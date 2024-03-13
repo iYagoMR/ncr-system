@@ -1,0 +1,247 @@
+﻿@model IEnumerable<NCR>
+
+@{
+    ViewData["Title"] = "Archived";
+}
+
+<div>
+    <h1>NCR</h1>
+
+    <nav class="main-nav ncr navbar-expand-sm navbar-toggleable-sm">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" asp-area="" asp-controller="NCR" asp-action="Index" onclick="activateLink(this)">NCR log</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-area="" asp-controller="NCR" asp-action="Analytics" onclick="activateLink(this)">Analytics</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-area="" asp-controller="NCR" asp-action="Archived" onclick="activateLink(this)">Archived NCRs</a>
+                <hr />
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" asp-area="" asp-controller="NCR" asp-action="Archiving" onclick="activateLink(this)">Archiving helper</a>
+            </li>
+
+        </ul>
+        <hr />
+
+    </nav>
+    <div class="dropdown ncr-mobile-nav">
+        <button class="dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-list"></i>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+            <li><a class="nav-link" asp-area="" asp-controller="NCR" asp-action="Index" onclick="activateLink(this)">NCR log</a></li>
+            <li><a class="nav-link" asp-area="" asp-controller="NCR" asp-action="Analytics" onclick="activateLink(this)">Analytics</a></li>
+            <li><a class="nav-link" asp-area="" asp-controller="NCR" asp-action="Archived" onclick="activateLink(this)">Archived NCRs</a></li>
+            <li><a class="nav-link" asp-area="" asp-controller="NCR" asp-action="Archiving" onclick="activateLink(this)">Archiving helper</a></li>
+        </ul>
+        <h2>Archived</h2>
+        <hr />
+    </div>
+</div>
+
+<form asp-action="Archived" method="get">
+    <input type="hidden" name="sortDirection" value="@ViewData["sortDirection"]" />
+    <input type="hidden" name="sortField" value="@ViewData["sortField"]" />
+
+    <div class="archived filtering-fields form-horizontal">
+        <div class="row">
+            <div class="form-group col-md-3">
+                <label class="control-label">Search by NCR number</label>
+                @Html.TextBox("SearchString", null, new { @class = "form-control search-box", @placeholder = "Ex: 2024-023"})
+            </div>
+            <div class="form-group col-md-3">
+                <label class="control-label">Start Date</label>
+                <input type="date" class="form-control" name="startDate">
+            </div>
+            <div class="form-group col-md-3">
+                <label class="control-label">End Date</label>
+                <input type="date" class="form-control" name="endDate">
+            </div>
+            <div class="form-group col-md-3">
+                <label class="control-label">Filter by Supplier</label>
+                @Html.DropDownList("SupplierID", null, "All Suppliers", htmlAttributes: new { @class = "form-select" })
+            </div>
+            <div class="form-group col-md-4 align-self-end fieltering-btns">
+                <button asp-action="Archived" formmethod="get" type="submit" name="actionButton" class="btn btn-primary">
+                    <i class="bi bi-funnel-fill"></i>
+                    Filter
+                </button>
+                <a asp-action="Archived" class="btn btn-primary"><i class="bi bi-arrow-clockwise"></i>Clear</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-none d-lg-block">
+    
+        <table class="table table-borderless">
+            <thead>
+                <tr>
+                    <th class="sorting-headers">
+                        <input id="thElement" type="submit" name="actionButton" value="NCR NO." class="btn btn-link" />
+                        <i class="bi bi-arrow-down-up "></i>
+                    </th>
+                    <th>
+                        STATUS
+                    </th>
+                    <th>
+                        PHASE
+                    </th>
+                    <th>
+                        PO OR PROD NO.
+                    </th>
+                    <th>
+                        SUPPLIER
+                    </th>
+                    <th class="sorting-headers">
+                        <input type="submit" name="actionButton" value="CREATED ON" class="btn btn-link" />
+                        <i class="bi bi-arrow-down-up"></i>
+                    </th>
+
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody class="ncr-list-row">
+                @foreach (var item in Model)
+                {
+
+                    <tr id="tr-@item.ID">
+                        <td>
+                            <div>@Html.DisplayFor(modelItem => item.NCRNum)</div>
+                        </td>
+                        <td>
+                            @if (item.Status == "Active")
+                            {
+                                <span style="color: var(--green);">@Html.DisplayFor(modelItem => item.Status)</span>
+                            }
+                            else if (item.Status == "Closed")
+                            {
+                                <span style="color: var(--yellow);">@Html.DisplayFor(modelItem => item.Status)</span>
+                            }
+                            else if (item.Status == "Rejected" || item.Status == "Rejected Again")
+                            {
+                                <span style="color: var(--red);">@Html.DisplayFor(modelItem => item.Status)</span>
+                            }
+                            else if (item.Status == "Voided")
+                            {
+                                <span style="color: var(--haver-blue);">@Html.DisplayFor(modelItem => item.Status)</span>
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Phase)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.QualityRepresentative.PoNo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.QualityRepresentative.Supplier.SupplierName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreatedOn)
+                        </td>
+                        <td>
+
+                            <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.ID"><i class="bi bi-card-list"></i>Details</a>
+                            @* <a class="btn btn-primary" href="@Url.Action("DownloadPDF", "NCR", new { id = @item.ID })"><i class="bi bi-download"></i>Download PDF</a> *@
+                            <div class="dropdown">
+                                <button class="dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-three-dots-vertical"></i>
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+
+                                    @if (item.PrevNCRID != null)
+                                    {
+                                        <li><a class="dropdown-item" asp-action="Details" asp-route-id="@item.PrevNCRID">Go to prev NCR</a></li>
+                                    }
+                                    <li><a class="dropdown-item" asp-action="Details" asp-route-id="@item.ID">Details</a></li>
+                                    <li><a class="dropdown-item" href="@Url.Action("DownloadPDF", "NCR", new { id = @item.ID })">Download PDF</a></li>
+
+                                </ul>
+                            </div>
+                        </td>
+                        @if (item.PrevNCRID != null)
+                        {
+                            <script>
+                                document.querySelectorAll('#tr-' + @item.ID + ' td').forEach((td, index) => {
+                                    // Setting common styles for border bottom and top
+                                    td.style.borderBottom = '1.5px rgb(175, 57, 57, 54%) solid';
+                                    td.style.borderTop = '1.5px rgb(175, 57, 57, 54%) solid';
+
+                                    if (index === 6) {
+                                            td.style.borderRight = '1.5px rgb(175, 57, 57, 54%) solid';
+                                    }
+                                    if (index === 0) {
+                                        td.style.borderLeft = '1.5px rgb(175, 57, 57, 54%) solid';
+                                    }
+
+                                });
+
+                            </script>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <br />
+    <div class="ncr-cards container-fluid d-block d-lg-none">
+
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <p>@Html.DisplayFor(modelItem => item.NCRNum)</p>
+                        @if (item.Status == "Active")
+                        {
+                            <span style="color: var(--green);">@Html.DisplayFor(modelItem => item.Status)</span>
+                        }
+                        else if (item.Status == "Closed")
+                        {
+                            <span style="color: var(--yellow);">@Html.DisplayFor(modelItem => item.Status)</span>
+                        }
+                        else if (item.Status == "Rejected" || item.Status == "Rejected Again")
+                        {
+                            <span style="color: var(--red);">@Html.DisplayFor(modelItem => item.Status)</span>
+                        }
+                        else if (item.Status == "Voided")
+                        {
+                            <span style="color: var(--haver-blue);">@Html.DisplayFor(modelItem => item.Status)</span>
+                        }
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <p><strong>Phase:</strong> @Html.DisplayFor(modelItem => item.Phase)</p>
+                                <p><strong>PO Number:</strong> @Html.DisplayFor(modelItem => item.QualityRepresentative.PoNo)</p>
+                                <p><strong>Supplier:</strong> @Html.DisplayFor(modelItem => item.QualityRepresentative.Supplier.SupplierName)</p>
+                                <p><strong>Created On:</strong> @Html.DisplayFor(modelItem => item.CreatedOn)</p>
+                            </div>
+                            <div class="col">
+                                @if (item.PrevNCRID != null)
+                                {
+
+                                    <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.PrevNCRID">Go to prev NCR</a>
+                                }
+                                <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.ID">Details</a>
+                                <a class="btn btn-primary" href="@Url.Action("DownloadPDF", "NCR", new { id = @item.ID })">Download PDF</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+
+        </div>
+
+    </div>
+
+    <partial name="_PagingNavBar" />
+</form>
+
+
+

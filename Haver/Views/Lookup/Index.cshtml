@@ -1,0 +1,83 @@
+﻿@{
+    ViewData["Title"] = "Lookups";
+}
+
+
+<div>
+    <h1>Lookups</h1>
+
+    <div class="text-success">@Html.Raw(TempData["FeedbackGreen"])</div>
+    <div class="text-danger">@Html.Raw(TempData["Feedback"])</div>
+
+    <!-- Nav tabs -->
+    <nav class="main-nav lookups-nav navbar-expand-sm navbar-toggleable-sm">
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <button class="nav-link active" id="Information-Tab" data-bs-toggle="tab" data-bs-target="#InformationPanel" type="button" role="tab" aria-controls="InformationPanel" aria-selected="true">Information</button>
+            <button class="nav-link" id="EngReview-Tab" data-bs-toggle="tab" data-bs-target="#EngReviewPanel" type="button" role="tab" aria-controls="EngReviewPanel" aria-selected="false">Eng. Reviews</button>
+            <button class="nav-link" id="Part-Tab" data-bs-toggle="tab" data-bs-target="#PartPanel" type="button" role="tab" aria-controls="PartPanel" aria-selected="false">Parts</button>
+            <button class="nav-link" id="Problem-Tab" data-bs-toggle="tab" data-bs-target="#ProblemPanel" type="button" role="tab" aria-controls="ProblemPanel" aria-selected="false">Problems</button>
+            <button class="nav-link" id="PrelDecision-Tab" data-bs-toggle="tab" data-bs-target="#PrelDecisionPanel" type="button" role="tab" aria-controls="PrelDecisionPanel" aria-selected="false">Prel. Decisions</button>
+            <button class="nav-link" id="Supplier-Tab" data-bs-toggle="tab" data-bs-target="#SupplierPanel" type="button" role="tab" aria-controls="SupplierPanel" aria-selected="false">Suppliers</button>
+        </div>
+        <hr />
+    </nav>
+
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="InformationPanel" role="tabpanel" aria-labelledby="InformationTab">
+            <p>This page will allow you to manage all of the Lookup values in the system. </p><p>
+                Just select a Tab to view and maintiain the values for a specific one.
+            </p>
+        </div>
+        <div class="tab-pane fade" id="EngReviewPanel" role="tabpanel" aria-labelledby="EngReview-Tab"><br /></div>
+        <div class="tab-pane fade" id="PartPanel" role="tabpanel" aria-labelledby="Part-Tab"><br /></div>
+        <div class="tab-pane fade" id="ProblemPanel" role="tabpanel" aria-labelledby="Problem-Tab"><br /></div>
+        <div class="tab-pane fade" id="PrelDecisionPanel" role="tabpanel" aria-labelledby="PrelDecisionPanel-Tab"><br /></div>
+        <div class="tab-pane fade" id="SupplierPanel" role="tabpanel" aria-labelledby="Supplier-Tab"><br /></div>
+    </div>
+
+</div>
+
+
+@section Scripts {
+    <script type="text/javascript">
+        function refreshTab(activeTab) {
+            switch (activeTab) {
+                case 'EngReview-Tab': $('#EngReviewPanel').load('/Lookup/EngReview');
+                    break;
+                case 'PrelDecision-Tab': $('#PrelDecisionPanel').load('/Lookup/PrelDecision');
+                    break;
+                case 'Part-Tab': $('#PartPanel').load('/Lookup/Part');
+                    break;
+                case 'Problem-Tab': $('#ProblemPanel').load('/Lookup/Problem');
+                    break;
+                case 'Supplier-Tab': $('#SupplierPanel').load('/Lookup/Supplier');
+                    break;
+                default: break;
+            };
+            return;
+        };
+        $('.nav-link').click(function () {
+            var activeTab = $(this).attr("id");
+            refreshTab(activeTab);
+        });
+        $(".tab-content").on("click", ".linkClick", function (event) {
+            event.preventDefault();
+            var address = $(this).attr("href");
+            var lookup = address.split("/")[1];
+            var id = $("#" + lookup + "ID").val();
+            var caption = $("#" + lookup).html();
+            if (id == null) {
+                alert("Error: no value selected from the " + caption + " list!");
+            } else {
+                window.location.href = address + "/" + id;
+            }
+        });
+        $(function () {
+            setTimeout(function () {
+                $("#@ViewData["Tab"]").trigger('click');
+            }, 10);
+        });
+    </script>
+}
+
+

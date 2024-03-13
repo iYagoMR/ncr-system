@@ -1,0 +1,321 @@
+{
+  "Files": [
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\obj\\Debug\\net7.0\\scopedcss\\projectbundle\\Haver.bundle.scp.css",
+      "PackagePath": "staticwebassets\\Haver.bundle.scp.css"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\assets\\excelFiles\\Parts.xlsx",
+      "PackagePath": "staticwebassets\\assets\\excelFiles\\Parts.xlsx"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\assets\\excelFiles\\Problems.xlsx",
+      "PackagePath": "staticwebassets\\assets\\excelFiles\\Problems.xlsx"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\assets\\excelFiles\\Suppliers.xlsx",
+      "PackagePath": "staticwebassets\\assets\\excelFiles\\Suppliers.xlsx"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\assets\\images\\logo-horizontal-two.png",
+      "PackagePath": "staticwebassets\\assets\\images\\logo-horizontal-two.png"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\assets\\images\\search.svg",
+      "PackagePath": "staticwebassets\\assets\\images\\search.svg"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\css\\custom-styles.scss",
+      "PackagePath": "staticwebassets\\css\\custom-styles.scss"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\css\\site.css",
+      "PackagePath": "staticwebassets\\css\\site.css"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\favicon.ico",
+      "PackagePath": "staticwebassets\\favicon.ico"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\js\\block-fields.js",
+      "PackagePath": "staticwebassets\\js\\block-fields.js"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\js\\expand-images.js",
+      "PackagePath": "staticwebassets\\js\\expand-images.js"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\js\\form-dates-filler.js",
+      "PackagePath": "staticwebassets\\js\\form-dates-filler.js"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\js\\form-fill.js",
+      "PackagePath": "staticwebassets\\js\\form-fill.js"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\js\\header-nav.js",
+      "PackagePath": "staticwebassets\\js\\header-nav.js"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\js\\multiselect.js",
+      "PackagePath": "staticwebassets\\js\\multiselect.js"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\js\\photos-adder.js",
+      "PackagePath": "staticwebassets\\js\\photos-adder.js"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\js\\site.js",
+      "PackagePath": "staticwebassets\\js\\site.js"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\js\\video-link.js",
+      "PackagePath": "staticwebassets\\js\\video-link.js"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\LICENSE",
+      "PackagePath": "staticwebassets\\lib\\bootstrap"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.css.map"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.min.css.map"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.css.map"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-grid.rtl.min.css.map"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.css.map"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.min.css.map"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.css.map"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-reboot.rtl.min.css.map"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.css.map"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.min.css.map"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.css.map"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap-utilities.rtl.min.css.map"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.css"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.css.map"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.min.css"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.css.map"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\css\\bootstrap.rtl.min.css.map"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.js.map"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.bundle.min.js.map"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.js.map"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.esm.min.js.map"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.js"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.js.map"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.min.js"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map",
+      "PackagePath": "staticwebassets\\lib\\bootstrap\\dist\\js\\bootstrap.min.js.map"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\jquery-validation-unobtrusive\\LICENSE.txt",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\LICENSE.txt"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.js"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation-unobtrusive\\jquery.validate.unobtrusive.min.js"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\jquery-validation\\LICENSE.md",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\LICENSE.md"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\additional-methods.js"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\jquery-validation\\dist\\additional-methods.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\additional-methods.min.js"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\jquery.validate.js"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\jquery-validation\\dist\\jquery.validate.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery-validation\\dist\\jquery.validate.min.js"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\jquery\\LICENSE.txt",
+      "PackagePath": "staticwebassets\\lib\\jquery\\LICENSE.txt"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\jquery\\dist\\jquery.js",
+      "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.js"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\jquery\\dist\\jquery.min.js",
+      "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.js"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\jquery\\dist\\jquery.min.map",
+      "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.map"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.Haver.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.build.Haver.props",
+      "PackagePath": "build\\Haver.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildMultiTargeting.Haver.props",
+      "PackagePath": "buildMultiTargeting\\Haver.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildTransitive.Haver.props",
+      "PackagePath": "buildTransitive\\Haver.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

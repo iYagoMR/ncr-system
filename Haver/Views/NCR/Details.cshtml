@@ -1,0 +1,650 @@
+﻿@model NCR
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div class="page-sub-title">
+    <a asp-action="Index"><i class="bi bi-arrow-left"></i></a>
+    <h1>Details</h1>
+</div>
+
+
+<div class="accordion" id="accordionPanelsStayOpenExample">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+            <button class="accordion-button" id="Quality-Section" type="button" data-bs-toggle="collapse" data-bs-target="#QualityForm" aria-expanded="true" aria-controls="QalityForm">
+                <i class="bi bi-pencil-square"></i>Quality Representative
+            </button>
+        </h2>
+        <div id="QualityForm" class="accordion-collapse collapse show" aria-labelledby="QualityRep-Section">
+            <div class="accordion-body">
+                <div class="section-form">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="QualityRepresentative.ProcessApplicableID" class="control-label"></label>
+                                <input asp-for="QualityRepresentative.ProcessApplicable.ProcessName" class="form-control" readonly>
+                                <span asp-validation-for="QualityRepresentative.ProcessApplicableID" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="QualityRepresentative.PartID" class="control-label"></label>
+                                <input asp-for="QualityRepresentative.Part.PartSummary" class="form-control" readonly />
+                                <span asp-validation-for="QualityRepresentative.PartID" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="QualityRepresentative.ProblemID" class="control-label"></label>
+                                <input asp-for="QualityRepresentative.Problem.ProblemDescription" class="form-control" readonly>
+                                <span asp-validation-for="QualityRepresentative.ProblemID" class="text-danger"></span>
+                            </div>
+                            <div class="form-group form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" asp-for="QualityRepresentative.NonConforming" checked disabled /> @Html.DisplayNameFor(model => model.QualityRepresentative.NonConforming)
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="QualityRepresentative.SupplierID" class="control-label"></label>
+                                <input asp-for="QualityRepresentative.Supplier.SupplierName" class="form-control" readonly>
+                                <span asp-validation-for="QualityRepresentative.SupplierID" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="QualityRepresentative.QuantReceived" class="control-label"></label>
+                                <input asp-for="QualityRepresentative.QuantReceived" class="form-control" oninput="this.value = Math.abs(this.value)" readonly />
+                                <span asp-validation-for="QualityRepresentative.QuantReceived" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="QualityRepresentative.QuantDefective" class="control-label"></label>
+                                <input asp-for="QualityRepresentative.QuantDefective" class="form-control" oninput="this.value = Math.abs(this.value)" readonly />
+                                <span asp-validation-for="QualityRepresentative.QuantDefective" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="NCRNum" class="control-label"></label>
+                                <input asp-for="NCRNum" class="form-control" readonly />
+                                <span asp-validation-for="NCRNum" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="QualityRepresentative.PoNo" class="control-label"></label>
+                                <input asp-for="QualityRepresentative.PoNo" class="form-control" oninput="this.value = Math.abs(this.value)" readonly />
+                                <span asp-validation-for="QualityRepresentative.PoNo" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="QualityRepresentative.SalesOrd" class="control-label"></label>
+                                <input asp-for="QualityRepresentative.SalesOrd" class="form-control" readonly />
+                                <span asp-validation-for="QualityRepresentative.SalesOrd" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="QualityRepresentative.QualityRepresentativeSign" class="control-label"></label>
+                                <input asp-for="QualityRepresentative.QualityRepresentativeSign" class="form-control" readonly />
+                                <span asp-validation-for="QualityRepresentative.QualityRepresentativeSign" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="QualityRepresentative.QualityRepDate" class="control-label"></label>
+                                <input asp-for="QualityRepresentative.QualityRepDate" class="form-control" readonly />
+                                <span asp-validation-for="QualityRepresentative.QualityRepDate" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row section-form">
+                    <div class="form-label">
+                        <h4>Report Notes</h4>
+                        <hr />
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label asp-for="QualityRepresentative.DescDefect" class="control-label"></label>
+                            <textarea asp-for="QualityRepresentative.DescDefect" rows="5" class="form-control" readonly></textarea>
+                            <span asp-validation-for="QualityRepresentative.DescDefect" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                @if (Model.QualityRepresentative != null)
+                {
+                    <div class="section-form multimedia">
+                        <div class="section-label">
+                            <h4>Multimedia</h4>
+                            <hr />
+                        </div>
+                        @if (Model.QualityRepresentative.QualityPhotos?.Any() ?? false)
+                        {
+                            <p class="control-label">Images</p>
+                            <div class="form-group details-images">
+                                @foreach (var image in Model.QualityRepresentative.QualityPhotos)
+                                {
+                                    string imageBase64 = Convert.ToBase64String(image.Content);
+                                    string imageSrc = string.Format("data:" + image.MimeType + ";base64,{0}", imageBase64);
+                                    <div class="card editor" style="width: 14rem;">
+                                        <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="img-fluid rounded" />
+
+                                    </div>
+                                }
+                            </div>
+                        }
+                        @if (Model.QualityRepresentative.VideoLinks != null && Model.QualityRepresentative.VideoLinks.Any())
+                        {
+                            <div class="form-group details-links">
+                                <p class="control-label">Video links</p>
+                                <ul>
+                                    @foreach (var link in Model.QualityRepresentative.VideoLinks)
+                                    {
+                                        <li>
+                                            <a href="@link.Link" target="_blank">@link.Link</a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+            <button class="accordion-button" id="Engineer-Section" type="button" data-bs-toggle="collapse" data-bs-target="#EngineerForm" aria-expanded="false" aria-controls="EngineerForm">
+                <i class="bi bi-gear"></i>Engineering
+            </button>
+        </h2>
+        <div id="EngineerForm" class="accordion-collapse collapse show" aria-labelledby="Engineering-Section">
+            <div class="accordion-body">
+                <div class="section-form">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="Engineering.EngReviewID" class="control-label"></label>
+                                <input asp-for="Engineering.EngReview.Review" class="form-control" readonly>
+                                <span asp-validation-for="Engineering.EngReviewID" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="Engineering.IsCustNotificationNecessary" class="custom-control-label"></label><br />
+                                <input class="form-check-input" asp-for="Engineering.IsCustNotificationNecessary" id="custNotificationCheckbox" disabled/>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label asp-for="Engineering.DrawReqUpdating" class="custom-control-label"></label><br />
+                                <input class="form-check-input" asp-for="Engineering.DrawReqUpdating" id="drawReqUpdatingCheckbox" disabled/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Engineering.EngineerSign" class="control-label"></label>
+                                <input asp-for="Engineering.EngineerSign" class="form-control" readonly />
+                                <span asp-validation-for="Engineering.EngineerSign" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Engineering.EngineeringDate" class="control-label"></label>
+                                <input asp-for="Engineering.EngineeringDate" id="engineeringDate" class="form-control" readonly />
+                                <span asp-validation-for="Engineering.EngineeringDate" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row section-form">
+                    <div class="form-label">
+                        <h4>Drawing</h4>
+                        <hr />
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Engineering.OrgRevisionNum" class="control-label"></label>
+                            <input asp-for="Engineering.OrgRevisionNum" class="form-control drawing-field" oninput="this.value = Math.abs(this.value)" readonly />
+                            <span asp-validation-for="Engineering.OrgRevisionNum" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Engineering.UpdatedRevisionNum" class="control-label"></label>
+                            <input asp-for="Engineering.UpdatedRevisionNum" class="form-control drawing-field" oninput="this.value = Math.abs(this.value)" readonly />
+                            <span asp-validation-for="Engineering.UpdatedRevisionNum" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label asp-for="Engineering.RevisionedBy" class="control-label"></label>
+                            <input asp-for="Engineering.RevisionedBy" class="form-control drawing-field" readonly />
+                            <span asp-validation-for="Engineering.RevisionedBy" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Engineering.RevisionDate" class="control-label"></label>
+                            <input asp-for="Engineering.RevisionDate" class="form-control drawing-field" readonly />
+                            <span asp-validation-for="Engineering.RevisionDate" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row section-form">
+                    <div class="form-label">
+                        <h4>Report Notes</h4>
+                        <hr />
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label asp-for="Engineering.Disposition" class="control-label"></label>
+                            <textarea asp-for="Engineering.Disposition" rows="5" class="form-control" readonly></textarea>
+                            <span asp-validation-for="Engineering.Disposition" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Engineering.CustIssueMsg" class="control-label"></label>
+                            <textarea asp-for="Engineering.CustIssueMsg" rows="5" class="form-control" id="custIssueMsgField" readonly></textarea>
+                            <span asp-validation-for="Engineering.CustIssueMsg" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                @if (Model.Engineering != null)
+                {
+                    <div class="section-form multimedia">
+                        <div class="section-label">
+                            <h4>Multimedia</h4>
+                            <hr />
+                        </div>
+                        @if (Model.Engineering.QualityPhotos?.Any() ?? false)
+                        {
+                            <p class="control-label">Images</p>
+                            <div class="form-group details-images">
+                                @foreach (var image in Model.Engineering.QualityPhotos)
+                                {
+                                    string imageBase64 = Convert.ToBase64String(image.Content);
+                                    string imageSrc = string.Format("data:" + image.MimeType + ";base64,{0}", imageBase64);
+                                    <div class="card editor" style="width: 14rem;">
+                                        <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="img-fluid rounded" />
+
+                                    </div>
+                                }
+                            </div>
+                        }
+                        @if (Model.Engineering.VideoLinks != null && Model.Engineering.VideoLinks.Any())
+                        {
+                            <div class="form-group details-links">
+                                <p class="control-label">Video links</p>
+                                <ul>
+                                    @foreach (var link in Model.Engineering.VideoLinks)
+                                    {
+                                        <li>
+                                            <a href="@link.Link" target="_blank">@link.Link</a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="panelsStayOpen-headingThree">
+            <button class="accordion-button" id="Purchasing-Section" type="button" data-bs-toggle="collapse" data-bs-target="#PurchasingForm" aria-expanded="false" aria-controls="PurchasingForm">
+                <i class="bi bi-receipt"></i>Operations
+            </button>
+        </h2>
+        <div id="PurchasingForm" class="accordion-collapse collapse show" aria-labelledby="Purchasing-Section">
+            <div class="accordion-body">
+                <div class="section-form">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Purchasing.PrelDecisionID" class="control-label"></label>
+                                <input asp-for="Purchasing.PrelDecisionID" class="form-control" readonly>
+                                <span asp-validation-for="Purchasing.PrelDecisionID" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label asp-for="Purchasing.CarRaised" class="custom-control-label"></label><br />
+                                <input class="form-check-input" asp-for="Purchasing.CarRaised" id="carRaisedCheckbox" oninput="this.value = Math.abs(this.value)" disabled />
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label asp-for="Purchasing.IsFollowUpReq" class="custom-control-label"></label><br />
+                                <input class="form-check-input" asp-for="Purchasing.IsFollowUpReq" id="followUpReqCheckbox" disabled />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Purchasing.CarNum" class="control-label"></label>
+                                <input asp-for="Purchasing.CarNum" class="form-control" id="carNumField" oninput="this.value = Math.abs(this.value)" readonly />
+                                <span asp-validation-for="Purchasing.CarNum" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label asp-for="Purchasing.ExpecDate" class="control-label"></label>
+                                <input asp-for="Purchasing.ExpecDate" class="form-control" id="followUpTypeFieldTwo" readonly />
+                                <span asp-validation-for="Purchasing.ExpecDate" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label asp-for="Purchasing.FollowUpType" class="control-label"></label>
+                                <input asp-for="Purchasing.FollowUpType" class="form-control" id="followUpTypeField" readonly />
+                                <span asp-validation-for="Purchasing.FollowUpType" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Purchasing.OpManagerSign" class="control-label"></label>
+                                <input asp-for="Purchasing.OpManagerSign" class="form-control" readonly />
+                                <span asp-validation-for="Purchasing.OpManagerSign" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Purchasing.PurchasingDate" class="control-label"></label>
+                                <input asp-for="Purchasing.PurchasingDate" class="form-control" id="purchasingDate" readonly />
+                                <span asp-validation-for="Purchasing.PurchasingDate" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row section-form">
+                    <div class="form-label">
+                        <h4>Report Notes</h4>
+                        <hr />
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label asp-for="Purchasing.Message" class="control-label"></label>
+                            <textarea asp-for="Purchasing.Message" rows="5" class="form-control" readonly></textarea>
+                            <span asp-validation-for="Purchasing.Message" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                @if (Model.Purchasing != null)
+                {
+                    <div class="section-form multimedia">
+                        <div class="section-label">
+                            <h4>Multimedia</h4>
+                            <hr />
+                        </div>
+                        @if (Model.Purchasing.QualityPhotos?.Any() ?? false)
+                        {
+                            <p class="control-label">Images</p>
+                            <div class="form-group details-images">
+                                @foreach (var image in Model.Purchasing.QualityPhotos)
+                                {
+                                    string imageBase64 = Convert.ToBase64String(image.Content);
+                                    string imageSrc = string.Format("data:" + image.MimeType + ";base64,{0}", imageBase64);
+                                    <div class="card editor" style="width: 14rem;">
+                                        <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="img-fluid rounded" />
+
+                                    </div>
+                                }
+                            </div>
+                        }
+                        @if (Model.Purchasing.VideoLinks != null && Model.Purchasing.VideoLinks.Any())
+                        {
+                            <div class="form-group details-links">
+                                <p class="control-label">Video links</p>
+                                <ul>
+                                    @foreach (var link in Model.Purchasing.VideoLinks)
+                                    {
+                                        <li>
+                                            <a href="@link.Link" target="_blank">@link.Link</a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="panelsStayOpen-headingFour">
+            <button class="accordion-button" id="Procurement-Section" type="button" data-bs-toggle="collapse" data-bs-target="#ProcurementForm" aria-expanded="false" aria-controls="ProcurementForm">
+                <i class="bi bi-box-seam"></i>Procurement
+            </button>
+        </h2>
+        <div id="ProcurementForm" class="accordion-collapse collapse show" aria-labelledby="Procurement-Section">
+            <div class="accordion-body">
+                <div class="section-form">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" asp-for="Procurement.SuppItemsBack" id="suppItemsBackCheckbox" disabled /> @Html.DisplayNameFor(model => model.Procurement.SuppItemsBack)
+                                </label>
+                            </div>
+                            <div class="form-group form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" asp-for="Procurement.SuppReturnCompleted" disabled /> @Html.DisplayNameFor(model => model.Procurement.SuppReturnCompleted)
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" asp-for="Procurement.IsCreditExpec" disabled /> @Html.DisplayNameFor(model => model.Procurement.IsCreditExpec)
+                                </label>
+                            </div>
+                            <div class="form-group form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" asp-for="Procurement.ChargeSupplier" disabled/> @Html.DisplayNameFor(model => model.Procurement.ChargeSupplier)
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Procurement.RMANo" class="control-label"></label>
+                                <input asp-for="Procurement.RMANo" class="form-control" oninput="this.value = Math.abs(this.value)" readonly/>
+                                <span asp-validation-for="Procurement.RMANo" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Procurement.ExpecDateOfReturn" class="control-label"></label>
+                                <input asp-for="Procurement.ExpecDateOfReturn" class="form-control" readonly/>
+                                <span asp-validation-for="Procurement.ExpecDateOfReturn" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Procurement.ProcurementSign" class="control-label"></label>
+                                <input asp-for="Procurement.ProcurementSign" class="form-control" readonly/>
+                                <span asp-validation-for="Procurement.ProcurementSign" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Procurement.ProcurementDate" class="control-label"></label>
+                                <input asp-for="Procurement.ProcurementDate" class="form-control" id="procurementDate" readonly/>
+                                <span asp-validation-for="Procurement.ProcurementDate" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row section-form">
+                    <div class="form-label">
+                        <h4>Report Notes</h4>
+                        <hr />
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label asp-for="Procurement.CarrierInfo" class="control-label"></label>
+                            <textarea asp-for="Procurement.CarrierInfo" rows="5" class="form-control" id="carrierInfoField" readonly> </textarea>
+                            <span asp-validation-for="Procurement.CarrierInfo" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                @if (Model.Procurement != null)
+                {
+                    <div class="section-form multimedia">
+                        <div class="section-label">
+                            <h4>Multimedia</h4>
+                            <hr />
+                        </div>
+                        @if (Model.Procurement.QualityPhotos?.Any() ?? false)
+                        {
+                            <p class="control-label">Images</p>
+                            <div class="form-group details-images">
+                                @foreach (var image in Model.Procurement.QualityPhotos)
+                                {
+                                    string imageBase64 = Convert.ToBase64String(image.Content);
+                                    string imageSrc = string.Format("data:" + image.MimeType + ";base64,{0}", imageBase64);
+                                    <div class="card editor" style="width: 14rem;">
+                                        <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="img-fluid rounded" />
+
+                                    </div>
+                                }
+                            </div>
+                        }
+                        @if (Model.Procurement.VideoLinks != null && Model.Procurement.VideoLinks.Any())
+                        {
+                            <div class="form-group details-links">
+                                <p class="control-label">Video links</p>
+                                <ul>
+                                    @foreach (var link in Model.Procurement.VideoLinks)
+                                    {
+                                        <li>
+                                            <a href="@link.Link" target="_blank">@link.Link</a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="panelsStayOpen-headingFive">
+            <button class="accordion-button" id="Reinspection-Section" type="button" data-bs-toggle="collapse" data-bs-target="#ReinspectionForm" aria-expanded="false" aria-controls="ReinspectionForm">
+                <i class="bi bi-arrow-repeat"></i>Reinspection
+            </button>
+        </h2>
+        <div id="ReinspectionForm" class="accordion-collapse collapse show" aria-labelledby="Reinspection-Section">
+            <div class="accordion-body">
+                <div class="section-form">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" asp-for="Reinspection.ReinspecAccepted" disabled /> @Html.DisplayNameFor(model => model.Reinspection.ReinspecAccepted)
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Reinspection.ReinspecInspectorSign" class="control-label"></label>
+                                <input asp-for="Reinspection.ReinspecInspectorSign" class="form-control" readonly/>
+                                <span asp-validation-for="Reinspection.ReinspecInspectorSign" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label asp-for="Reinspection.ReinspectionDate" class="control-label"></label>
+                                <input asp-for="Reinspection.ReinspectionDate" class="form-control" id="reinspectionDate" readonly/>
+                                <span asp-validation-for="Reinspection.ReinspectionDate" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @if (Model.Reinspection != null)
+                {
+                    <div class="section-form multimedia">
+                        <div class="section-label">
+                            <h4>Multimedia</h4>
+                            <hr />
+                        </div>
+                        @if (Model.Reinspection.QualityPhotos?.Any() ?? false)
+                        {
+                            <p class="control-label">Images</p>
+                            <div class="form-group details-images">
+                                @foreach (var image in Model.Reinspection.QualityPhotos)
+                                {
+                                    string imageBase64 = Convert.ToBase64String(image.Content);
+                                    string imageSrc = string.Format("data:" + image.MimeType + ";base64,{0}", imageBase64);
+                                    <div class="card editor" style="width: 14rem;">
+                                        <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="img-fluid rounded" />
+                                    </div>
+                                }
+                            </div>
+                        }
+                        @if (Model.Reinspection.VideoLinks != null && Model.Reinspection.VideoLinks.Any())
+                        {
+                            <div class="form-group details-links">
+                                <p class="control-label">Video links</p>
+                                <ul>
+                                    @foreach (var link in Model.Reinspection.VideoLinks)
+                                    {
+                                        <li>
+                                            <a href="@link.Link" target="_blank">@link.Link</a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Get the images
+    // var images = document.querySelectorAll(".img-fluid");
+
+    // images.forEach(function (image) {
+
+    //     //Get the image clicked
+    //     image.onclick = function () {
+    //         let imageRow = image.closest(".card");
+
+    //         image.classList.toggle("expanded");
+    //         imageRow.classList.toggle("image-modal");
+    //         imageRow.style.display = "flex";
+
+    //         //Toggle id
+    //         if (image.id === "clickedImage") {
+    //             image.removeAttribute("id");
+    //         } else {
+    //             image.id = "clickedImage";
+    //         }
+
+    //         // Hide images other than the clicked one
+    //         images.forEach(function (otherImage) {
+    //             if (otherImage !== image) {
+    //                 otherImage.classList.toggle("hide-other-imgs")
+    //             }
+    //         });
+    //     }
+    // });
+</script>

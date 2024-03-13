@@ -1,0 +1,97 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Haver</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Haver.styles.css" asp-append-version="true" />
+    <!-- Bootstrap Font Icon CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="header-nav container navbar navbar-expand-sm navbar-toggleable-sm mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand justify-content-start" asp-area="" asp-controller="Home" asp-action="Index"><img id="logo" src="~/assets/images/logo-horizontal-two.png" /></a>
+                <ul class=" navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index" onclick="activateLink(this)">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link activated" asp-area="" asp-controller="NCR" asp-action="Index" onclick="activateLink(this)">NCR</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Employee" asp-action="Index" onclick="activateLink(this)">Employees</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Lookup" asp-action="Index" onclick="activateLink(this)">Lookups</a>
+                    </li>
+                </ul>
+                <div class="dropdown layout-mobile-nav">
+                    <button class="dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-list"></i>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                        <li><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a></li>
+                        <li><a class="nav-link activated" asp-area="" asp-controller="NCR" asp-action="Index">NCR</a></li>
+                        <li><a class="nav-link" asp-area="" asp-controller="Employee" asp-action="Index">Employees</a></li>
+                        <li><a class="nav-link" asp-area="" asp-controller="Lookup" asp-action="Index">Lookups</a></li>
+                    </ul>
+                </div>
+                <div class="justify-content-end">
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2024 - Haver
+        </div>
+    </footer>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/header-nav.js"></script>
+
+    <script>
+        function activateLink(link) {
+            // Remove 'activated' class from previously clicked link
+            const activeLink = document.querySelector('.nav-link.activated');
+            var allBorders = document.querySelectorAll('.header-nav hr');
+            if (activeLink) {
+                activeLink.classList.remove('activated');
+
+                allBorders.forEach(function (border) {
+                    border.remove();
+                });
+
+            }
+            borderBottom = document.createElement('hr');
+            borderBottom.setAttribute('id', 'tabBorderBottom');
+
+            // Add 'active' class to the clicked link
+            link.classList.add('activated');
+        }
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

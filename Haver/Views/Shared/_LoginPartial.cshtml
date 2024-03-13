@@ -1,0 +1,45 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@*For Cookies*@
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+
+<ul class="navbar-nav">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        var userName = HttpContextAccessor.HttpContext.Request.Cookies["userName"] ?? UserManager.GetUserName(User);
+        var user = await UserManager.GetUserAsync(User);
+        var userRole = (await UserManager.GetRolesAsync(user)).FirstOrDefault();
+
+        <li class="nav-item dropdown">
+            <a class="nav-link text-white" href="#" id="navbarIDDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <div class="user-nav">
+                    <div class="name-role">
+                        @userName
+                        <span>
+                            @userRole
+                        </span>
+                    </div>
+                    <div>
+                        <i class="bi bi-chevron-down"></i>
+                    </div>
+                </div>
+
+            </a>
+            <ul class="header-user-dropd dropdown-menu" aria-labelledby="navbarIDDropdown">
+                <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Change Security Settings</a></li>
+                <li><a class="dropdown-item" asp-area="" asp-controller="EmployeeAccount" asp-action="Details">Manage Account</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                    <button type="submit" class="dropdown-item btn btn-link">Logout</button>
+                </form>
+            </ul>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        </li>
+    }
+</ul>

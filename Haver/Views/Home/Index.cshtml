@@ -1,0 +1,186 @@
+﻿@model IEnumerable<NCR>
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div>
+    <h1>Dashboard</h1>
+
+    <nav class="main-nav navbar-expand-sm navbar-toggleable-sm">
+        <hr />
+    </nav>
+</div>
+
+
+<div class="row dashboard-cards">
+    <div class="col-md-6 stats-cards-dashboard">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card" style="width: 100%;">
+                    <div class="card-body">
+                        <h5 class="card-title">NCRs in <b>Quality Rep.</b></h5>
+                        <p class="card-text">@ViewBag.QualityRepresentativeCount</p>
+                    </div>
+                </div>
+                <div class="card" style="width: 100%;">
+                    <div class="card-body">
+                        <h5 class="card-title">NCRs in <b>Engineering</b></h5>
+                        <p class="card-text">@ViewBag.EngineeringCount</p>
+                    </div>
+                </div>
+                <div class="card" style="width: 100%;">
+                    <div class="card-body">
+                        <h5 class="card-title">NCRs in <b>Operations</b></h5>
+                        <p class="card-text">@ViewBag.PurchasingCount</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card" style="width: 100%;">
+                    <div class="card-body">
+                        <h5 class="card-title">NCRs in <b>Procurement</b></h5>
+                        <p class="card-text">@ViewBag.ProcurementCount</p>
+                    </div>
+                </div>
+                <div class="card" style="width: 100%;">
+                    <div class="card-body">
+                        <h5 class="card-title">NCRs in <b>Reinspection</b></h5>
+                        <p class="card-text">@ViewBag.ReinspectionCount</p>
+                    </div>
+                </div>
+                <div class="card" style="width: 100%;">
+                    <div class="card-body">
+                        <h5 class="card-title">Active NCRs</h5>
+                        <p class="card-text">@ViewBag.ncrCount</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 dashboard-btns">
+        <div class="row">
+            <div class="col-md-12">
+                <a class="btn btn-primary" asp-area="" asp-controller="Lookup" asp-action="Index"><i class="bi bi-file-earmark-spreadsheet"></i>Lookups</a>
+                <a class="btn btn-primary" asp-area="" asp-controller="Employee" asp-action="Index"><i class="bi bi-person"></i>Employees</a>
+                <a class="btn btn-primary" asp-area="" asp-controller="NCR" asp-action="Index"><i class="bi bi-card-list"></i>NCR</a>
+                <a class="btn btn-secondary app-actions" asp-area="" asp-controller="NCR" asp-action="CreateQualityRepresentative"><i class="bi bi-pencil-square"></i>Create NCR</a>
+                <a class="btn btn-secondary app-actions" asp-area="" asp-controller="Employee" asp-action="Create"><i class="bi bi-person-plus"></i>Create Employee</a>
+                <a class="btn btn-secondary app-actions disabled" asp-area="" aria-disabled="true"><i class="bi bi-bar-chart"></i>Analytics</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="table-box">
+    <h4>Recent NCRs</h4>
+
+    <div class="d-none d-lg-block">
+        <table class="table table-borderless">
+            <thead>
+                <tr>
+                    <th>
+                        NCR NO.
+                    </th>
+                    <th>
+                        STATUS
+                    </th>
+                    <th>
+                        PHASE
+                    </th>
+                    <th>
+                        PO OR PROD NO.
+                    </th>
+                    <th>
+                        SUPPLIER
+                    </th>
+                    <th>
+                        CREATED ON
+                    </th>
+
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody class="ncr-list-row">
+                @foreach (var item in Model)
+                {
+                    <tr class="grey-rows">
+                        <td>
+                            <div>@Html.DisplayFor(modelItem => item.NCRNum)</div>
+                        </td>
+                        <td>
+                            @if (item.Status == "Active")
+                            {
+                                <span style="color: var(--green);">@Html.DisplayFor(modelItem => item.Status)</span>
+                            }
+                            else if (item.Status == "Closed")
+                            {
+                                <span style="color: var(--yellow);">@Html.DisplayFor(modelItem => item.Status)</span>
+                            }
+                            else if (item.Status == "Rejected" || item.Status == "Rejected Again")
+                            {
+                                <span style="color: var(--red);">@Html.DisplayFor(modelItem => item.Status)</span>
+                            }
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Phase)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.QualityRepresentative.PoNo)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.QualityRepresentative.Supplier.SupplierName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.CreatedOn)
+                        </td>
+                        <td>
+                            <a class="btn btn-primary" asp-controller="NCR" asp-action="Details" asp-route-id="@item.ID"><i class="bi bi-card-list"></i>Details</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="ncr-cards container-fluid d-block d-lg-none">
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="card mb-3">
+                    <div class="card-header">
+                        <p>@Html.DisplayFor(modelItem => item.NCRNum)</p>
+                        @if (item.Status == "Active")
+                        {
+                            <span style="color: var(--green);">@Html.DisplayFor(modelItem => item.Status)</span>
+                        }
+                        else if (item.Status == "Closed")
+                        {
+                            <span style="color: var(--yellow);">@Html.DisplayFor(modelItem => item.Status)</span>
+                        }
+                        else if (item.Status == "Rejected" || item.Status == "Rejected Again")
+                        {
+                            <span style="color: var(--red);">@Html.DisplayFor(modelItem => item.Status)</span>
+                        }
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col">
+                                <p><strong>Phase:</strong> @Html.DisplayFor(modelItem => item.Phase)</p>
+                                <p><strong>PO Number:</strong> @Html.DisplayFor(modelItem => item.QualityRepresentative.PoNo)</p>
+                                <p><strong>Supplier:</strong> @Html.DisplayFor(modelItem => item.QualityRepresentative.Supplier.SupplierName)</p>
+                                <p><strong>Created On:</strong> @Html.DisplayFor(modelItem => item.CreatedOn)</p>
+                            </div>
+                            <div class="col">
+                                <a class="btn btn-primary" asp-controller="NCR" asp-action="Details" asp-route-id="@item.ID"><i class="bi bi-card-list"></i> Details</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,35 @@
+﻿@model Haver.Models.Problem
+@{
+    ViewData["Title"] = "Create Problem";
+}
+
+<div>
+    <h1>Create Problem</h1>
+    <hr />
+    <div class="text-danger">@Html.Raw(TempData["Feedback"])</div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ProblemDescription" class="control-label"></label>
+                <input asp-for="ProblemDescription" class="form-control" />
+                <span asp-validation-for="ProblemDescription" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <partial name="_BackToList" />
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

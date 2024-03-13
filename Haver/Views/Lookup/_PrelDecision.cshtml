@@ -1,0 +1,10 @@
+﻿<div class="card-body">
+    <div class="card-body lookup-values-displayer">
+        @Html.DropDownList("PrelDecisionID", null, htmlAttributes: new { @size = 6, @class = "form-control" })
+    </div>
+</div>
+<div class="lookup-footer">
+    <a asp-controller="PrelDecision" asp-action="Create" class="btn btn-primary">Create</a>
+    <a asp-controller="PrelDecision" asp-action="Edit" class="btn btn-primary linkClick">Edit</a>
+    <a asp-controller="PrelDecision" asp-action="Delete" class="btn btn-primary linkClick">Delete</a>
+</div>

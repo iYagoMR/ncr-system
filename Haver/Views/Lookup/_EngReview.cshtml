@@ -1,0 +1,30 @@
+﻿<div class="card-body">
+@*     <form asp-action="InsertFromExcel" asp-controller="EngReview" method="post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="control-label custom-file-label">Upload Excel File:</label>
+                    <div class="mb-3">
+                        <input class="form-control" type="file" id="theExcel" name="theExcel">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Upload Data" class="btn btn-secondary" />
+                </div>
+            </div>
+            <div class="col-md-7">
+                <p>
+                    Your excel file must have one column named Review.<br />
+                </p>
+            </div>
+        </div>
+    </form> *@
+    <div class="card-body lookup-values-displayer">
+        @Html.DropDownList("EngReviewID", null, htmlAttributes: new { @size = 6, @class = "form-control" })
+    </div>
+</div>
+<div class="lookup-footer">
+    <a class="btn btn-primary" asp-controller="EngReview" asp-action="Create">Create</a>
+    <a class="btn btn-primary linkClick" asp-controller="EngReview" asp-action="Edit">Edit</a>
+    <a class="btn btn-primary linkClick" asp-controller="EngReview" asp-action="Delete">Delete</a>
+</div>
