@@ -271,8 +271,8 @@
                             <span class="position-absolute">
                                 <i class="bi bi-search"></i>
                             </span>
-                            <input name="supplierSelected" class="form-control" list="suppliersSatalistOptions" id="supplierDataList" placeholder="Type to search..." oninput="loadSuppliersChart()">
-                            <datalist id="suppliersSatalistOptions">
+                            <input name="supplierSelected" class="form-control" list="suppliersDatalistOptions" id="suppliersDataList" placeholder="Type to search..." oninput="loadSuppliersChart()">
+                            <datalist id="suppliersDatalistOptions">
                                 @foreach (var supplier in ViewBag.Suppliers)
                                 {
                                     <option value="@supplier.SupplierSummary"></option>
@@ -282,14 +282,14 @@
                     </div>
                 </div>
 
-                <div id="SupEnoughData">
-                    <h6 id="Status">---</h6>
-                    <h2><span id="supPartsDefectiveAmount">--</span><span id="supChangeBadge" class="badge"><span id="supPeriodChange">--</span><i class="bi bi-triangle-fill"></i></span></h2>
+                <div id="supEnoughData">
+                    <h6 id="supStatus">---</h6>
+                    <h2><span id="supPartsDefectiveAmount">--</span><span id="supChangeBadge" class="badge"><span id="supPeriodChange">---</span><i class="bi bi-triangle-fill"></i></span></h2>
                     <div class="chart-container">
-                        <canvas id="myChart"></canvas>
+                        <canvas id="mySuppliersChart"></canvas>
                     </div>
                 </div>
-                <div id="SupNotEnoughData">
+                <div id="supNotEnoughData">
                     <div class="chart-container">
                         <h1>Not enough data</h1>
                     </div>
@@ -364,7 +364,7 @@
         //Initialize variables
         var mySuppliersChart;
 
-        var firstOption = document.querySelector('#suppliersSatalistOptions option:first-child');
+        var firstOption = document.querySelector('#suppliersDatalistOptions option:first-child');
         if (firstOption) {
             // Set the value of the input field to the value of the first option
             document.getElementById('suppliersDataList').value = firstOption.value;
@@ -373,15 +373,16 @@
         loadSuppliersChart();
 
         function loadSuppliersChart() {
-            var partSelected = document.getElementById("suppliersDataList").value;
-            var period = document.getElementById("SuppliersPeriod").value;
+            var supplierSelected = document.getElementById("suppliersDataList").value;
+            var period = document.getElementById("PeriodSuppliers").value;
+            console.log('loadSuppliersChart called');
 
             $.ajax({
                 type: "GET",
                 url: "/NCR/SuppliersChartModel",
                 data:
                 {
-                    partSelected: partSelected,
+                    supplierSelected: supplierSelected,
                     period: period
                 },
                 contextType: "application/json; charset=utf8",
@@ -397,37 +398,37 @@
                     var enoughData = response.enoughData;
 
                     // Assign the values to the HTML elements
-                    $('#partsDefectiveAmount').text(partsDefectiveAmount);
-                    $('#periodChange').text((isChangePositive ? '+' : '-') + periodChange + '%');
-                    $('#ChangeBadge i').css('display', 'block');
-                    $('#EnoughData').css('display', 'flex');
-                    $('#NotEnoughData').css('display', 'none');
+                    $('#supPartsDefectiveAmount').text(partsDefectiveAmount);
+                    $('#supPeriodChange').text((isChangePositive ? '+' : '-') + periodChange + '%');
+                    $('#supChangeBadge i').css('display', 'block');
+                    $('#supEnoughData').css('display', 'flex');
+                    $('#supNotEnoughData').css('display', 'none');
 
                     if (periodChange == null) {
-                        $('#periodChange').text('---');
-                        $('#ChangeBadge').css('background-color', '#AF3939');
-                        $('#ChangeBadge i').css('display', 'none');
+                        $('#supPeriodChange').text('---');
+                        $('#supChangeBadge').css('background-color', '#AF3939');
+                        $('#supChangeBadge i').css('display', 'none');
                     }
                     if (enoughData == false) {
-                        $('#EnoughData').css('display', 'none');
-                        $('#NotEnoughData').css('display', 'flex');
+                        $('#supEnoughData').css('display', 'none');
+                        $('#supNotEnoughData').css('display', 'flex');
                     }
                     if (isChangePositive == false) {
-                        $('#Status').text('There was a PoP decrease');
-                        $('#ChangeBadge').css('background-color', '#027A49');
-                        $('#ChangeBadge i').css('color', '#00D308');
-                        $('#ChangeBadge i').css('transform', 'rotate(3.142rad)');
+                        $('#supStatus').text('There was a PoP decrease');
+                        $('#supChangeBadge').css('background-color', '#027A49');
+                        $('#supChangeBadge i').css('color', '#00D308');
+                        $('#supChangeBadge i').css('transform', 'rotate(3.142rad)');
                     }
                     else if (isChangePositive == true) {
-                        $('#Status').text('There was a PoP increase');
+                        $('#supStatus').text('There was a PoP increase');
                     }
                     if (periodChange == null) {
-                        $('#Status').text('Not enough data to compare');
+                        $('#supStatus').text('Not enough data to compare');
                     }
                 },
                 error: function (xhr, status, error) {
-                    $('#EnoughData').css('display', 'none');
-                    $('#NotEnoughData').css('display', 'flex');
+                    $('#supEnoughData').css('display', 'none');
+                    $('#supNotEnoughData').css('display', 'flex');
                     // Handle errors if the AJAX request fails
                     console.error(error); // Log the error to the console
                 }
@@ -438,7 +439,7 @@
                 url: "/NCR/GenSuppliersChart",
                 data:
                 {
-                    partSelected: partSelected,
+                    supplierSelected: supplierSelected,
                     period: period
                 },
                 contextType: "application/json; charset=utf8",
@@ -462,13 +463,13 @@
                 }
 
                 // Destroy the old chart instance if it exists
-                if (myChart) {
-                    myChart.destroy();
+                if (mySuppliersChart) {
+                    mySuppliersChart.destroy();
                 }
 
-                const chartCanvas = document.getElementById('myChart');
+                const chartCanvas = document.getElementById('mySuppliersChart');
 
-                myChart = new Chart(chartCanvas, {
+                mySuppliersChart = new Chart(chartCanvas, {
                     type: 'line',
                     data: {
                         labels: _labels,

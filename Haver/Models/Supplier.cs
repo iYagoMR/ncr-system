@@ -12,7 +12,7 @@ namespace Haver.Models
         {
             get
             {
-                return ($"{SupplierName} - {Convert.ToString(SupplierCode)}");
+                return ($"{Convert.ToString(SupplierCode)} - {SupplierName}");
             }
         }
 

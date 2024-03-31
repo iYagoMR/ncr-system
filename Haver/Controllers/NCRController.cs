@@ -442,7 +442,7 @@ namespace Haver.Controllers
                 //Is data enough?
                 partsDefectiveVM.EnoughData = qualRepsLinkedToSupplier.Count() <= 3 ? false : true;
 
-                (double periodChange, int total, int previousTotal) periodChange = PoPChange(supplierNumber, timeSpan);
+                (double periodChange, int total, int previousTotal) periodChange = PoPChange(supplierNumber, timeSpan, "supplier");
 
                 //Assign values to ViewModel
                 partsDefectiveVM.StartDate = formattedStartDate;
@@ -695,7 +695,7 @@ namespace Haver.Controllers
                     int sumQuantDefective = items.Sum(p => p.QuantDefective);
 
                     //Method to calculate PoP change
-                    (double periodChange, int total, int previousTotal) periodChange = PoPChange(Convert.ToString(part.PartNumber), timeSpan);
+                    (double periodChange, int total, int previousTotal) periodChange = PoPChange(Convert.ToString(part.PartNumber), timeSpan, "part");
 
                     PartsDefectiveVM partDefective = new PartsDefectiveVM
                     {
@@ -784,7 +784,7 @@ namespace Haver.Controllers
                 //Is data enough?
                 partsDefectiveVM.EnoughData = qualRepsLinkedToPart.Count() <= 3 ? false : true;
 
-                (double periodChange, int total, int previousTotal) periodChange = PoPChange(partNumber, timeSpan);
+                (double periodChange, int total, int previousTotal) periodChange = PoPChange(partNumber, timeSpan, "part");
 
                 //Assign values to ViewModel
                 partsDefectiveVM.StartDate = formattedStartDate;
@@ -896,24 +896,36 @@ namespace Haver.Controllers
             return null;
         }
 
-        public (double periodChange, int total, int previousTotal) PoPChange(string partNumber, List<DateOnly> timeSpan)
+        public (double periodChange, int total, int previousTotal) PoPChange(string objNumber, List<DateOnly> timeSpan, string objectName)
         {
+            List<QualityRepresentative> qualRepsLinked = new List<QualityRepresentative>();
+            List<QualityRepresentative> previousQualRepsLinked = new List<QualityRepresentative>();
 
-            // Put in a list all the Qual Rep forms associated with the Part
-            var qualRepsLinkedToPart = GetQualRepsByPart(partNumber, timeSpan, false);
-            // Put in a list all the Qual Rep forms associated with the from the previous timeSpan
-            var previousQualRepsLinkedToPart = GetQualRepsByPart(partNumber, timeSpan, true);
+            if (objectName == "part")
+            {
+                // Put in a list all the Qual Rep forms associated with the Part
+                qualRepsLinked = GetQualRepsByPart(objNumber, timeSpan, false);
+                // Put in a list all the Qual Rep forms associated with the from the previous timeSpan
+                previousQualRepsLinked = GetQualRepsByPart(objNumber, timeSpan, true);
+            }
+            else
+            {
+                // Put in a list all the Qual Rep forms associated with the Supplier
+                qualRepsLinked = GetQualRepsBySupplier(objNumber, timeSpan, false);
+                // Put in a list all the Qual Rep forms associated with the previous timeSpan
+                previousQualRepsLinked = GetQualRepsBySupplier(objNumber, timeSpan, true);
+            }
 
             int total = 0;
             int previousTotal = 0;
 
             //Loop trhough the qualRep's and add to the lists the total and months
-            foreach (var QualRep in qualRepsLinkedToPart)
+            foreach (var QualRep in qualRepsLinked)
             {
                 total += QualRep.QuantDefective;
             }
 
-            foreach (var QualRep in previousQualRepsLinkedToPart)
+            foreach (var QualRep in previousQualRepsLinked)
             {
                 previousTotal += QualRep.QuantDefective;
             }

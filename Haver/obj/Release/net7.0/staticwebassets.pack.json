@@ -65,6 +65,14 @@
       "PackagePath": "staticwebassets\\assets\\fonts\\Inter\\static\\Inter-Thin.ttf"
     },
     {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\assets\\icons\\search-symbol.png",
+      "PackagePath": "staticwebassets\\assets\\icons\\search-symbol.png"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\assets\\icons\\search.svg",
+      "PackagePath": "staticwebassets\\assets\\icons\\search.svg"
+    },
+    {
       "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\assets\\images\\logo-horizontal-blue.png",
       "PackagePath": "staticwebassets\\assets\\images\\logo-horizontal-blue.png"
     },

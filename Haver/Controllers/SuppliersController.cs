@@ -95,7 +95,7 @@ namespace Haver.Controllers
 
             //Try updating it with the values posted
             if (await TryUpdateModelAsync<Supplier>(SupplierToUpdate, "",
-                d => d.SupplierName))
+                d => d.SupplierName, d => d.SupplierCode))
             {
                 try
                 {

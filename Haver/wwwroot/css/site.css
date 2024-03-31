@@ -1213,7 +1213,7 @@ main > form > table > tbody > tr > td:nth-child(7){
 #NotEnoughData {
     display: none;
 }
-#NotEnoughData .chart-container{
+#NotEnoughData .chart-container, #supNotEnoughData .chart-container{
     justify-content: center;
     align-items: center;
 }
@@ -1223,7 +1223,7 @@ main > form > table > tbody > tr > td:nth-child(7){
     margin-top: auto;
     margin-bottom: 50%;
 }
-#EnoughData {
+#EnoughData, #supEnoughData {
     height: 100%;
     display: flex;
     flex-direction: column;

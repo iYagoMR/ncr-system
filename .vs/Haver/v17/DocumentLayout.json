@@ -3,24 +3,32 @@
   "WorkspaceRootPath": "D:\\My Work\\backup5\\haver7-iago\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|d:\\my work\\backup5\\haver7-iago\\haver\\controllers\\ncrcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|solutionrelative:haver\\controllers\\ncrcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|d:\\my work\\backup5\\haver7-iago\\haver\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
-      "RelativeMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|solutionrelative:haver\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+      "AbsoluteMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|d:\\my work\\backup5\\haver7-iago\\haver\\views\\supplier\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|solutionrelative:haver\\views\\supplier\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|d:\\my work\\backup5\\haver7-iago\\haver\\views\\ncr\\analytics.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|solutionrelative:haver\\views\\ncr\\analytics.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|d:\\my work\\backup5\\haver7-iago\\haver\\controllers\\ncrcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|solutionrelative:haver\\controllers\\ncrcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|d:\\my work\\backup5\\haver7-iago\\haver\\viewmodels\\ncrtimelistvm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|solutionrelative:haver\\viewmodels\\ncrtimelistvm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|d:\\my work\\backup5\\haver7-iago\\haver\\models\\supplier.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|solutionrelative:haver\\models\\supplier.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|d:\\my work\\backup5\\haver7-iago\\haver\\viewmodels\\partsdefectivevm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|solutionrelative:haver\\viewmodels\\partsdefectivevm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|d:\\my work\\backup5\\haver7-iago\\haver\\controllers\\supplierscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|solutionrelative:haver\\controllers\\supplierscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|d:\\my work\\backup5\\haver7-iago\\haver\\viewmodels\\composedanalyticslistsvm.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -34,7 +42,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 376,
-          "SelectedChildIndex": 11,
+          "SelectedChildIndex": 10,
           "Children": [
             {
               "$type": "Bookmark",
@@ -78,6 +86,31 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Edit.cshtml",
+              "DocumentMoniker": "D:\\My Work\\backup5\\haver7-iago\\Haver\\Views\\Supplier\\Edit.cshtml",
+              "RelativeDocumentMoniker": "Haver\\Views\\Supplier\\Edit.cshtml",
+              "ToolTip": "D:\\My Work\\backup5\\haver7-iago\\Haver\\Views\\Supplier\\Edit.cshtml",
+              "RelativeToolTip": "Haver\\Views\\Supplier\\Edit.cshtml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAcAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-03-31T21:32:26.57Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Supplier.cs",
+              "DocumentMoniker": "D:\\My Work\\backup5\\haver7-iago\\Haver\\Models\\Supplier.cs",
+              "RelativeDocumentMoniker": "Haver\\Models\\Supplier.cs",
+              "ToolTip": "D:\\My Work\\backup5\\haver7-iago\\Haver\\Models\\Supplier.cs",
+              "RelativeToolTip": "Haver\\Models\\Supplier.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABkAAAAtAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-03-31T21:28:47.104Z"
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 3,
               "Title": "NCRTimeListVM.cs",
               "DocumentMoniker": "D:\\My Work\\backup5\\haver7-iago\\Haver\\ViewModels\\NCRTimeListVM.cs",
@@ -86,31 +119,30 @@
               "RelativeToolTip": "Haver\\ViewModels\\NCRTimeListVM.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAAfAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-03-31T07:44:52.385Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-03-31T07:44:52.385Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "NCRController.cs",
               "DocumentMoniker": "D:\\My Work\\backup5\\haver7-iago\\Haver\\Controllers\\NCRController.cs",
               "RelativeDocumentMoniker": "Haver\\Controllers\\NCRController.cs",
               "ToolTip": "D:\\My Work\\backup5\\haver7-iago\\Haver\\Controllers\\NCRController.cs",
               "RelativeToolTip": "Haver\\Controllers\\NCRController.cs",
-              "ViewState": "AQIAAAcLAAAAAAAAAAAAADMLAAAIAAAA",
+              "ViewState": "AQIAALABAAAAAAAAAAAQwL8BAABAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-03-28T02:28:11.935Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
               "Title": "Analytics.cshtml",
               "DocumentMoniker": "D:\\My Work\\backup5\\haver7-iago\\Haver\\Views\\NCR\\Analytics.cshtml",
               "RelativeDocumentMoniker": "Haver\\Views\\NCR\\Analytics.cshtml",
               "ToolTip": "D:\\My Work\\backup5\\haver7-iago\\Haver\\Views\\NCR\\Analytics.cshtml",
               "RelativeToolTip": "Haver\\Views\\NCR\\Analytics.cshtml",
-              "ViewState": "AQIAAPYAAAAAAAAAAAAEwBMBAAA6AAAA",
+              "ViewState": "AQIAAH0BAAAAAAAAAAAAAJUBAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2024-03-27T00:49:24.878Z",
               "EditorCaption": ""
@@ -118,6 +150,30 @@
             {
               "$type": "Document",
               "DocumentIndex": 5,
+              "Title": "PartsDefectiveVM.cs",
+              "DocumentMoniker": "D:\\My Work\\backup5\\haver7-iago\\Haver\\ViewModels\\PartsDefectiveVM.cs",
+              "RelativeDocumentMoniker": "Haver\\ViewModels\\PartsDefectiveVM.cs",
+              "ToolTip": "D:\\My Work\\backup5\\haver7-iago\\Haver\\ViewModels\\PartsDefectiveVM.cs",
+              "RelativeToolTip": "Haver\\ViewModels\\PartsDefectiveVM.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAAiAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-03-29T16:21:44.361Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "SuppliersController.cs",
+              "DocumentMoniker": "D:\\My Work\\backup5\\haver7-iago\\Haver\\Controllers\\SuppliersController.cs",
+              "RelativeDocumentMoniker": "Haver\\Controllers\\SuppliersController.cs",
+              "ToolTip": "D:\\My Work\\backup5\\haver7-iago\\Haver\\Controllers\\SuppliersController.cs",
+              "RelativeToolTip": "Haver\\Controllers\\SuppliersController.cs",
+              "ViewState": "AQIAACsAAAAAAAAAAAAqwFUAAAAIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-03-31T21:33:49.614Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "ComposedAnalyticsListsVM.cs",
               "DocumentMoniker": "D:\\My Work\\backup5\\haver7-iago\\Haver\\ViewModels\\ComposedAnalyticsListsVM.cs",
               "RelativeDocumentMoniker": "Haver\\ViewModels\\ComposedAnalyticsListsVM.cs",
@@ -125,40 +181,7 @@
               "RelativeToolTip": "Haver\\ViewModels\\ComposedAnalyticsListsVM.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAIAAAApAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-03-30T20:00:35.87Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "PartsDefectiveVM.cs",
-              "DocumentMoniker": "D:\\My Work\\backup5\\haver7-iago\\Haver\\ViewModels\\PartsDefectiveVM.cs",
-              "RelativeDocumentMoniker": "Haver\\ViewModels\\PartsDefectiveVM.cs",
-              "ToolTip": "D:\\My Work\\backup5\\haver7-iago\\Haver\\ViewModels\\PartsDefectiveVM.cs",
-              "RelativeToolTip": "Haver\\ViewModels\\PartsDefectiveVM.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAIAAAAfAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-03-29T16:21:44.361Z",
-              "EditorCaption": ""
-            }
-          ]
-        },
-        {
-          "DockedWidth": 386,
-          "SelectedChildIndex": 0,
-          "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "site.css",
-              "DocumentMoniker": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\css\\site.css",
-              "RelativeDocumentMoniker": "Haver\\wwwroot\\css\\site.css",
-              "ToolTip": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\css\\site.css",
-              "RelativeToolTip": "Haver\\wwwroot\\css\\site.css",
-              "ViewState": "AQIAAEUBAAAAAAAAAAAUwFcBAAARAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2024-03-27T03:30:59.444Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-03-30T20:00:35.87Z"
             }
           ]
         }

@@ -39,7 +39,16 @@ main {
 
 /*Universal*/
 
-.control-label{
+.row {
+    --bs-gutter-x: 2rem;
+    --bs-gutter-y: 2rem;
+}
+
+.dropdown-item{
+    cursor: pointer;
+}
+
+.control-label {
     color: var(--text3);
 }
 
@@ -157,7 +166,7 @@ tbody > tr > td:nth-child(5) {
 tbody > tr > td:nth-child(6) {
     background-color: var(--white);
 }
-tbody > tr > td:nth-child(7) {
+tbody > tr > td:last-child{
     border-radius: 0 5px 5px 0;
     text-align: end;
     padding: 0.5rem 1rem;
@@ -198,11 +207,14 @@ tbody tr.grey-rows td {
 .layout-mobile-nav a, .ncr-mobile-nav a {
     color: var(--text3);
 }
-/*Recovery codes*/
 
+/*DataList*/
+
+
+/*Recovery codes*/
 .col-md-12.recovery-codes {
-    display:flex;
-    flex-wrap:wrap;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 
@@ -858,6 +870,13 @@ header{
 }
 
 /*NCR log*/
+
+/*Modals*/
+.modal-body.download{
+    display: none;
+}
+
+
 .main-nav {
     flex-direction: column;
     align-items: unset;
@@ -1023,7 +1042,6 @@ main > form > table > tbody > tr > td:nth-child(7){
 }
 /*Analytics*/
 
-
 .dashboard-cards.analytics div div .col-md-6, .dashboard-cards.analytics .col-md-12 {
     display: flex;
 }
@@ -1037,63 +1055,22 @@ main > form > table > tbody > tr > td:nth-child(7){
     flex-wrap: nowrap;
 }
 
-.card.chart {
-    border: none;
-    border-radius: 8px;
+/*Chart configs header*/
+.standard-card-header .card-body {
     height: 100%;
 }
-.card.chart .card-body{
-    padding: 1.25rem 1.56rem;
-    gap: 1.56rem;
-    display: flex;
-    flex-direction: column;
-}
 
-.chart-card-header {
-    display: flex;
-    align-items: center;
-}
-.chart-card-header i {
-    margin-left: 0.9rem;
-}
-
-.chart-card-header > div {
-    display: flex;
-    gap: 1rem;
-    flex: 1;
-    margin-left: 4.4rem;
-}
-.chart-card-header .form-group {
-    margin-bottom: 0;
-    flex: 1;
-}
-.chart-card-header h5{
-    margin: 0;
-    font-size: 1.56rem;
-    font-weight: 400;
+.chart .standard-card-header div:nth-child(2) > div:nth-child(2) span i {
     color: var(--text3);
 }
-.chart-card-header i{
-    font-size: 1.5rem;
-    color: var(--blue);
-}
-
-.chart .card-body h6 {
-    margin: 0 0 10px 0;
-    font-size: 1rem;
-    color: var(--text2);
-    font-weight: 400;
-}
-.chart .card-body h2 {
-    font-size: 1.6rem;
-    color: var(--text2);
-    font-weight: 600;
+.chart .standard-card-header span {
     display: flex;
-    gap: 10px;
-    align-items: center;
-    margin-bottom: 1.3rem;
+    margin-top: 10px;
 }
-.chart .card-body span {
+.chart .standard-card-header div:nth-child(2) i {
+    margin-left: 0.9rem;
+}
+.chart .card-body .badge {
     background-color: var(--red);
     border-radius: 5px;
     color: white;
@@ -1103,23 +1080,155 @@ main > form > table > tbody > tr > td:nth-child(7){
     font-size: 14px;
     font-weight: 400;
     align-items: center;
-
     height: 2.2rem;
 }
-.chart .card-body span i {
+
+.chart .card-body .badge i {
     color: red;
 }
-#myChart {
-    width: 100%;
-    height: 100%;
-    flex: 1;
+
+/*List configs*/
+.positive-change-list{ color: var(--positive); }
+.negative-change-list{ color: var(--green); }
+
+.list .navigator {margin-top: auto;}
+.list .navigator ul{margin-bottom: 0;}
+
+.standard-card.list td:last-child {
+    text-align: center;
 }
 
+.standard-card.list .standard-card-header div:nth-child(2){
+    min-width: 150px;
+}
+/*Standad card header*/
+.standard-card-header div:nth-child(2) > div:nth-child(2) {
+    position: relative;
+}
+.standard-card-header div:nth-child(2) .form-group {
+    margin-bottom: 0;
+}
+.standard-card-header span i {
+    font-size: 17px;
+}
+.standard-card-header input {
+    padding-left: 45px;
+}
+.standard-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.standard-card-header > div {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+.standard-card-header .form-group:nth-child(2) {
+    margin-bottom: 0;
+    flex: 1;
+}
+.standard-card-header h5 {
+    margin: 0;
+    font-size: 1.56rem;
+    font-weight: 400;
+    color: var(--text3);
+}
+.standard-card-header i{
+    position: relative;
+    font-size: 1.5rem;
+    color: var(--blue);
+    cursor: pointer;
+}
+.standard-card-header i:hover::after {
+    content: attr(data-tooltip); 
+    position: absolute;
+    bottom: 100%; 
+    transform: translateX(-50%); 
+    min-width: 200px;
+    max-width: 300px;
+    padding: 5px 10px;
+    background-color: #333;
+    color: #fff;
+    border-radius: 5px;
+    font-size: 14px;
+    white-space: pre-line;
+    text-align: center;
+}
+
+/*Standard Card */
+
+.standard-card th input {
+    width: 60px;
+    cursor: pointer;
+    border: none;
+}
+.standard-card .sc-th input{
+    width: 150px;
+}
+.standard-card .lf-th input{
+    width: 80px;
+}
+
+.standard-card th input:hover {
+    border: none;
+}
+
+.standard-card .card-body h6 {
+    margin: 0 0 10px 0;
+    font-size: 1rem;
+    color: var(--text2);
+    font-weight: 400;
+}
+.standard-card .card-body h2 {
+    font-size: 1.6rem;
+    color: var(--text2);
+    font-weight: 600;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 1.3rem;
+}
+.card.standard-card {
+    border: none;
+    border-radius: 8px;
+    height: 100%;
+}
+.card.standard-card .card-body {
+    padding: 1.25rem 1.56rem;
+    gap: 1.56rem;
+    display: flex;
+    flex-direction: column;
+}
+
+
+#myChart {
+    flex: 1;
+}
 .chart-container {
     display: flex;
     width: 100%;
 }
-
+/*Is data enough?*/
+#NotEnoughData {
+    display: none;
+}
+#NotEnoughData .chart-container, #supNotEnoughData .chart-container{
+    justify-content: center;
+    align-items: center;
+}
+.notEnoughDataText {
+    opacity: 0.5;
+    text-align: center;
+    margin-top: auto;
+    margin-bottom: 50%;
+}
+#EnoughData, #supEnoughData {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+/*Is data enough?*/
 
 /*Dashboard*/
 .dashboard-cards div div .col-md-6, .col-md-12 {
@@ -1279,6 +1388,21 @@ input[type="file"]::file-selector-button {
 
 /*media queries*/
 
+@media (max-width:1199px){
+    .row.graphs-charts .standard-card-header {
+        flex-direction: column;
+        gap: 0.7rem;
+        align-items: unset;
+        justify-content: unset;
+    }
+}
+
+@media (min-width: 991px){
+    .chart-container {
+        min-height: 380px;
+    }
+}
+
 @media (max-width: 991px) {
     /*NCR log */
     /*Filtering fields*/
@@ -1357,6 +1481,15 @@ input[type="file"]::file-selector-button {
         font-size: 20px;
     }
 
+    /*Analytics*/
+    /*NCR Cards*/
+    .row.analytics {
+        flex-wrap: wrap;
+    }
+    .row.analytics .col-md-6:nth-child(2){
+        margin-top: 0;
+    }
+
 
 }
 
@@ -1378,6 +1511,7 @@ input[type="file"]::file-selector-button {
     }
 
     .stats-cards-dashboard, .stats-cards-dashboard .col-md-6{
+        text-align: center;
         margin-bottom: 0.95rem;
     }
 
@@ -1402,14 +1536,41 @@ input[type="file"]::file-selector-button {
     .user-account .row > div:first-child{
         margin-bottom: 1.5rem; 
     }
+
+    /*Analytics*/
+    /*Analytics page Dropdowns*/
+    .standard-card-header div:nth-child(2) .form-group{
+        flex: 1;
+    }
+    /*Stats cards*/
+    .dashboard-cards .stats-cards-dashboard, .stats-cards-dashboard .col-md-6 {
+        margin-bottom: 0rem;
+    }
+
+    /*charts*/
+    .chart-container {
+        height: 300px;
+    }
+    /*Tables*/
+    .table-container{ 
+        overflow-y: scroll;
+    }
 }
 @media (max-width: 575px) {
     /*Main Nav*/
-    .main-nav.ncr{
+    .main-nav.ncr {
         display: none;
     }
-    .ncr-mobile-nav{
+
+    .ncr-mobile-nav {
         display: block;
+    }
+}
+@media (max-width: 450px) {
+    /*Analytics*/
+    .standard-card-header div:nth-child(2) {
+        flex-direction: column;
+        align-items: unset;
     }
     
 }
