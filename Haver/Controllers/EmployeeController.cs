@@ -5,27 +5,33 @@ using Haver.Utilities;
 using Haver.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
+using System.Text.Encodings.Web;
 
 namespace Haver.Controllers
 {
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class EmployeeController : CognizantController
     {
         private readonly HaverContext _context;
         private readonly ApplicationDbContext _identityContext;
         private readonly IMyEmailSender _emailSender;
+        private readonly IEmailSender _iEmailSender;
         private readonly UserManager<IdentityUser> _userManager;
 
         public EmployeeController(HaverContext context,
-            ApplicationDbContext identityContext, IMyEmailSender emailSender,
+            ApplicationDbContext identityContext, IMyEmailSender emailSender, IEmailSender iEmailSender,
             UserManager<IdentityUser> userManager)
         {
             _context = context;
             _identityContext = identityContext;
             _emailSender = emailSender;
             _userManager = userManager;
+            _iEmailSender = iEmailSender;
         }
         public async Task<IActionResult> Index()
         {
@@ -39,6 +45,7 @@ namespace Haver.Controllers
                     Active = e.Active,
                     ID = e.ID,
                     FirstName = e.FirstName,
+                    EmployeeThumbnail = e.EmployeeThumbnail,
                     LastName = e.LastName,
                     Phone = e.Phone,
                     NumberOfPushSubscriptions = e.Subscriptions.Count(),
@@ -79,7 +86,7 @@ namespace Haver.Controllers
                     _context.Add(employee);
                     await _context.SaveChangesAsync();
 
-                    InsertIdentityUser(employee.Email, selectedRoles);
+                    InsertIdentityUser(employee.Email, selectedRoles, employee.Phone);
 
                     //Send Email to new Employee - commented out till email configured
                     await InviteUserToResetPassword(employee, null);
@@ -106,6 +113,7 @@ namespace Haver.Controllers
                 FirstAid = employee.FirstAid,
                 Active = employee.Active,
                 ID = employee.ID,
+                EmployeeThumbnail = employee.EmployeeThumbnail,
                 FirstName = employee.FirstName,
                 LastName = employee.LastName,
                 Phone = employee.Phone
@@ -135,6 +143,7 @@ namespace Haver.Controllers
                     FirstAid = e.FirstAid,
                     Active = e.Active,
                     ID = e.ID,
+                    EmployeeThumbnail = e.EmployeeThumbnail,
                     FirstName = e.FirstName,
                     LastName = e.LastName,
                     Phone = e.Phone
@@ -171,10 +180,12 @@ namespace Haver.Controllers
             {
                 return NotFound();
             }
+            var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == employeeToUpdate.Email);
 
             //Note the current Email and Active Status
             bool ActiveStatus = employeeToUpdate.Active;
             string databaseEmail = employeeToUpdate.Email;
+            string databasePhone = employeeToUpdate.Phone;
 
 
             if (await TryUpdateModelAsync<Employee>(employeeToUpdate, "",
@@ -183,6 +194,7 @@ namespace Haver.Controllers
             {
                 try
                 {
+
                     await _context.SaveChangesAsync();
                     //Save successful so go on to related changes
 
@@ -198,7 +210,7 @@ namespace Haver.Controllers
                     {
                         //You reactivating the user, create them and
                         //give them the selected roles
-                        InsertIdentityUser(employeeToUpdate.Email, selectedRoles);
+                        InsertIdentityUser(employeeToUpdate.Email, selectedRoles, employeeToUpdate.Phone);
                     }
                     else if (employeeToUpdate.Active == true && ActiveStatus == true)
                     {
@@ -212,6 +224,11 @@ namespace Haver.Controllers
 
                             //This deletes the user's old login from the security system
                             await DeleteIdentityUser(databaseEmail);
+                        }
+                        //If you Changed the phone, update the number in the user account
+                        if (employeeToUpdate.Phone != databasePhone)
+                        {
+                            var setPhoneUserAcc = await _userManager.SetPhoneNumberAsync(user, employeeToUpdate.Phone);
                         }
                         else
                         {
@@ -329,7 +346,7 @@ namespace Haver.Controllers
             }
         }
 
-        private void InsertIdentityUser(string Email, string[] selectedRoles)
+        private void InsertIdentityUser(string Email, string[] selectedRoles, string Phone = null)
         {
             //Create the IdentityUser in the IdentitySystem
             //Note: this is similar to what we did in ApplicationSeedData
@@ -339,6 +356,7 @@ namespace Haver.Controllers
                 {
                     UserName = Email,
                     Email = Email,
+                    PhoneNumber = Phone,
                     EmailConfirmed = true //since we are creating it!
                 };
                 //Create a random password with a default 8 characters
@@ -355,7 +373,7 @@ namespace Haver.Controllers
             }
             else
             {
-                TempData["message"] = "The Login Account for " + Email + " was already in the system.";
+                TempData["messageGreen"] = "The Account for " + Email + " was already in the system.";
             }
         }
 
@@ -371,22 +389,33 @@ namespace Haver.Controllers
 
         private async Task InviteUserToResetPassword(Employee employee, string message)
         {
-            message ??= "Hello " + employee.FirstName + "<br /><p>Please navigate to:<br />" +
-                        "<a href='https://haverp2team7-314145.azurewebsites.net/Identity/Account/ForgotPassword' title='https://haverp2team7-314145.azurewebsites.net/Identity/Account/ForgotPassword' target='_blank' rel='noopener'>" +
-                        "https://haverp2team7-314145.azurewebsites.net/Identity/Account/ForgotPassword</a><br />" +
-                        " and create a new password for " + employee.Email + " using Forgot Password.</p>";
             try
             {
-                await _emailSender.SendOneAsync(employee.FullName, employee.Email,
-                "Account Registration", message);
-                TempData["message"] = "Invitation email sent to " + employee.FullName + " at " + employee.Email;
+                //Send reset password link to new employee
+                if (ModelState.IsValid)
+                {
+                    var user = await _userManager.FindByEmailAsync(employee.Email);
+
+                    var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                    var callbackUrl = Url.Page(
+                        "/Account/ResetPassword",
+                        pageHandler: null,
+                        values: new { area = "Identity", code, email = user.Email},
+                        protocol: Request.Scheme);
+
+                    await _iEmailSender.SendEmailAsync(
+                        employee.Email,
+                        "Set Password",
+                        $"Hello {employee.FullName} please set your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                
+                    TempData["messageGreen"] = "Invitation email sent to " + employee.FullName + " at " + employee.Email;
+                }
             }
             catch (Exception)
             {
                 TempData["message"] = "Could not send Invitation email to " + employee.FullName + " at " + employee.Email;
             }
-
-
         }
 
 

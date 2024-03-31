@@ -9,223 +9,299 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Haver
 build_property.RootNamespace = Haver
-build_property.ProjectDir = D:\My Work\merged-login\haver7-iago\Haver\
+build_property.ProjectDir = D:\My Work\backup5\haver7-iago\Haver\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 7.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = D:\My Work\merged-login\haver7-iago\Haver
+build_property.MSBuildProjectDirectory = D:\My Work\backup5\haver7-iago\Haver
 build_property._RazorSourceGeneratorDebug = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Areas/Identity/Pages/Account/Login.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Areas/Identity/Pages/Account/AccessDenied.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxBY2Nlc3NEZW5pZWQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/My Work/backup5/haver7-iago/Haver/Areas/Identity/Pages/Account/ConfirmEmail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxDb25maXJtRW1haWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/My Work/backup5/haver7-iago/Haver/Areas/Identity/Pages/Account/ConfirmEmailChange.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxDb25maXJtRW1haWxDaGFuZ2UuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/My Work/backup5/haver7-iago/Haver/Areas/Identity/Pages/Account/ForgotPassword.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxGb3Jnb3RQYXNzd29yZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/My Work/backup5/haver7-iago/Haver/Areas/Identity/Pages/Account/ForgotPasswordConfirmation.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxGb3Jnb3RQYXNzd29yZENvbmZpcm1hdGlvbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/My Work/backup5/haver7-iago/Haver/Areas/Identity/Pages/Account/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxMb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Areas/Identity/Pages/Account/Manage/_ManageNav.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Areas/Identity/Pages/Account/LoginWith2fa.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxMb2dpbldpdGgyZmEuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/My Work/backup5/haver7-iago/Haver/Areas/Identity/Pages/Account/LoginWithRecoveryCode.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxMb2dpbldpdGhSZWNvdmVyeUNvZGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/My Work/backup5/haver7-iago/Haver/Areas/Identity/Pages/Account/Manage/DeletePersonalData.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxNYW5hZ2VcRGVsZXRlUGVyc29uYWxEYXRhLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/My Work/backup5/haver7-iago/Haver/Areas/Identity/Pages/Account/Manage/DownloadPersonalData.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxNYW5hZ2VcRG93bmxvYWRQZXJzb25hbERhdGEuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/My Work/backup5/haver7-iago/Haver/Areas/Identity/Pages/Account/Manage/Email.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxNYW5hZ2VcRW1haWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/My Work/backup5/haver7-iago/Haver/Areas/Identity/Pages/Account/Manage/EnableAuthenticator.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxNYW5hZ2VcRW5hYmxlQXV0aGVudGljYXRvci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/My Work/backup5/haver7-iago/Haver/Areas/Identity/Pages/Account/Manage/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxNYW5hZ2VcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/My Work/backup5/haver7-iago/Haver/Areas/Identity/Pages/Account/Manage/PersonalData.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxNYW5hZ2VcUGVyc29uYWxEYXRhLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/My Work/backup5/haver7-iago/Haver/Areas/Identity/Pages/Account/Manage/ShowRecoveryCodes.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxNYW5hZ2VcU2hvd1JlY292ZXJ5Q29kZXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/My Work/backup5/haver7-iago/Haver/Areas/Identity/Pages/Account/Manage/TwoFactorAuthentication.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxNYW5hZ2VcVHdvRmFjdG9yQXV0aGVudGljYXRpb24uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/My Work/backup5/haver7-iago/Haver/Areas/Identity/Pages/Account/Manage/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxNYW5hZ2VcX0xheW91dC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/My Work/backup5/haver7-iago/Haver/Areas/Identity/Pages/Account/Manage/_ManageNav.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxNYW5hZ2VcX01hbmFnZU5hdi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Areas/Identity/Pages/Account/Manage/_ViewImports.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Areas/Identity/Pages/Account/Manage/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxNYW5hZ2VcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Areas/Identity/Pages/Account/_ViewImports.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Areas/Identity/Pages/Account/ResetPassword.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxSZXNldFBhc3N3b3JkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/My Work/backup5/haver7-iago/Haver/Areas/Identity/Pages/Account/ResetPasswordConfirmation.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxSZXNldFBhc3N3b3JkQ29uZmlybWF0aW9uLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/My Work/backup5/haver7-iago/Haver/Areas/Identity/Pages/Account/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcQWNjb3VudFxfVmlld0ltcG9ydHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Areas/Identity/Pages/_ValidationScriptsPartial.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Areas/Identity/Pages/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcX1ZhbGlkYXRpb25TY3JpcHRzUGFydGlhbC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Areas/Identity/Pages/_ViewImports.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Areas/Identity/Pages/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Areas/Identity/Pages/_ViewStart.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Areas/Identity/Pages/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/EmployeeAccount/Details.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/EmployeeAccount/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1wbG95ZWVBY2NvdW50XERldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/EmployeeAccount/Edit.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/EmployeeAccount/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1wbG95ZWVBY2NvdW50XEVkaXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/Employee/Create.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/Employee/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1wbG95ZWVcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/Employee/Edit.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/Employee/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1wbG95ZWVcRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/Employee/Index.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/Employee/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW1wbG95ZWVcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/EngReview/Create.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/EngReview/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW5nUmV2aWV3XENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/EngReview/Delete.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/EngReview/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW5nUmV2aWV3XERlbGV0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/EngReview/Edit.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/EngReview/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRW5nUmV2aWV3XEVkaXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/Home/Index.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/Home/Privacy.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/Lookup/Index.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/Lookup/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9va3VwXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/Lookup/_EngReview.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/Lookup/_EngReview.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9va3VwXF9FbmdSZXZpZXcuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/Lookup/_Part.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/Lookup/_Part.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9va3VwXF9QYXJ0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/Lookup/_PrelDecision.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/Lookup/_PrelDecision.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9va3VwXF9QcmVsRGVjaXNpb24uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/Lookup/_Problem.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/Lookup/_Problem.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9va3VwXF9Qcm9ibGVtLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/Lookup/_Supplier.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/Lookup/_Supplier.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9va3VwXF9TdXBwbGllci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/NCR/Archived.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/NCR/Analytics.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTkNSXEFuYWx5dGljcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/My Work/backup5/haver7-iago/Haver/Views/NCR/Archived.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTkNSXEFyY2hpdmVkLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/NCR/Archiving.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/NCR/Archiving.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTkNSXEFyY2hpdmluZy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/NCR/Create.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/NCR/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTkNSXENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/NCR/Delete.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/NCR/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTkNSXERlbGV0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/NCR/Details.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/NCR/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTkNSXERldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/NCR/Edit.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/NCR/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTkNSXEVkaXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/NCR/EditLookup.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/NCR/EditLookup.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTkNSXEVkaXRMb29rdXAuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/NCR/Index.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/NCR/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTkNSXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/Part/Create.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/Part/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFydFxDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/Part/Delete.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/Part/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFydFxEZWxldGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/Part/Edit.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/Part/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGFydFxFZGl0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/PrelDecision/Create.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/PrelDecision/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJlbERlY2lzaW9uXENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/PrelDecision/Delete.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/PrelDecision/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJlbERlY2lzaW9uXERlbGV0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/PrelDecision/Edit.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/PrelDecision/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJlbERlY2lzaW9uXEVkaXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/Problem/Create.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/Problem/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvYmxlbVxDcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/Problem/Delete.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/Problem/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvYmxlbVxEZWxldGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/Problem/Edit.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/Problem/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvYmxlbVxFZGl0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/Shared/Error.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/Shared/_BackToList.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/Shared/_BackToList.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9CYWNrVG9MaXN0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/Shared/_LoginPartial.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/Shared/_LoginPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Mb2dpblBhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/Shared/_PageSizeModal.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/Shared/_PageSizeModal.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9QYWdlU2l6ZU1vZGFsLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/Shared/_PagingNavBar.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/Shared/_PagingNavBar.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9QYWdpbmdOYXZCYXIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/Shared/_ValidationScriptsPartial.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/Shared/_ViewHeading.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/Shared/_ViewHeading.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WaWV3SGVhZGluZy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/Supplier/Create.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/Supplier/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3VwcGxpZXJcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/Supplier/Delete.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/Supplier/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3VwcGxpZXJcRGVsZXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/Supplier/Edit.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/Supplier/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3VwcGxpZXJcRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/_ViewImports.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/_ViewStart.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/My Work/merged-login/haver7-iago/Haver/Views/Shared/_Layout.cshtml]
+[D:/My Work/backup5/haver7-iago/Haver/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-2frekbpj7o

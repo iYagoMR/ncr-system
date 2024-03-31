@@ -38,7 +38,7 @@ namespace Haver.Models
 
         [Required(ErrorMessage = "You must enter the start date of the report.")]
         [Display(Name = "Date")]
-        public DateOnly QualityRepDate { get; set; } = DateOnly.FromDateTime(DateTime.Now);
+        public DateOnly QualityRepDate { get; set; }
 
         [Required(ErrorMessage = "The Quality Representative's signature is required.")]
         [StringLength(255, ErrorMessage = "Quality Representative sign is limited to 255 characters.")]
@@ -72,6 +72,9 @@ namespace Haver.Models
         [Display(Name = "Video Links")]
         public List<VideoLink> VideoLinks { get; set; }
 
-
+        public static implicit operator List<object>(QualityRepresentative v)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

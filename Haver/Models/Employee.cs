@@ -55,5 +55,8 @@ namespace Haver.Models
         public bool Active { get; set; } = true;
 
         public ICollection<Subscription> Subscriptions { get; set; }
+
+        public EmployeePhoto EmployeePhoto { get; set; }
+        public EmployeeThumbnail EmployeeThumbnail { get; set; }
     }
 }

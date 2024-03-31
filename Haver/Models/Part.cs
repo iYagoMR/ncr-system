@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Haver.DraftModels;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics.CodeAnalysis;
 
@@ -27,5 +28,7 @@ namespace Haver.Models
         [Display(Name = "Supplier")]
         public int? SupplierID { get; set; }
         public Supplier Supplier { get; set; }
+
+        public ICollection<QualityRepresentative> QualityRepresentatives { get; set; } = new HashSet<QualityRepresentative>();
     }
 }

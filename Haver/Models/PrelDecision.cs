@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Haver.DraftModels;
+using System.ComponentModel.DataAnnotations;
 
 namespace Haver.Models
 {
@@ -11,6 +12,6 @@ namespace Haver.Models
         [StringLength(255, ErrorMessage = "Decision is limited to 255 characters.")]
         public string Decision { get; set; }
 
-        public ICollection<Purchasing> Purchasings { get; set; } = new HashSet<Purchasing>();
+        public ICollection<Operations> OperationsS { get; set; } = new HashSet<Operations>();
     }
 }

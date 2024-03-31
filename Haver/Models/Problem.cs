@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Haver.DraftModels;
+using System.ComponentModel.DataAnnotations;
 
 namespace Haver.Models
 {

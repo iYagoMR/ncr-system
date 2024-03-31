@@ -1,73 +1,145 @@
 ﻿@model IEnumerable<Haver.ViewModels.EmployeeAdminVM>
 
-<div>
+<div class=" standard-page-header">
     <h1>Employee list</h1>
-    <hr/>
+    <hr class="standard-border-bottom" />
     <div class="text-danger">@TempData["message"]</div>
+    <div class="text-success">@TempData["messageGreen"]</div>
 </div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.FullName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Phone)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserRoles)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Active)
-            </th>
-            <th class="text-center" style="min-width:120px">
-                <a asp-action="Create" class="btn btn-secondary"
-                   role="button" data-bs-toggle="tooltip" title="Create New @ViewData["ControllerFriendlyName"]">
-                    <i class="bi bi-person-add"></i>Create
-                </a>
-            </th>
-        </tr>
-    </thead>
-    <tbody>
+<div class="d-none d-lg-block">
+    <table class="table table-borderless">
+        <thead>
+            <tr>
+                <th>
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.FullName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Phone)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UserRoles)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Active)
+                </th>
+                <th class="text-center" style="min-width:120px">
+                    <a asp-action="Create" class="btn btn-secondary"
+                       role="button" data-bs-toggle="tooltip" title="Create New @ViewData["ControllerFriendlyName"]">
+                        <i class="bi bi-person-plus"></i>Create
+                    </a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                    @{
+                        if (item.EmployeeThumbnail?.Content != null)
+                        {
+                            
+                            string imageBase64 = Convert.ToBase64String(item.EmployeeThumbnail.Content);
+                            string imageSrc = string.Format("data:" + item.EmployeeThumbnail.MimeType + ";base64,{0}", imageBase64);
+                            <img src="@imageSrc" alt="Profile Picture of @item.FullName" title="Profile Picture of @item.FullName" class="img-fluid emp-image-table-row" />
+                        }
+                        else
+                        {
+                                <img src="~/assets/images/user-pic-default.jpg" alt="Default profile picture" title="Default profile picture" class="img-fluid emp-image-table-row" />
+                        }
+                    }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FullName)<br />
+                        Email: @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PhoneNumber)
+                    </td>
+                    <td>
+                        @{
+                            foreach (var r in item.UserRoles)
+                            {
+                                @:  @r <br />
+                            }
+                        }
+                    </td>
+                    <td>
+                        <div class="form-group form-switch">
+                            <input class="form-check-input" type="checkbox" disabled="disabled"
+                            @(Html.Raw(item.Active ? "checked=\"checked\"" : "")) />
+                        </div>
+                    </td>
+                    <td class="text-center">
+                        <a asp-action="Edit" asp-route-id="@item.ID" class="btn btn-primary"
+                           role="button" data-bs-toggle="tooltip" title="Edit @ViewData["ControllerFriendlyName"]">
+                            <i class="bi bi-stickies"></i>Edit
+                        </a>
+                        @if (item.NumberOfPushSubscriptions > 0)
+                        {
+                            @:| @{
+                                <a asp-controller="WebPush" asp-action="Send" asp-route-id="@item.ID">Send Notification</a>
+                            }
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<br />
+<div class="ncr-cards container-fluid d-block d-lg-none">
+
+    <a asp-action="Create" class="btn btn-secondary emp-create-btn"
+       role="button" data-bs-toggle="tooltip" title="Create New @ViewData["ControllerFriendlyName"]">
+        <i class="bi bi-person-plus"></i>Create
+    </a>
+
+    <div class="row">
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FullName)<br />
-                    Email: @Html.DisplayFor(modelItem => item.Email)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PhoneNumber)
-                </td>
-                <td>
-                    @{
-                        foreach (var r in item.UserRoles)
-                        {
-                            @:  @r <br />
-                        }
-                    }
-                </td>
-                <td>
-                    <div class="form-group form-switch">
-                        <input class="form-check-input" type="checkbox" disabled="disabled"
-                        @(Html.Raw(item.Active ? "checked=\"checked\"" : "")) />
-                    </div>
-                </td>
-                <td class="text-center">
-                    <a asp-action="Edit" asp-route-id="@item.ID" class="btn btn-primary"
-                       role="button" data-bs-toggle="tooltip" title="Edit @ViewData["ControllerFriendlyName"]">
-                        <i class="bi bi-stickies"></i>Edit
-                    </a>
-                    @if (item.NumberOfPushSubscriptions > 0)
+            <div class="card mb-3">
+                <div class="card-header">
+                    @if (item.Active == true)
                     {
-                        @:| @{
-                            <a asp-controller="WebPush" asp-action="Send" asp-route-id="@item.ID">Send Notification</a>
-                        }
+                        <span style="color: var(--green);">Active</span>
                     }
-                </td>
-            </tr>
+                    else if (item.Active == false)
+                    {
+                        <span style="color: var(--red);">Inactive</span>
+                    }
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col">
+                            @{
+                                if (item.EmployeeThumbnail?.Content != null)
+                                {
+
+                                    string imageBase64 = Convert.ToBase64String(item.EmployeeThumbnail.Content);
+                                    string imageSrc = string.Format("data:" + item.EmployeeThumbnail.MimeType + ";base64,{0}", imageBase64);
+                                    <img src="@imageSrc" alt="Profile Picture of @item.FullName" title="Profile Picture of @item.FullName" class="img-fluid emp-image-table-row margin" />
+                                }
+                                else
+                                {
+                                    <img src="~/assets/images/user-pic-default.jpg" alt="Default profile picture" title="Default profile picture" class="img-fluid emp-image-table-row margin" />
+                                }
+                            }
+                            <p><strong>Name:</strong> @Html.DisplayFor(modelItem => item.FullName)</p>
+                            <p><strong>Phone:</strong> @Html.DisplayFor(modelItem => item.Phone)</p>
+                            <p><strong>Roles:</strong> @Html.DisplayFor(modelItem => item.UserRoles)</p>
+                        </div>
+                        <div class="col">
+                            <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.ID">Edit</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         }
-    </tbody>
-</table>
+    </div>
+</div>
 

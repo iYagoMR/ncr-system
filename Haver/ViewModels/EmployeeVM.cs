@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Haver.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace Haver.ViewModels
 {
@@ -39,5 +40,8 @@ namespace Haver.ViewModels
 
         [Display(Name = "Number Of Push Subscriptions")]
         public int NumberOfPushSubscriptions { get; set; }
+
+        public EmployeePhoto EmployeePhoto { get; set; }
+        public EmployeeThumbnail EmployeeThumbnail { get; set; }
     }
 }

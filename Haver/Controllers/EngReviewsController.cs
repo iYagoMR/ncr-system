@@ -12,9 +12,9 @@ using OfficeOpenXml;
 using System.Numerics;
 using Microsoft.AspNetCore.Authorization;
 
-
 namespace Haver.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class EngReviewController : LookupsController
     {
         private readonly HaverContext _context;

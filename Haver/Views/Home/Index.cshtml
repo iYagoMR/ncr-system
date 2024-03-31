@@ -32,7 +32,7 @@
                 <div class="card" style="width: 100%;">
                     <div class="card-body">
                         <h5 class="card-title">NCRs in <b>Operations</b></h5>
-                        <p class="card-text">@ViewBag.PurchasingCount</p>
+                        <p class="card-text">@ViewBag.OperationsCount</p>
                     </div>
                 </div>
             </div>
@@ -61,12 +61,25 @@
     <div class="col-md-6 dashboard-btns">
         <div class="row">
             <div class="col-md-12">
-                <a class="btn btn-primary" asp-area="" asp-controller="Lookup" asp-action="Index"><i class="bi bi-file-earmark-spreadsheet"></i>Lookups</a>
-                <a class="btn btn-primary" asp-area="" asp-controller="Employee" asp-action="Index"><i class="bi bi-person"></i>Employees</a>
-                <a class="btn btn-primary" asp-area="" asp-controller="NCR" asp-action="Index"><i class="bi bi-card-list"></i>NCR</a>
-                <a class="btn btn-secondary app-actions" asp-area="" asp-controller="NCR" asp-action="CreateQualityRepresentative"><i class="bi bi-pencil-square"></i>Create NCR</a>
-                <a class="btn btn-secondary app-actions" asp-area="" asp-controller="Employee" asp-action="Create"><i class="bi bi-person-plus"></i>Create Employee</a>
-                <a class="btn btn-secondary app-actions disabled" asp-area="" aria-disabled="true"><i class="bi bi-bar-chart"></i>Analytics</a>
+                @if (User.IsInRole("Admin"))
+                {
+                    <a class="btn btn-primary" asp-area="" asp-controller="Lookup" asp-action="Index"><i class="bi bi-file-earmark-spreadsheet"></i>Lookups</a>
+                    <a class="btn btn-primary" asp-area="" asp-controller="Employee" asp-action="Index"><i class="bi bi-person"></i>Employees</a>
+                    <a class="btn btn-primary" asp-area="" asp-controller="NCR" asp-action="Index"><i class="bi bi-card-list"></i>NCR</a>
+                    <a class="btn btn-secondary app-actions" asp-area="" asp-controller="NCR" asp-action="CreateQualityRepresentative"><i class="bi bi-pencil-square"></i>Create NCR</a>
+                    <a class="btn btn-secondary app-actions" asp-area="" asp-controller="Employee" asp-action="Create"><i class="bi bi-person-plus"></i>Create Employee</a>
+                    <a class="btn btn-secondary app-actions disabled" asp-area="" aria-disabled="true"><i class="bi bi-bar-chart"></i>Analytics</a>
+                }
+                @if (User.IsInRole("Procurement") || User.IsInRole("Engineer") || User.IsInRole("Quality Inspector") || User.IsInRole("Operations Manager"))
+                {
+                    <a class="btn btn-primary disabled" asp-area="" asp-controller="Lookup" asp-action="Index" aria-disabled="true"><i class="bi bi-file-earmark-spreadsheet"></i>Lookups</a>
+                    <a class="btn btn-primary disabled" asp-area="" asp-controller="Employee" asp-action="Index" aria-disabled="true"><i class="bi bi-person"></i>Employees</a>
+                    <a class="btn btn-primary" asp-area="" asp-controller="NCR" asp-action="Index"><i class="bi bi-card-list"></i>NCR</a>
+                    <a class="btn btn-secondary app-actions disabled" asp-area="" asp-controller="NCR" asp-action="CreateQualityRepresentative" aria-disabled="true"><i class="bi bi-pencil-square"></i>Create NCR</a>
+                    <a class="btn btn-secondary app-actions disabled" asp-area="" asp-controller="Employee" asp-action="Create" aria-disabled="true"><i class="bi bi-person-plus"></i>Create Employee</a>
+                    <a class="btn btn-secondary app-actions disabled" asp-area="" aria-disabled="true"><i class="bi bi-bar-chart"></i>Analytics</a>
+                }
+                
             </div>
         </div>
     </div>

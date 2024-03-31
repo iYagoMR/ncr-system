@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Haver.DraftModels;
+using System.ComponentModel.DataAnnotations;
 
 namespace Haver.Models
 {
@@ -12,6 +13,5 @@ namespace Haver.Models
         public string Review { get; set; }
 
         public ICollection<Engineering> Engineerings { get; set; } = new HashSet<Engineering>();
-
     }
 }

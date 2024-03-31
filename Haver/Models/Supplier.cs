@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Haver.DraftModels;
+using System.ComponentModel.DataAnnotations;
 
 namespace Haver.Models
 {
@@ -24,7 +25,7 @@ namespace Haver.Models
         [Required(ErrorMessage = "Supplier name is required.")]
         public int SupplierCode { get; set; }
 
-        public ICollection<QualityRepresentative> QualityRepresentatives { get; set; }
+        public ICollection<QualityRepresentative> QualityRepresentatives { get; set; } = new HashSet<QualityRepresentative>();
 
     }
 }

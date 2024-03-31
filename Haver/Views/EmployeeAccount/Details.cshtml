@@ -1,9 +1,11 @@
 ﻿@model Haver.ViewModels.EmployeeVM
 
-<div>
-    <h1>Employee Account Details</h1>
-    <h3>Account for: @Model.FullName</h3>
-    <hr />
+<div class="standard-page-header">
+    <h1>Account Details</h1>
+    <h4>@User.Identity.Name</h4>
+    <nav class="main-nav navbar-expand-sm navbar-toggleable-sm">
+        <hr />
+    </nav>
 </div>
 
 <div>
@@ -11,35 +13,44 @@
         <strong>Note:</strong>
         <ul id="errorMessage"></ul>
     </div>
-    <dl class="row">
-        <dt class="col-sm-4">
-            @Html.DisplayNameFor(model => model.FirstName)
-        </dt>
-        <dd class="col-sm-6">
-            @Html.DisplayFor(model => model.FirstName)
-        </dd>
-        <dt class="col-sm-4">
-            @Html.DisplayNameFor(model => model.LastName)
-        </dt>
-        <dd class="col-sm-6">
-            @Html.DisplayFor(model => model.LastName)
-        </dd>
-        <dt class="col-sm-4">
-            @Html.DisplayNameFor(model => model.Phone)
-        </dt>
-        <dd class="col-sm-6">
-            @Html.DisplayFor(model => model.PhoneNumber)
-        </dd>
-        <dt class="col-sm-4">
-            @Html.DisplayNameFor(model => model.NumberOfPushSubscriptions)
-        </dt>
-        <dd class="col-sm-6">
-            @Html.DisplayFor(model => model.NumberOfPushSubscriptions)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.ID">Edit Account Details</a>
+    <div class="row">
+        <div class="col-md-4">
+            @{
+                if (Model.EmployeePhoto?.Content != null)
+                {
+                    @:<div>
+                        string imageBase64 = Convert.ToBase64String(Model.EmployeePhoto.Content);
+                        string imageSrc = string.Format("data:" + Model.EmployeePhoto.MimeType + ";base64,{0}", imageBase64);
+                        <img src="@imageSrc" alt="Profile Picture of @Model.FullName" title="Profile Picture of @Model.FullName" class="img-fluid rounded emp-image" />
+                    @:</div><hr />
+                }
+                else
+                {
+                    <p class="control-label">No profile picture</p>
+                    <img src="~/assets/images/user-pic-default.jpg" alt="Default profile picture" title="Default profile picture" class="img-fluid rounded emp-image" />
+                    <hr />
+                }
+            }
+            <div class="form-group">
+                <label class="control-label">First Name</label>
+                <input asp-for="FirstName" class="form-control" readonly />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Last Name</label>
+                <input asp-for="LastName" class="form-control" readonly/>
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Phone</label>
+                <input asp-for="Phone" class="form-control" readonly />
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <a asp-action="Edit" class="btn btn-primary" asp-route-id="@Model.ID">Edit Account Details</a>
+            </div>
+        </div>
+    </div>
 </div>
 
 

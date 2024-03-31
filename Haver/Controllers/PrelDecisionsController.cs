@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Haver.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class PrelDecisionController : LookupsController
     {
         private readonly HaverContext _context;

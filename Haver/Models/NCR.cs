@@ -1,5 +1,6 @@
 ﻿using Microsoft.Build.ObjectModelRemoting;
 using System.ComponentModel.DataAnnotations;
+using Haver.DraftModels;
 
 namespace Haver.Models
 {
@@ -28,26 +29,41 @@ namespace Haver.Models
         [Display(Name = "Phase")]
         public string Phase { get; set; }    
 
-
         [Display(Name = "Created on")]
-        public DateOnly CreatedOn { get; set; }
+        public DateTime CreatedOn { get; set; }
+
+        [Display(Name = "Created on DateOnly")]
+        public DateOnly CreatedOnDO { get; set; }
 
         //Hard Coded role for testing purposes ONLY
         public string UserRole = "Quality Representative";
 
         public QualityRepresentative QualityRepresentative { get; set; }
         public Engineering Engineering { get; set; }
-        public Purchasing Purchasing { get; set; }
+        public Operations Operations { get; set; }
         public Procurement Procurement { get; set; }
         public Reinspection Reinspection { get; set; }
 
         public int? QualityRepresentativeID { get; set; }
         public int? EngineeringID { get; set; }
-        public int? PurchasingID { get; set; }
+        public int? OperationsID { get; set; }
         public int? ProcurementID { get; set; }
         public int? ReinspectionID { get; set; }
 
         public int? PrevNCRID { get; set; }
         public int? NewNCRID { get; set; }
+
+        //Draft models
+        public DraftQualityRepresentative DraftQualityRepresentative { get; set; }
+        public DraftEngineering DraftEngineering { get; set; }
+        public DraftOperations DraftOperations { get; set; }
+        public DraftProcurement DraftProcurement { get; set; }
+        public DraftReinspection DraftReinspection { get; set; }
+
+        public int? DraftQualityRepresentativeID { get; set; }
+        public int? DraftEngineeringID { get; set; }
+        public int? DraftOperationsID { get; set; }
+        public int? DraftProcurementID { get; set; }
+        public int? DraftReinspectionID { get; set; }
     }
 }

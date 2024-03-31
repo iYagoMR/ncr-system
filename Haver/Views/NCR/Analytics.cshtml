@@ -62,7 +62,7 @@
                 <div class="card" style="width: 100%;">
                     <div class="card-body">
                         <h5 class="card-title">NCRs in <b>Operations</b></h5>
-                        <p class="card-text">@ViewBag.PurchasingCount</p>
+                        <p class="card-text">@ViewBag.OperationsCount</p>
                     </div>
                 </div>
             </div>
@@ -90,41 +90,125 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-md-7">
-        <div class="card chart">
+<div class="row graphs-charts">
+    <div class="col-lg-7">
+        <div class="card standard-card chart">
             <div class="card-body">
-                <div class="chart-card-header">
-                    <h5 class="card-title">Parts Defective</h5>
-                    <i class="bi bi-info-circle-fill"></i>
+                <div class="standard-card-header">
                     <div>
-                        <div class="form-group col-md-6">
-                            @Html.DropDownList("SupplierID", null, "All Suppliers", htmlAttributes: new { @class = "form-select" })
+                        <h5 class="card-title">Parts</h5>
+                        <i class="bi bi-info-circle-fill" data-tooltip="This chart illustrates the total number of defective parts along with the Period-over-Period (PoP) change for the selected part."></i>
+                    </div>
+                    <div>
+                        <div class="form-group col-md-5">
+                            @{
+                                List<string> items = ViewData["Items"] as List<string>;
+
+                                            @Html.DropDownList("period", new SelectList(items), htmlAttributes: new { @class = "form-select", onchange = "loadPartsChart()" })
+                            }
                         </div>
-                        <div class="form-group col-md-6">
-                            <input class="form-control" list="datalistOptions" id="exampleDataList" placeholder="Type to search...">
+                        <div class="form-group col-md-7">
+                            <span class="position-absolute">
+                                <i class="bi bi-search"></i>
+                            </span>
+                            <input name="partSelected" class="form-control" list="datalistOptions" id="exampleDataList" placeholder="Type to search..." oninput="loadPartsChart()">
                             <datalist id="datalistOptions">
+                                @foreach (var part in ViewBag.Parts)
+                                {
+                                    <option value="@part.PartSummary"></option>
+                                }
                             </datalist>
                         </div>
                     </div>
                 </div>
 
-                <div>
-                    <h6>This month</h6>
-                    <h2>45<span class="badge">+10%<i class="bi bi-triangle-fill"></i></span></h2>
-                    <div>
-                        <canvas id="line-chart" style="width: 100%; height: auto;"></canvas>
+                <div id="EnoughData">
+                    <h6 id="Status">---</h6>
+                    <h2><span id="partsDefectiveAmount">--</span><span id="ChangeBadge" class="badge"><span id="periodChange">--</span><i class="bi bi-triangle-fill"></i></span></h2>
+                    <div class="chart-container">
+                        <canvas id="myChart"></canvas>
+                    </div>
+                </div>
+                <div id="NotEnoughData">
+                    <div class="chart-container">
+                        <h1>Not enough data</h1>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="col-md-5">
-        <div class="table-box">
-            <h4>Overdue NCRs</h4>
+    <div class="col-lg-5">
+        <div class="card standard-card list">
+            <div id="EnoughDataPartsList" class="card-body">
+                <div class="standard-card-header">
+                    <div>
+                        <h5 class="card-title">Parts list</h5>
+                        <i class="bi bi-info-circle-fill" data-tooltip="This list provides a ranking of the most defective parts, accompanied by their total count and the Period-over-Period (PoP) change ."></i>
+                    </div>
+                    <div>
+                        <div class="form-group col-md-12">
+                            @{
+                                            @Html.DropDownList("PartsListPeriod", new SelectList(items), htmlAttributes: new { @class = "form-select", onchange = "loadPartsList()" })
+                            }
+                        </div>
+                    </div>
+                </div>
 
-            <div class="d-none d-lg-block">
+                <div class="table-container">
+                    <table class="table table-borderless">
+                        <thead>
+                            <tr>
+                                <th>
+                                    PART NO.
+                                </th>
+                                <th>
+                                    <input name="actionButton" value="TOTAL" onclick="sortPartsList()" readonly />
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </th>
+                                <th>
+                                    CHANGE
+                                </th>
+                            </tr>
+                        </thead>
+
+                        <tbody class="ncr-list-row parts-defective-list">
+                            <tr class="grey-rows">
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="navigator" id="navigator-PartsList">
+                    <ul class="pagination">
+                        <li class="btn btn-primary previous" onclick="changePage('previous')">Previous</li>
+                        <li class="btn btn-primary page-counter-parts">1 of 3</li>
+                        <li class="btn btn-primary next" onclick="changePage('next')">Next</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    
+</div>
+
+<div class="col-lg-12">
+    <div class="card standard-card list">
+        <div id="EnoughDataNCRT" class="card-body">
+            <div class="standard-card-header">
+                <div>
+                    <h5 class="card-title">NCR time tracker </h5>
+                    <i class="bi bi-info-circle-fill" data-tooltip="This list provides a comprehensive overview of NCRs, detailing the days elapsed since their inception or since their most recent accomplishment."></i>
+                </div>
+@*                 <div>
+                    <div class="form-group col-md-12">
+                    </div>
+                </div> *@
+            </div>
+
+            <div class="table-container">
                 <table class="table table-borderless">
                     <thead>
                         <tr>
@@ -132,306 +216,657 @@
                                 NCR NO.
                             </th>
                             <th>
-                                STATUS
-                            </th>
-                            <th>
                                 PHASE
                             </th>
-                            <th>
-                                PO OR PROD NO.
+                            <th class="lf-th">
+                                <input name="actionButton-Time" value="LAST FILLED" onclick="sortNCRsTimeList('LAST FILLED')" readonly />
+                                <i class="bi bi-arrow-down-up"></i>
                             </th>
-                            <th>
-                                SUPPLIER
+                            <th class="sc-th">
+                                <input name="actionButton-Time" value="SINCE CREATION" onclick="sortNCRsTimeList('SINCE CREATION')" readonly />
+                                <i class="bi bi-arrow-down-up"></i>
                             </th>
-                            <th>
-                                CREATED ON
-                            </th>
-
-                            <th></th>
                         </tr>
                     </thead>
 
-                    <tbody class="ncr-list-row">
-                        @foreach (var item in Model)
-                        {
-                            <tr class="grey-rows">
-                                <td>
-                                    <div>@Html.DisplayFor(modelItem => item.NCRNum)</div>
-                                </td>
-                                <td>
-                                    @if (item.Status == "Active")
-                                    {
-                                        <span style="color: var(--green);">@Html.DisplayFor(modelItem => item.Status)</span>
-                                    }
-                                    else if (item.Status == "Closed")
-                                    {
-                                        <span style="color: var(--yellow);">@Html.DisplayFor(modelItem => item.Status)</span>
-                                    }
-                                    else if (item.Status == "Rejected" || item.Status == "Rejected Again")
-                                    {
-                                        <span style="color: var(--red);">@Html.DisplayFor(modelItem => item.Status)</span>
-                                    }
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.Phase)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.QualityRepresentative.PoNo)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.QualityRepresentative.Supplier.SupplierName)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.CreatedOn)
-                                </td>
-                                <td>
-                                    <a class="btn btn-primary" asp-controller="NCR" asp-action="Details" asp-route-id="@item.ID"><i class="bi bi-card-list"></i>Details</a>
-                                </td>
-                            </tr>
-                        }
+                    <tbody class="ncr-list-row ncr-time-list">
+                        <tr class="grey-rows">
+                        </tr>
                     </tbody>
+
                 </table>
-
             </div>
 
-            <div class="ncr-cards container-fluid d-block d-lg-none">
-                <div class="row">
-                    @foreach (var item in Model)
-                    {
-                        <div class="card mb-3">
-                            <div class="card-header">
-                                <p>@Html.DisplayFor(modelItem => item.NCRNum)</p>
-                                @if (item.Status == "Active")
-                                {
-                                    <span style="color: var(--green);">@Html.DisplayFor(modelItem => item.Status)</span>
-                                }
-                                else if (item.Status == "Closed")
-                                {
-                                    <span style="color: var(--yellow);">@Html.DisplayFor(modelItem => item.Status)</span>
-                                }
-                                else if (item.Status == "Rejected" || item.Status == "Rejected Again")
-                                {
-                                    <span style="color: var(--red);">@Html.DisplayFor(modelItem => item.Status)</span>
-                                }
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col">
-                                        <p><strong>Phase:</strong> @Html.DisplayFor(modelItem => item.Phase)</p>
-                                        <p><strong>PO Number:</strong> @Html.DisplayFor(modelItem => item.QualityRepresentative.PoNo)</p>
-                                        <p><strong>Supplier:</strong> @Html.DisplayFor(modelItem => item.QualityRepresentative.Supplier.SupplierName)</p>
-                                        <p><strong>Created On:</strong> @Html.DisplayFor(modelItem => item.CreatedOn)</p>
-                                    </div>
-                                    <div class="col">
-                                        <a class="btn btn-primary" asp-controller="NCR" asp-action="Details" asp-route-id="@item.ID"><i class="bi bi-card-list"></i> Details</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    }
-                </div>
+            <div class="navigator" id="navigator-ncr-time-list">
+                <ul class="pagination">
+                    <li class="btn btn-primary previous" onclick="changePageNCRT('previous')">Previous</li>
+                    <li class="btn btn-primary page-counter">1 of 3</li>
+                    <li class="btn btn-primary next" onclick="changePageNCRT('next')">Next</li>
+                </ul>
             </div>
+
+
         </div>
+
     </div>
-    
+
 </div>
 
-<div class="table-box">
-    <h4>Overdue NCRs</h4>
-
-    <div class="d-none d-lg-block">
-        <table class="table table-borderless">
-            <thead>
-                <tr>
-                    <th>
-                        NCR NO.
-                    </th>
-                    <th>
-                        STATUS
-                    </th>
-                    <th>
-                        PHASE
-                    </th>
-                    <th>
-                        PO OR PROD NO.
-                    </th>
-                    <th>
-                        SUPPLIER
-                    </th>
-                    <th>
-                        CREATED ON
-                    </th>
-
-                    <th></th>
-                </tr>
-            </thead>
-
-            <tbody class="ncr-list-row">
-                @foreach (var item in Model)
-                {
-                    <tr class="grey-rows">
-                        <td>
-                            <div>@Html.DisplayFor(modelItem => item.NCRNum)</div>
-                        </td>
-                        <td>
-                            @if (item.Status == "Active")
-                            {
-                                <span style="color: var(--green);">@Html.DisplayFor(modelItem => item.Status)</span>
-                            }
-                            else if (item.Status == "Closed")
-                            {
-                                <span style="color: var(--yellow);">@Html.DisplayFor(modelItem => item.Status)</span>
-                            }
-                            else if (item.Status == "Rejected" || item.Status == "Rejected Again")
-                            {
-                                <span style="color: var(--red);">@Html.DisplayFor(modelItem => item.Status)</span>
-                            }
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Phase)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.QualityRepresentative.PoNo)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.QualityRepresentative.Supplier.SupplierName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.CreatedOn)
-                        </td>
-                        <td>
-                            <a class="btn btn-primary" asp-controller="NCR" asp-action="Details" asp-route-id="@item.ID"><i class="bi bi-card-list"></i>Details</a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-
-    </div>
-
-    <div class="ncr-cards container-fluid d-block d-lg-none">
-        <div class="row">
-            @foreach (var item in Model)
-            {
-                <div class="card mb-3">
-                    <div class="card-header">
-                        <p>@Html.DisplayFor(modelItem => item.NCRNum)</p>
-                        @if (item.Status == "Active")
-                        {
-                            <span style="color: var(--green);">@Html.DisplayFor(modelItem => item.Status)</span>
-                        }
-                        else if (item.Status == "Closed")
-                        {
-                            <span style="color: var(--yellow);">@Html.DisplayFor(modelItem => item.Status)</span>
-                        }
-                        else if (item.Status == "Rejected" || item.Status == "Rejected Again")
-                        {
-                            <span style="color: var(--red);">@Html.DisplayFor(modelItem => item.Status)</span>
-                        }
+<div class="row graphs-charts">
+    <div class="col-lg-7">
+        <div class="card standard-card chart">
+            <div class="card-body">
+                <div class="standard-card-header">
+                    <div>
+                        <h5 class="card-title">Suppliers</h5>
+                        <i class="bi bi-info-circle-fill" data-tooltip="This chart illustrates the total number of defective parts along with the Period-over-Period (PoP) change for the selected supplier."></i>
                     </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col">
-                                <p><strong>Phase:</strong> @Html.DisplayFor(modelItem => item.Phase)</p>
-                                <p><strong>PO Number:</strong> @Html.DisplayFor(modelItem => item.QualityRepresentative.PoNo)</p>
-                                <p><strong>Supplier:</strong> @Html.DisplayFor(modelItem => item.QualityRepresentative.Supplier.SupplierName)</p>
-                                <p><strong>Created On:</strong> @Html.DisplayFor(modelItem => item.CreatedOn)</p>
-                            </div>
-                            <div class="col">
-                                <a class="btn btn-primary" asp-controller="NCR" asp-action="Details" asp-route-id="@item.ID"><i class="bi bi-card-list"></i> Details</a>
-                            </div>
+                    <div>
+                        <div class="form-group col-md-5">
+                            @{
+                                @Html.DropDownList("PeriodSuppliers", new SelectList(items), htmlAttributes: new { @class = "form-select", onchange = "loadSuppliersChart()" })
+                            }
+                        </div>
+                        <div class="form-group col-md-7">
+                            <span class="position-absolute">
+                                <i class="bi bi-search"></i>
+                            </span>
+                            <input name="supplierSelected" class="form-control" list="suppliersSatalistOptions" id="supplierDataList" placeholder="Type to search..." oninput="loadSuppliersChart()">
+                            <datalist id="suppliersSatalistOptions">
+                                @foreach (var supplier in ViewBag.Suppliers)
+                                {
+                                    <option value="@supplier.SupplierSummary"></option>
+                                }
+                            </datalist>
                         </div>
                     </div>
                 </div>
-            }
+
+                <div id="SupEnoughData">
+                    <h6 id="Status">---</h6>
+                    <h2><span id="supPartsDefectiveAmount">--</span><span id="supChangeBadge" class="badge"><span id="supPeriodChange">--</span><i class="bi bi-triangle-fill"></i></span></h2>
+                    <div class="chart-container">
+                        <canvas id="myChart"></canvas>
+                    </div>
+                </div>
+                <div id="SupNotEnoughData">
+                    <div class="chart-container">
+                        <h1>Not enough data</h1>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+
+@*     <div class="col-lg-5">
+        <div class="card standard-card list">
+            <div id="SupEnoughDataList" class="card-body">
+                <div class="standard-card-header">
+                    <div>
+                        <h5 class="card-title">Parts list</h5>
+                        <i class="bi bi-info-circle-fill" data-tooltip="This list provides a ranking of the most defective parts grouped by supplier, accompanied by their total count and the Period-over-Period (PoP) change."></i>
+                    </div>
+                    <div>
+                        <div class="form-group col-md-12">
+                            @{
+                                @Html.DropDownList("SuppliersListPeriod", new SelectList(items), htmlAttributes: new { @class = "form-select", onchange = "loadSuppliersList()" })
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="table table-borderless">
+                        <thead>
+                            <tr>
+                                <th>
+                                    SUPPLIER NAME
+                                </th>
+                                <th>
+                                    <input name="actionButton" value="TOTAL" onclick="sortSuppliersList()" readonly />
+                                    <i class="bi bi-arrow-down-up"></i>
+                                </th>
+                                <th>
+                                    CHANGE
+                                </th>
+                            </tr>
+                        </thead>
+
+                        <tbody class="ncr-list-row suppliers-list">
+                            <tr class="grey-rows">
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="navigator" id="navigator-SuppliersList">
+                    <ul class="pagination">
+                        <li class="btn btn-primary previous" onclick="changePage('previous')">Previous</li>
+                        <li class="btn btn-primary page-counter-suppliers">1 of 3</li>
+                        <li class="btn btn-primary next" onclick="changePage('next')">Next</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+
+    </div> *@
+
 </div>
 
 @section Scripts {
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-
+        
     <script>
-        $(document).ready(function () {
+        //Suppliers chart
+        //Initialize variables
+        var mySuppliersChart;
+
+        var firstOption = document.querySelector('#suppliersSatalistOptions option:first-child');
+        if (firstOption) {
+            // Set the value of the input field to the value of the first option
+            document.getElementById('suppliersDataList').value = firstOption.value;
+        }
+
+        loadSuppliersChart();
+
+        function loadSuppliersChart() {
+            var partSelected = document.getElementById("suppliersDataList").value;
+            var period = document.getElementById("SuppliersPeriod").value;
+
+            $.ajax({
+                type: "GET",
+                url: "/NCR/SuppliersChartModel",
+                data:
+                {
+                    partSelected: partSelected,
+                    period: period
+                },
+                contextType: "application/json; charset=utf8",
+                dataType: "json",
+                success: function (response) {
+                    console.log(response); // Log the response object to the console
+
+                    var startDate = response.startDate;
+                    var endDate = response.endDate;
+                    var partsDefectiveAmount = response.partsDefectiveAmount;
+                    var periodChange = response.periodChange;
+                    var isChangePositive = response.isChangePositive;
+                    var enoughData = response.enoughData;
+
+                    // Assign the values to the HTML elements
+                    $('#partsDefectiveAmount').text(partsDefectiveAmount);
+                    $('#periodChange').text((isChangePositive ? '+' : '-') + periodChange + '%');
+                    $('#ChangeBadge i').css('display', 'block');
+                    $('#EnoughData').css('display', 'flex');
+                    $('#NotEnoughData').css('display', 'none');
+
+                    if (periodChange == null) {
+                        $('#periodChange').text('---');
+                        $('#ChangeBadge').css('background-color', '#AF3939');
+                        $('#ChangeBadge i').css('display', 'none');
+                    }
+                    if (enoughData == false) {
+                        $('#EnoughData').css('display', 'none');
+                        $('#NotEnoughData').css('display', 'flex');
+                    }
+                    if (isChangePositive == false) {
+                        $('#Status').text('There was a PoP decrease');
+                        $('#ChangeBadge').css('background-color', '#027A49');
+                        $('#ChangeBadge i').css('color', '#00D308');
+                        $('#ChangeBadge i').css('transform', 'rotate(3.142rad)');
+                    }
+                    else if (isChangePositive == true) {
+                        $('#Status').text('There was a PoP increase');
+                    }
+                    if (periodChange == null) {
+                        $('#Status').text('Not enough data to compare');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    $('#EnoughData').css('display', 'none');
+                    $('#NotEnoughData').css('display', 'flex');
+                    // Handle errors if the AJAX request fails
+                    console.error(error); // Log the error to the console
+                }
+            });
+
             $.ajax({
                 type: "POST",
-                url: "NCR/GenChart",
-                data: "",
+                url: "/NCR/GenSuppliersChart",
+                data:
+                {
+                    partSelected: partSelected,
+                    period: period
+                },
                 contextType: "application/json; charset=utf8",
                 dataType: "json",
                 success: OnSuccess,
             });
 
             function OnSuccess(data) {
-                const myChart = document.getElementById('line-chart');
                 var _data = data;
                 var _labels = _data[0];
-                var _ChartData = _data[1];
+                var _total = _data[1];
+                var _recordDates = _data[2];
 
-                new Chart(myChart,{
+                // Create an array to hold data for each day of the month
+                var chartData = new Array(_labels.length).fill(0); // Initialize with zeros for all days
+
+                // Insert actual data into the corresponding positions
+                for (var i = 0; i < _recordDates.length; i++) {
+                    var dateIndex = parseInt(_recordDates[i]);
+                    chartData[dateIndex] += _total[i]; // Add to existing value if dateIndex is repeated
+                }
+
+                // Destroy the old chart instance if it exists
+                if (myChart) {
+                    myChart.destroy();
+                }
+
+                const chartCanvas = document.getElementById('myChart');
+
+                myChart = new Chart(chartCanvas, {
                     type: 'line',
                     data: {
                         labels: _labels,
                         datasets: [{
-                            backgroundColor: colors,
-                            data: _ChartData,
+                            backgroundColor: "#19416D",
+                            borderColor: "#19416D",
+                            data: chartData,
                             borderWidth: 1,
-                            borderColor: "#3e95cd",
-                            fill: false
                         }]
                     },
                     options: {
-                        title: {
-                            display: true,
-                            text: 'World population per region (in millions)'
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                ticks: {
+                                    maxRotation: 30,
+                                    minRotation: 0,
+                                    maxTicksLimit: _labels.length > 20 ? _labels.length / 3 : 10,
+                                    source: 'auto',
+                                    autoSkip: true
+                                }
+                            }
                         }
                     }
-                })
-
+                });
             }
-        });
-        // new Chart(document.getElementById("line-chart"), {
-        //     type: 'line',
-        //     data: {
-        //         labels: [1500, 1600, 1700, 1750, 1800, 1850, 1900, 1950, 1999, 2050],
-        //         datasets: [{
-        //             data: [86, 114, 106, 106, 107, 111, 133, 221, 783, 2478],
-        //             label: "Africa",
-        //             borderColor: "#3e95cd",
-        //             fill: false
-        //         }, {
-        //             data: [282, 350, 411, 502, 635, 809, 947, 1402, 3700, 5267],
-        //             label: "Asia",
-        //             borderColor: "#8e5ea2",
-        //             fill: false
-        //         }, {
-        //             data: [168, 170, 178, 190, 203, 276, 408, 547, 675, 734],
-        //             label: "Europe",
-        //             borderColor: "#3cba9f",
-        //             fill: false
-        //         }, {
-        //             data: [40, 20, 10, 16, 24, 38, 74, 167, 508, 784],
-        //             label: "Latin America",
-        //             borderColor: "#e8c3b9",
-        //             fill: false
-        //         }, {
-        //             data: [6, 3, 2, 2, 7, 26, 82, 172, 312, 433],
-        //             label: "North America",
-        //             borderColor: "#c45850",
-        //             fill: false
-        //         }
-        //         ]
-        //     },
-        //     options: {
-        //         title: {
-        //             display: true,
-        //             text: 'World population per region (in millions)'
-        //         }
-        //     }
-        // });
-        
+        }
+
+        //NCRs time list
+        //initialize variables
+        var NCRTimeListPageNumber = 1;
+        var NCRTimeListTotalPages = 0;
+
+        loadNCRsTimeList();
+
+        var actionButtonTimeName; 
+
+        // Function to toggle the state of the button and update the UI
+        function sortNCRsTimeList(name) {
+            if (actionButtonTimeName == 'LAST FILLED' || actionButtonTimeName == 'SINCE CREATION') {
+                actionButtonTimeName = null;
+            }
+            else {
+                actionButtonTimeName = name;
+            }
+            loadNCRsTimeList();
+        }
+
+        function loadNCRsTimeList() {
+
+            loadPage(1);
+
+            // Event handler for pagination links
+            window.changePageNCRT = function (btn) {
+                if (btn == "previous" && NCRTimeListPageNumber != 1) {
+                    var prevPage = NCRTimeListPageNumber - 1;
+                    NCRTimeListPageNumber--;
+                    loadPage(prevPage);
+                }
+                if (btn == "next" && NCRTimeListPageNumber < NCRTimeListTotalPages) {
+                    var nextPage = NCRTimeListPageNumber + 1;
+                    NCRTimeListPageNumber++;
+                    loadPage(nextPage);
+                }
+            };
+
+            function loadPage(pageNum) {
+                $.ajax({
+                    type: 'GET',
+                    url: "/NCR/GetNCRTimeList",
+                    dataType: 'json',
+                    data:
+                    {
+                        actionButton: actionButtonTimeName,
+                        page: NCRTimeListPageNumber,
+                    },
+                    contextType: "application/json; charset=utf8",
+                    dataType: "json",
+                    success: function (response) {
+                        console.log(response);
+
+                        //Assign number of pages to the the universal variable
+                        NCRTimeListTotalPages = response.numbOfPages;
+
+                        // Clear existing table rows
+                        $('.ncr-list-row.ncr-time-list').empty();
+
+                        // Populate table with new data
+                        $.each(response.ncrtPagedData, function (index, item) {
+
+                            var row = '<tr class="grey-rows">' +
+                                '<td><div>' + item.ncrNo + '</td></div>' +
+                                '<td>' + item.phase + '</td>' +
+                                '<td>' + item.lastFilled + '</td>' +
+                                '<td>' + item.sinceCreated + '</td>' +
+                                '</tr>';
+                            $('.ncr-list-row.ncr-time-list').append(row);
+                        });
+
+                        $('#EnoughDataNCRT').css('display', 'flex');
+
+                        $('#navigator-ncr-time-list .page-counter').text(response.pageNum + ' Of ' + response.numbOfPages);
+
+                        //Disable previous btn if in page one
+                        $('#navigator-ncr-time-list  .previous').css('background-color', '#19416d');
+                        if (partsListPageNumber <= 1) {
+                            $('#navigator-ncr-time-list  .previous').css('background-color', 'grey');
+                        }
+                        //Disable next btn if in last page
+                        $('#navigator-ncr-time-list  .next').css('background-color', '#19416d');
+                        if (partsListPageNumber == NCRTimeListTotalPages) {
+                            $('#navigator-ncr-time-list .next').css('background-color', 'grey');
+                        }
+                        if (response.ncrtPagedData.length < 1) {
+                            $('#EnoughDataNCRT .table').css('display', 'none');
+                            var NotEnoughDataText = '<h1 class="notEnoughDataText">Not enough data</h1>'
+                            $('#EnoughDataNCRT').append(NotEnoughDataText);
+                            $('#EnoughDataNCRT .navigator').css('display', 'none');
+                        }
+                    },
+                    error: function (error) {
+                        $('#EnoughDataNCRT .table').css('display', 'none');
+                        var NotEnoughDataText = '<h1 class="notEnoughDataText">Not enough data</h1>'
+                        $('#EnoughDataNCRT').append(NotEnoughDataText);
+                        $('#EnoughDataNCRT .navigator').css('display', 'none');
+                        console.log(error);
+                    }
+                });
+            }
+        };
+
+        //Parts Defective list
+        //initialize variables
+        var partsListPageNumber = 1;
+        var partsListTotalPages = 0;
+
+        loadPartsList();
+
+        var actionButtonName; // Initially false
+
+        // Function to toggle the state of the button and update the UI
+        function sortPartsList() {
+            if (actionButtonName == 'TOTAL') {
+                actionButtonName = null;
+            }
+            else{
+                actionButtonName = 'TOTAL';
+            }
+            loadPartsList();
+        }
+
+        function loadPartsList() {
+            var period = document.getElementById("PartsListPeriod").value;
+            var sortDirection = document.getElementById("PartsListPeriod").value;
+            
+            loadPage(1);
+
+            // Event handler for pagination links
+            window.changePage = function (btn) {
+                if (btn == "previous" && partsListPageNumber != 1) {
+                    var prevPage = partsListPageNumber - 1;
+                    partsListPageNumber--;
+                    loadPage(prevPage);
+                }
+                if (btn == "next" && partsListPageNumber < partsListTotalPages) {
+                    var nextPage = partsListPageNumber + 1;
+                    partsListPageNumber++;
+                    loadPage(nextPage);
+                }
+            };
+
+            function loadPage(pageNum){
+                $.ajax({
+                    type: 'GET',
+                    url: "/NCR/GetPartsDefective",
+                    dataType: 'json',
+                    data:
+                    {
+                        actionButton: actionButtonName,
+                        period: period,
+                        page: partsListPageNumber,
+                    },
+                    contextType: "application/json; charset=utf8",
+                    dataType: "json",
+                    success: function (response) {
+                        console.log(response);
+
+                        //Assign number of pages to the the universal variable
+                        partsListTotalPages = response.numbOfPages;
+
+                        // Clear existing table rows
+                        $('.ncr-list-row.parts-defective-list').empty();
+
+                        // Populate table with new data
+                        $.each(response.pagedData, function (index, item) {
+                            //Decide color of the period change number
+                            var colorClass = '';
+                            if (item.periodChange != null) {
+                                if (item.isChangePositive) {
+                                    colorClass = 'positive-change-list';
+                                } else {
+                                    colorClass = 'negative-change-list';
+                                }
+                            }
+
+                            var row = '<tr class="grey-rows">' +
+                                '<td><div>' + item.partNumber + '</td></div>' +
+                                '<td>' + item.partsDefectiveAmount + '</td>' +
+                                //If period change not null assign it to the list record
+                                '<td class="' + colorClass + '">' + (item.periodChange != null ? (item.isChangePositive ? '+' : '-') + item.periodChange + '%' : '---') + '</td>' +
+                                '</tr>';
+                            $('.ncr-list-row.parts-defective-list').append(row);
+                        });
+
+                        $('#EnoughDataPartsList').css('display', 'flex');
+
+                        $('#navigator-PartsList .page-counter-parts').text(response.pageNum + ' Of ' + response.numbOfPages);
+
+                        //Disable previous btn if in page one
+                        $('#navigator-PartsList .previous').css('background-color', '#19416d');
+                        if(partsListPageNumber <= 1){
+                            $('#navigator-PartsList .previous').css('background-color', 'grey');
+                        }
+                        //Disable next btn if in last page
+                        $('#navigator-PartsList .next').css('background-color', '#19416d');
+                        if (partsListPageNumber == partsListTotalPages) {
+                            $('#navigator-PartsList .next').css('background-color', 'grey');
+                        }
+                        if(response.pagedData.length < 1){
+                            $('#EnoughDataPartsList .table').css('display', 'none');
+                            var NotEnoughDataText = '<h1 class="notEnoughDataText">Not enough data</h1>'
+                            $('#EnoughDataPartsList').append(NotEnoughDataText);
+                            $('#EnoughDataPartsList .navigator').css('display', 'none');
+                        }
+                    },
+                    error: function (error) {
+                        $('#EnoughDataPartsList .table').css('display', 'none');
+                        var NotEnoughDataText = '<h1 class="notEnoughDataText">Not enough data</h1>'
+                        $('#EnoughDataPartsList').append(NotEnoughDataText);
+                        $('#EnoughDataPartsList .navigator').css('display', 'none');
+                        console.log(error);
+                    }
+                });
+            }
+        };
+
+
+        //Parts Defective Chart
+        // Define a variable
+        var myChart;
+
+        var firstOption = document.querySelector('#datalistOptions option:first-child');
+        if (firstOption) {
+            // Set the value of the input field to the value of the first option
+            document.getElementById('exampleDataList').value = firstOption.value;
+        }
+
+        loadPartsChart();
+
+        function loadPartsChart() {
+            var partSelected = document.getElementById("exampleDataList").value;
+            var period = document.getElementById("period").value;
+
+            $.ajax({
+                type: "GET",
+                url: "/NCR/PartsDefective",
+                data:
+                {
+                    partSelected: partSelected,
+                    period: period
+                },
+                contextType: "application/json; charset=utf8",
+                dataType: "json",
+                success: function (response) {
+                    console.log(response); // Log the response object to the console
+
+                    var startDate = response.startDate;
+                    var endDate = response.endDate;
+                    var partsDefectiveAmount = response.partsDefectiveAmount;
+                    var periodChange = response.periodChange;
+                    var isChangePositive = response.isChangePositive;
+                    var enoughData = response.enoughData;
+
+                    // Assign the values to the HTML elements
+                    $('#partsDefectiveAmount').text(partsDefectiveAmount);
+                    $('#periodChange').text((isChangePositive ? '+' : '-') + periodChange + '%');
+                    $('#ChangeBadge i').css('display', 'block');
+                    $('#EnoughData').css('display', 'flex');
+                    $('#NotEnoughData').css('display', 'none');
+
+                    if (periodChange == null) {
+                        $('#periodChange').text('---');
+                        $('#ChangeBadge').css('background-color', '#AF3939');
+                        $('#ChangeBadge i').css('display', 'none');
+                    }
+                    if (enoughData == false) {
+                        $('#EnoughData').css('display', 'none');
+                        $('#NotEnoughData').css('display', 'flex');
+                    }
+                    if (isChangePositive == false) {
+                        $('#Status').text('There was a PoP decrease');
+                        $('#ChangeBadge').css('background-color', '#027A49');
+                        $('#ChangeBadge i').css('color', '#00D308');
+                        $('#ChangeBadge i').css('transform', 'rotate(3.142rad)');
+                    }
+                    else if (isChangePositive == true) {
+                        $('#Status').text('There was a PoP increase');
+                    }
+                    if (periodChange == null) {
+                        $('#Status').text('Not enough data to compare');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    $('#EnoughData').css('display', 'none');
+                    $('#NotEnoughData').css('display', 'flex');
+                    // Handle errors if the AJAX request fails
+                    console.error(error); // Log the error to the console
+                }
+            });
+
+            $.ajax({
+                type: "POST",
+                url: "/NCR/GenChart",
+                data:
+                {
+                    partSelected: partSelected,
+                    period: period
+                },
+                contextType: "application/json; charset=utf8",
+                dataType: "json",
+                success: OnSuccess,
+            });
+
+            function OnSuccess(data) {
+                var _data = data;
+                var _labels = _data[0];
+                var _total = _data[1];
+                var _recordDates = _data[2];
+
+                // Create an array to hold data for each day of the month
+                var chartData = new Array(_labels.length).fill(0); // Initialize with zeros for all days
+
+                // Insert actual data into the corresponding positions
+                for (var i = 0; i < _recordDates.length; i++) {
+                    var dateIndex = parseInt(_recordDates[i]);
+                    chartData[dateIndex] += _total[i]; // Add to existing value if dateIndex is repeated
+                }
+
+                // Destroy the old chart instance if it exists
+                if (myChart) {
+                    myChart.destroy();
+                }
+
+                const chartCanvas = document.getElementById('myChart');
+
+                myChart = new Chart(chartCanvas, {
+                    type: 'line',
+                    data: {
+                        labels: _labels,
+                        datasets: [{
+                            backgroundColor: "#19416D",
+                            borderColor: "#19416D",
+                            data: chartData,
+                            borderWidth: 1,
+                        }]
+                    },
+                    options: {
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                ticks: {
+                                    maxRotation: 30,
+                                    minRotation: 0,
+                                    maxTicksLimit: _labels.length > 20 ? _labels.length / 3 : 10,
+                                    source: 'auto',
+                                    autoSkip: true
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+
+        }
+
     </script>
 
 }

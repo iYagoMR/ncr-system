@@ -17,12 +17,88 @@
       "PackagePath": "staticwebassets\\assets\\excelFiles\\Suppliers.xlsx"
     },
     {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\assets\\fonts\\Inter\\Inter-VariableFont_slnt,wght.ttf",
+      "PackagePath": "staticwebassets\\assets\\fonts\\Inter\\Inter-VariableFont_slnt,wght.ttf"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\assets\\fonts\\Inter\\OFL.txt",
+      "PackagePath": "staticwebassets\\assets\\fonts\\Inter\\OFL.txt"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\assets\\fonts\\Inter\\README.txt",
+      "PackagePath": "staticwebassets\\assets\\fonts\\Inter\\README.txt"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\assets\\fonts\\Inter\\static\\Inter-Black.ttf",
+      "PackagePath": "staticwebassets\\assets\\fonts\\Inter\\static\\Inter-Black.ttf"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\assets\\fonts\\Inter\\static\\Inter-Bold.ttf",
+      "PackagePath": "staticwebassets\\assets\\fonts\\Inter\\static\\Inter-Bold.ttf"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\assets\\fonts\\Inter\\static\\Inter-ExtraBold.ttf",
+      "PackagePath": "staticwebassets\\assets\\fonts\\Inter\\static\\Inter-ExtraBold.ttf"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\assets\\fonts\\Inter\\static\\Inter-ExtraLight.ttf",
+      "PackagePath": "staticwebassets\\assets\\fonts\\Inter\\static\\Inter-ExtraLight.ttf"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\assets\\fonts\\Inter\\static\\Inter-Light.ttf",
+      "PackagePath": "staticwebassets\\assets\\fonts\\Inter\\static\\Inter-Light.ttf"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\assets\\fonts\\Inter\\static\\Inter-Medium.ttf",
+      "PackagePath": "staticwebassets\\assets\\fonts\\Inter\\static\\Inter-Medium.ttf"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\assets\\fonts\\Inter\\static\\Inter-Regular.ttf",
+      "PackagePath": "staticwebassets\\assets\\fonts\\Inter\\static\\Inter-Regular.ttf"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\assets\\fonts\\Inter\\static\\Inter-SemiBold.ttf",
+      "PackagePath": "staticwebassets\\assets\\fonts\\Inter\\static\\Inter-SemiBold.ttf"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\assets\\fonts\\Inter\\static\\Inter-Thin.ttf",
+      "PackagePath": "staticwebassets\\assets\\fonts\\Inter\\static\\Inter-Thin.ttf"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\assets\\icons\\search-symbol.png",
+      "PackagePath": "staticwebassets\\assets\\icons\\search-symbol.png"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\assets\\icons\\search.svg",
+      "PackagePath": "staticwebassets\\assets\\icons\\search.svg"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\assets\\images\\logo-horizontal-blue.png",
+      "PackagePath": "staticwebassets\\assets\\images\\logo-horizontal-blue.png"
+    },
+    {
       "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\assets\\images\\logo-horizontal-two.png",
       "PackagePath": "staticwebassets\\assets\\images\\logo-horizontal-two.png"
     },
     {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\assets\\images\\logo-square-blue.png",
+      "PackagePath": "staticwebassets\\assets\\images\\logo-square-blue.png"
+    },
+    {
       "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\assets\\images\\search.svg",
       "PackagePath": "staticwebassets\\assets\\images\\search.svg"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\assets\\images\\user-pic-default.jpg",
+      "PackagePath": "staticwebassets\\assets\\images\\user-pic-default.jpg"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\assets\\pdf-template\\pg1.jpg",
+      "PackagePath": "staticwebassets\\assets\\pdf-template\\pg1.jpg"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\assets\\pdf-template\\tempPdf.pdf",
+      "PackagePath": "staticwebassets\\assets\\pdf-template\\tempPdf.pdf"
     },
     {
       "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\css\\custom-styles.scss",
@@ -63,6 +139,10 @@
     {
       "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\js\\photos-adder.js",
       "PackagePath": "staticwebassets\\js\\photos-adder.js"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\js\\qr.js",
+      "PackagePath": "staticwebassets\\js\\qr.js"
     },
     {
       "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\js\\site.js",
@@ -299,6 +379,42 @@
     {
       "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\jquery\\dist\\jquery.min.map",
       "PackagePath": "staticwebassets\\lib\\jquery\\dist\\jquery.min.map"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\qrcode\\LICENSE",
+      "PackagePath": "staticwebassets\\lib\\qrcode"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\qrcode\\README.md",
+      "PackagePath": "staticwebassets\\lib\\qrcode\\README.md"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\qrcode\\bower.json",
+      "PackagePath": "staticwebassets\\lib\\qrcode\\bower.json"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\qrcode\\index-svg.html",
+      "PackagePath": "staticwebassets\\lib\\qrcode\\index-svg.html"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\qrcode\\index.html",
+      "PackagePath": "staticwebassets\\lib\\qrcode\\index.html"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\qrcode\\index.svg",
+      "PackagePath": "staticwebassets\\lib\\qrcode\\index.svg"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\qrcode\\jquery.min.js",
+      "PackagePath": "staticwebassets\\lib\\qrcode\\jquery.min.js"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\qrcode\\qrcode.js",
+      "PackagePath": "staticwebassets\\lib\\qrcode\\qrcode.js"
+    },
+    {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\lib\\qrcode\\qrcode.min.js",
+      "PackagePath": "staticwebassets\\lib\\qrcode\\qrcode.min.js"
     },
     {
       "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.Haver.Microsoft.AspNetCore.StaticWebAssets.props",

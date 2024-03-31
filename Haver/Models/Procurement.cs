@@ -19,7 +19,7 @@ namespace Haver.Models
 
         [Required(ErrorMessage = "Expected date of return required.")]
         [Display(Name = "When replaced/reworked items expected to be returned")]
-        public DateTime ExpecDateOfReturn { get; set; } = DateTime.Today;
+        public DateTime ExpecDateOfReturn { get; set; }
 
         [Required(ErrorMessage = "Choice is necessary.")]
         [Display(Name = "Has supplier return been completed in SAP?")]

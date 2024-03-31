@@ -1,10 +1,12 @@
 ﻿using Haver.CustomControllers;
 using Haver.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Haver.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class LookupController : CognizantController
     {
         private readonly HaverContext _context;

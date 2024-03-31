@@ -450,14 +450,14 @@
     </div>
     <div class="accordion-item">
         <h2 class="accordion-header" id="panelsStayOpen-headingThree">
-            <button class="accordion-button collapsed" id="Purchasing-Section" type="button" data-bs-toggle="collapse" data-bs-target="#PurchasingForm" aria-expanded="false" aria-controls="PurchasingForm">
+            <button class="accordion-button collapsed" id="Operations-Section" type="button" data-bs-toggle="collapse" data-bs-target="#OperationsForm" aria-expanded="false" aria-controls="OperationsForm">
                 <i class="bi bi-receipt"></i>Operations
             </button>
         </h2>
-        <div id="PurchasingForm" class="accordion-collapse collapse" aria-labelledby="Purchasing-Section">
+        <div id="OperationsForm" class="accordion-collapse collapse" aria-labelledby="Operations-Section">
             <div class="accordion-body">
 
-                <form asp-action="CreatePurchasing" method="post" enctype="multipart/form-data">
+                <form asp-action="CreateOperations" method="post" enctype="multipart/form-data">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     @Html.AntiForgeryToken()
 
@@ -465,62 +465,62 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label asp-for="Purchasing.PrelDecisionID" class="control-label"></label><span> (required)</span>
-                                    <select asp-for="Purchasing.PrelDecisionID" class="form-select" asp-items="ViewBag.PrelDecisionID">
+                                    <label asp-for="Operations.PrelDecisionID" class="control-label"></label><span> (required)</span>
+                                    <select asp-for="Operations.PrelDecisionID" class="form-select" asp-items="ViewBag.PrelDecisionID">
                                         <option value="">Select a PrelDecision</option>
                                     </select>
-                                    <span asp-validation-for="Purchasing.PrelDecisionID" class="text-danger"></span>
+                                    <span asp-validation-for="Operations.PrelDecisionID" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label asp-for="Purchasing.CarRaised" class="custom-control-label"></label><br />
-                                    <input class="form-check-input" asp-for="Purchasing.CarRaised" id="carRaisedCheckbox" />
+                                    <label asp-for="Operations.CarRaised" class="custom-control-label"></label><br />
+                                    <input class="form-check-input" asp-for="Operations.CarRaised" id="carRaisedCheckbox" />
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label asp-for="Purchasing.IsFollowUpReq" class="custom-control-label"></label><br />
-                                    <input class="form-check-input" asp-for="Purchasing.IsFollowUpReq" id="followUpReqCheckbox" />
+                                    <label asp-for="Operations.IsFollowUpReq" class="custom-control-label"></label><br />
+                                    <input class="form-check-input" asp-for="Operations.IsFollowUpReq" id="followUpReqCheckbox" />
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label asp-for="Purchasing.CarNum" class="control-label"></label>
-                                    <input asp-for="Purchasing.CarNum" class="form-control" id="carNumField" oninput="this.value = Math.abs(this.value)" />
-                                    <span asp-validation-for="Purchasing.CarNum" class="text-danger"></span>
+                                    <label asp-for="Operations.CarNum" class="control-label"></label>
+                                    <input asp-for="Operations.CarNum" class="form-control" id="carNumField" oninput="this.value = Math.abs(this.value)" />
+                                    <span asp-validation-for="Operations.CarNum" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label asp-for="Purchasing.ExpecDate" class="control-label"></label>
-                                    <input asp-for="Purchasing.ExpecDate" class="form-control" id="followUpTypeFieldTwo" />
-                                    <span asp-validation-for="Purchasing.ExpecDate" class="text-danger"></span>
+                                    <label asp-for="Operations.ExpecDate" class="control-label"></label>
+                                    <input asp-for="Operations.ExpecDate" class="form-control" id="followUpTypeFieldTwo" />
+                                    <span asp-validation-for="Operations.ExpecDate" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <label asp-for="Purchasing.FollowUpType" class="control-label"></label>
-                                    <input asp-for="Purchasing.FollowUpType" class="form-control" id="followUpTypeField" />
-                                    <span asp-validation-for="Purchasing.FollowUpType" class="text-danger"></span>
+                                    <label asp-for="Operations.FollowUpType" class="control-label"></label>
+                                    <input asp-for="Operations.FollowUpType" class="form-control" id="followUpTypeField" />
+                                    <span asp-validation-for="Operations.FollowUpType" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label asp-for="Purchasing.OpManagerSign" class="control-label"></label><span> (required)</span>
-                                    <input asp-for="Purchasing.OpManagerSign" class="form-control" />
-                                    <span asp-validation-for="Purchasing.OpManagerSign" class="text-danger"></span>
+                                    <label asp-for="Operations.OpManagerSign" class="control-label"></label><span> (required)</span>
+                                    <input asp-for="Operations.OpManagerSign" class="form-control" />
+                                    <span asp-validation-for="Operations.OpManagerSign" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label asp-for="Purchasing.PurchasingDate" class="control-label"></label><span> (required)</span>
-                                    <input asp-for="Purchasing.PurchasingDate" class="form-control" id="purchasingDate" />
-                                    <span asp-validation-for="Purchasing.PurchasingDate" class="text-danger"></span>
+                                    <label asp-for="Operations.OperationsDate" class="control-label"></label><span> (required)</span>
+                                    <input asp-for="Operations.OperationsDate" class="form-control" id="operationsDate" />
+                                    <span asp-validation-for="Operations.OperationsDate" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
@@ -533,14 +533,14 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label asp-for="Purchasing.Message" class="control-label"></label>
-                                <textarea asp-for="Purchasing.Message" rows="5" class="form-control"></textarea>
-                                <span asp-validation-for="Purchasing.Message" class="text-danger"></span>
+                                <label asp-for="Operations.Message" class="control-label"></label>
+                                <textarea asp-for="Operations.Message" rows="5" class="form-control"></textarea>
+                                <span asp-validation-for="Operations.Message" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
 
-                    @if ((User.IsInRole("Admin") || User.IsInRole("Operations Manager")) && Model.Purchasing != null)
+                    @if ((User.IsInRole("Admin") || User.IsInRole("Operations Manager")) && Model.Operations != null)
                     {
                         <div class="row section-form">
                             <div class="section-label">
@@ -553,11 +553,11 @@
                                     <div class="upload-button-container">
                                         <label for="formFile" class="form-label">Drop files here or click on the button below</label>
                                         <button class="btn btn-primary">Upload</button>
-                                        <input class="form-control" type="file" id="uploadFilebtn" name="Pictures" multiple onchange="handleFileSelection(this, 'purchasing-container')">
+                                        <input class="form-control" type="file" id="uploadFilebtn" name="Pictures" multiple onchange="handleFileSelection(this, 'Operations-container')">
                                     </div>
-                                    <input id="uploadFileArea" class="form-control" type="file" name="Pictures" multiple onchange="handleFileSelection(this, 'purchasing-container')" />
+                                    <input id="uploadFileArea" class="form-control" type="file" name="Pictures" multiple onchange="handleFileSelection(this, 'Operations-container')" />
                                 </div>
-                                <div class="form-group" id="purchasing-container"></div>
+                                <div class="form-group" id="Operations-container"></div>
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group link-adder">
@@ -619,7 +619,7 @@
                         </div>
 
                         <div class="form-group">
-                            <input type="submit" value="Submit Purchasing" class="btn btn-primary" />
+                            <input type="submit" value="Submit Operations" class="btn btn-primary" />
                         </div>
                     }
                 </form>
@@ -886,8 +886,8 @@
                 toggleAccordion('#QualityForm', '#Quality-Section', 'QualityForm');
             } else if (currentSection === "Engineering") {
                 toggleAccordion('#EngineerForm', '#Engineering-Section', 'EngineerForm');
-            } else if (currentSection === "Purchasing") {
-                toggleAccordion('#PurchasingForm', '#Purchasing-Section', 'PurchasingForm');
+            } else if (currentSection === "Operations") {
+                toggleAccordion('#OperationsForm', '#Operations-Section', 'OperationsForm');
             } else if (currentSection === "Procurement") {
                 toggleAccordion('#ProcurementForm', '#Procurement-Section', 'ProcurementForm');
             } else if (currentSection === "Reinspection") {

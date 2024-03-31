@@ -1,10 +1,9 @@
-﻿function addLink() {
+﻿function addLink(containerId) {
+    var linksListContainer = document.getElementById(containerId);
     var linkInput = document.getElementById("Links");
     var linkValue = linkInput.value.trim();
 
     if (linkValue !== "") {
-        // Create a container for the links list
-        var linksListContainer = document.getElementById("linksListContainer");
 
         // Create a list item to display the link
         var listItem = document.createElement("div");
@@ -22,6 +21,10 @@
         removeButton.onclick = function () {
             linksListContainer.removeChild(listItem);
             linksListContainer.removeChild(hiddenInput);
+
+            if (linksListContainer.children.length === 0) {
+                linksListContainer.style.display = "none";
+            }
         };
 
         // Append the remove button to the list item
@@ -33,5 +36,10 @@
 
         // Clear the input field
         linkInput.value = "";
+
+        if (linksListContainer.children.length > 0) {
+            linksListContainer.style.display = "flex";
+        }
     }
+
 }

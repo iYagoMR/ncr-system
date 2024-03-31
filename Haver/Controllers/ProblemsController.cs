@@ -11,6 +11,7 @@ using OfficeOpenXml;
 
 namespace Haver.Controllers
 {
+    [Authorize(Roles = "Admin,Quality Inspector")]
     public class ProblemController : LookupsController
     {
         private readonly HaverContext _context;

@@ -26,7 +26,7 @@ namespace Haver.Utilities
                 //Not selected so see if it is in Cookie
                 pageSize = Convert.ToInt32(httpContext.Request.Cookies["pageSizeValue"]);
             }
-            return (pageSize == 0) ? 5 : pageSize;//Neither Selected or in Cookie so go with default
+            return (pageSize == 0) ? 20 : pageSize;//Neither Selected or in Cookie so go with default
         }
         /// <summary>
         /// Creates a SelectList for choices for page size

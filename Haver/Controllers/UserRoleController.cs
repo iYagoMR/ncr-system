@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Haver.Controllers
 {
-    //[Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin")]
     public class UserRoleController : CognizantController
     {
         private readonly ApplicationDbContext _context;

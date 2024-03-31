@@ -3055,3 +3055,16 @@ D:\My Work\backup5\haver7-iago\Haver\obj\Debug\net7.0\refint\Haver.dll
 D:\My Work\backup5\haver7-iago\Haver\obj\Debug\net7.0\Haver.pdb
 D:\My Work\backup5\haver7-iago\Haver\obj\Debug\net7.0\Haver.genruntimeconfig.cache
 D:\My Work\backup5\haver7-iago\Haver\obj\Debug\net7.0\ref\Haver.dll
+D:\My Work\backup5\haver7-iago\Haver\obj\Debug\net7.0\Haver.sourcelink.json
+D:\My Work\backup5\haver7-iago\Haver\bin\Debug\net7.0\SkiaSharp.dll
+D:\My Work\backup5\haver7-iago\Haver\bin\Debug\net7.0\runtimes\osx\native\libSkiaSharp.dylib
+D:\My Work\backup5\haver7-iago\Haver\bin\Debug\net7.0\runtimes\win-arm64\native\libSkiaSharp.dll
+D:\My Work\backup5\haver7-iago\Haver\bin\Debug\net7.0\runtimes\win-x64\native\libSkiaSharp.dll
+D:\My Work\backup5\haver7-iago\Haver\bin\Debug\net7.0\runtimes\win-x86\native\libSkiaSharp.dll
+D:\My Work\backup5\haver7-iago\Haver\bin\Debug\net7.0\HarfBuzzSharp.dll
+D:\My Work\backup5\haver7-iago\Haver\bin\Debug\net7.0\QuestPDF.dll
+D:\My Work\backup5\haver7-iago\Haver\bin\Debug\net7.0\SkiaSharp.HarfBuzz.dll
+D:\My Work\backup5\haver7-iago\Haver\bin\Debug\net7.0\runtimes\osx\native\libHarfBuzzSharp.dylib
+D:\My Work\backup5\haver7-iago\Haver\bin\Debug\net7.0\runtimes\win-arm64\native\libHarfBuzzSharp.dll
+D:\My Work\backup5\haver7-iago\Haver\bin\Debug\net7.0\runtimes\win-x64\native\libHarfBuzzSharp.dll
+D:\My Work\backup5\haver7-iago\Haver\bin\Debug\net7.0\runtimes\win-x86\native\libHarfBuzzSharp.dll

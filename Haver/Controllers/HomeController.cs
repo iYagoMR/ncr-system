@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Haver.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly HaverContext _context;
@@ -25,7 +27,7 @@ namespace Haver.Controllers
             string[] sortOptions = new[] { "NCRNumber" };
 
             var haverContext = _context.NCRs.Include(n => n.Engineering)
-                                            .Include(n => n.Purchasing)
+                                            .Include(n => n.Operations)
                                             .Include(n => n.QualityRepresentative)
                                                 .Include(n => n.QualityRepresentative.Supplier)
                                             .Where(n => !n.IsNCRArchived)
@@ -39,7 +41,7 @@ namespace Haver.Controllers
             ViewBag.ncrCount = _context.NCRs.Count(item => item.Status == "Active");
             ViewBag.QualityRepresentativeCount = activeNCRs.Include(ncr => ncr.QualityRepresentative).Count(item => item.Phase == "Quality Representative");
             ViewBag.EngineeringCount = activeNCRs.Include(ncr => ncr.Engineering).Count(item => item.Phase == "Engineering");
-            ViewBag.PurchasingCount = activeNCRs.Include(ncr => ncr.Purchasing).Count(item => item.Phase == "Purchasing");
+            ViewBag.OperationsCount = activeNCRs.Include(ncr => ncr.Operations).Count(item => item.Phase == "Operations");
             ViewBag.ProcurementCount = activeNCRs.Include(ncr => ncr.Procurement).Count(item => item.Phase == "Procurement");
             ViewBag.ReinspectionCount = activeNCRs.Include(ncr => ncr.Reinspection).Count(item => item.Phase == "Reinspection");
 

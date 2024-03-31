@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Haver.ViewModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace Haver.Utilities
 {
@@ -43,6 +44,11 @@ namespace Haver.Utilities
                 items = await source.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
             }
             return new PaginatedList<T>(items, count, pageIndex, pageSize);
+        }
+
+        internal static async Task CreateAsync(List<PartsDefectiveVM> defectivePartsList, int v1, int v2)
+        {
+            throw new NotImplementedException();
         }
     }
 }

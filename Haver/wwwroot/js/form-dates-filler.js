@@ -7,12 +7,13 @@ function getCurrentDate() {
     const hours = now.getHours().toString().padStart(2, '0');
     const minutes = now.getMinutes().toString().padStart(2, '0');
 
-    return `${year}-${month}-${day}T${hours}:${minutes}`;
+    return `${year}-${month}-${day}`;
 }
 
 $(document).ready(function () {
+    $("#qualityRepDate").val(getCurrentDate());
     $("#engineeringDate").val(getCurrentDate());
-    $("#purchasingDate").val(getCurrentDate());
+    $("#operationsDate").val(getCurrentDate());
     $("#procurementDate").val(getCurrentDate());
     $("#reinspectionDate").val(getCurrentDate());
 });

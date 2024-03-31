@@ -15,7 +15,211 @@ namespace Haver.Data.HMigrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "7.0.15");
+            modelBuilder.HasAnnotation("ProductVersion", "7.0.17");
+
+            modelBuilder.Entity("Haver.DraftModels.DraftEngineering", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CustIssueMsg")
+                        .HasMaxLength(3000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Disposition")
+                        .HasMaxLength(3000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("DrawReqUpdating")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("EngReviewID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("EngineerSign")
+                        .HasMaxLength(55)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateOnly?>("EngineeringDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsCustNotificationNecessary")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("OrgRevisionNum")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("RevisionDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RevisionedBy")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("UpdatedRevisionNum")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("DraftEngineerings");
+                });
+
+            modelBuilder.Entity("Haver.DraftModels.DraftOperations", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("CarNum")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("CarRaised")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("ExpecDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FollowUpType")
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsFollowUpReq")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Message")
+                        .HasMaxLength(3000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("OpManagerSign")
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateOnly?>("OperationsDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("PrelDecisionID")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("DraftOperationsS");
+                });
+
+            modelBuilder.Entity("Haver.DraftModels.DraftProcurement", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CarrierInfo")
+                        .HasMaxLength(3000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("ChargeSupplier")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("ExpecDateOfReturn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsCreditExpec")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateOnly?>("ProcurementDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ProcurementSign")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("RMANo")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("SuppItemsBack")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("SuppReturnCompleted")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("DraftProcurements");
+                });
+
+            modelBuilder.Entity("Haver.DraftModels.DraftQualityRepresentative", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("ConfirmingEng")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("DescDefect")
+                        .HasMaxLength(3000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool?>("NonConforming")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("PartID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("PoNo")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("ProblemID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("ProcessApplicableID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateOnly?>("QualityRepDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("QualityRepresentativeSign")
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("QuantDefective")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("QuantReceived")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("SalesOrd")
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("SupplierID")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("DraftQualityRepresentatives");
+                });
+
+            modelBuilder.Entity("Haver.DraftModels.DraftReinspection", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("NewNCRNum")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("ReinspecAccepted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ReinspecInspectorSign")
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateOnly?>("ReinspectionDate")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("DraftReinspections");
+                });
 
             modelBuilder.Entity("Haver.Models.Employee", b =>
                 {
@@ -64,6 +268,54 @@ namespace Haver.Data.HMigrations
                         .IsUnique();
 
                     b.ToTable("Employees");
+                });
+
+            modelBuilder.Entity("Haver.Models.EmployeePhoto", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<byte[]>("Content")
+                        .HasColumnType("BLOB");
+
+                    b.Property<int>("EmployeeID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("MimeType")
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("EmployeeID")
+                        .IsUnique();
+
+                    b.ToTable("EmployeePhotos");
+                });
+
+            modelBuilder.Entity("Haver.Models.EmployeeThumbnail", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<byte[]>("Content")
+                        .HasColumnType("BLOB");
+
+                    b.Property<int>("EmployeeID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("MimeType")
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("EmployeeID")
+                        .IsUnique();
+
+                    b.ToTable("EmployeeThumbnails");
                 });
 
             modelBuilder.Entity("Haver.Models.EngReview", b =>
@@ -139,8 +391,26 @@ namespace Haver.Data.HMigrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateOnly>("CreatedOn")
+                    b.Property<DateTime>("CreatedOn")
                         .HasColumnType("TEXT");
+
+                    b.Property<DateOnly>("CreatedOnDO")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("DraftEngineeringID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("DraftOperationsID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("DraftProcurementID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("DraftQualityRepresentativeID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("DraftReinspectionID")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("EngineeringID")
                         .HasColumnType("INTEGER");
@@ -160,6 +430,9 @@ namespace Haver.Data.HMigrations
                     b.Property<int?>("NewNCRID")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("OperationsID")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Phase")
                         .HasColumnType("TEXT");
 
@@ -167,9 +440,6 @@ namespace Haver.Data.HMigrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("ProcurementID")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("PurchasingID")
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("QualityRepresentativeID")
@@ -186,11 +456,21 @@ namespace Haver.Data.HMigrations
 
                     b.HasKey("ID");
 
+                    b.HasIndex("DraftEngineeringID");
+
+                    b.HasIndex("DraftOperationsID");
+
+                    b.HasIndex("DraftProcurementID");
+
+                    b.HasIndex("DraftQualityRepresentativeID");
+
+                    b.HasIndex("DraftReinspectionID");
+
                     b.HasIndex("EngineeringID");
 
-                    b.HasIndex("ProcurementID");
+                    b.HasIndex("OperationsID");
 
-                    b.HasIndex("PurchasingID");
+                    b.HasIndex("ProcurementID");
 
                     b.HasIndex("QualityRepresentativeID");
 
@@ -214,6 +494,50 @@ namespace Haver.Data.HMigrations
                     b.HasKey("ID");
 
                     b.ToTable("NCRNumbers");
+                });
+
+            modelBuilder.Entity("Haver.Models.Operations", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("CarNum")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("CarRaised")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("ExpecDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FollowUpType")
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsFollowUpReq")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Message")
+                        .HasMaxLength(3000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("OpManagerSign")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateOnly>("OperationsDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("PrelDecisionID")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("PrelDecisionID");
+
+                    b.ToTable("OperationsS");
                 });
 
             modelBuilder.Entity("Haver.Models.Part", b =>
@@ -327,50 +651,6 @@ namespace Haver.Data.HMigrations
                     b.ToTable("Procurement");
                 });
 
-            modelBuilder.Entity("Haver.Models.Purchasing", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("CarNum")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("CarRaised")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime?>("ExpecDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("FollowUpType")
-                        .HasMaxLength(255)
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsFollowUpReq")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Message")
-                        .HasMaxLength(3000)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("OpManagerSign")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("PrelDecisionID")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateOnly>("PurchasingDate")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("PrelDecisionID");
-
-                    b.ToTable("Purchasings");
-                });
-
             modelBuilder.Entity("Haver.Models.QualityPhoto", b =>
                 {
                     b.Property<int>("ID")
@@ -380,6 +660,21 @@ namespace Haver.Data.HMigrations
                     b.Property<byte[]>("Content")
                         .HasColumnType("BLOB");
 
+                    b.Property<int?>("DraftEngineeringID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("DraftOperationsID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("DraftProcurementID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("DraftQualityRepresentativeID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("DraftReinspectionID")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int?>("EngineeringID")
                         .HasColumnType("INTEGER");
 
@@ -387,10 +682,10 @@ namespace Haver.Data.HMigrations
                         .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("ProcurementID")
+                    b.Property<int?>("OperationsID")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("PurchasingID")
+                    b.Property<int?>("ProcurementID")
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("QualityRepresentativeID")
@@ -401,11 +696,21 @@ namespace Haver.Data.HMigrations
 
                     b.HasKey("ID");
 
+                    b.HasIndex("DraftEngineeringID");
+
+                    b.HasIndex("DraftOperationsID");
+
+                    b.HasIndex("DraftProcurementID");
+
+                    b.HasIndex("DraftQualityRepresentativeID");
+
+                    b.HasIndex("DraftReinspectionID");
+
                     b.HasIndex("EngineeringID");
 
-                    b.HasIndex("ProcurementID");
+                    b.HasIndex("OperationsID");
 
-                    b.HasIndex("PurchasingID");
+                    b.HasIndex("ProcurementID");
 
                     b.HasIndex("QualityRepresentativeID");
 
@@ -556,16 +861,31 @@ namespace Haver.Data.HMigrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int?>("DraftEngineeringID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("DraftOperationsID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("DraftProcurementID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("DraftQualityRepresentativeID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("DraftReinspectionID")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int?>("EngineeringID")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Link")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("ProcurementID")
+                    b.Property<int?>("OperationsID")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("PurchasingID")
+                    b.Property<int?>("ProcurementID")
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("QualityRepresentativeID")
@@ -576,11 +896,21 @@ namespace Haver.Data.HMigrations
 
                     b.HasKey("ID");
 
+                    b.HasIndex("DraftEngineeringID");
+
+                    b.HasIndex("DraftOperationsID");
+
+                    b.HasIndex("DraftProcurementID");
+
+                    b.HasIndex("DraftQualityRepresentativeID");
+
+                    b.HasIndex("DraftReinspectionID");
+
                     b.HasIndex("EngineeringID");
 
-                    b.HasIndex("ProcurementID");
+                    b.HasIndex("OperationsID");
 
-                    b.HasIndex("PurchasingID");
+                    b.HasIndex("ProcurementID");
 
                     b.HasIndex("QualityRepresentativeID");
 
@@ -612,6 +942,28 @@ namespace Haver.Data.HMigrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("Haver.Models.EmployeePhoto", b =>
+                {
+                    b.HasOne("Haver.Models.Employee", "Employee")
+                        .WithOne("EmployeePhoto")
+                        .HasForeignKey("Haver.Models.EmployeePhoto", "EmployeeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
+            modelBuilder.Entity("Haver.Models.EmployeeThumbnail", b =>
+                {
+                    b.HasOne("Haver.Models.Employee", "Employee")
+                        .WithOne("EmployeeThumbnail")
+                        .HasForeignKey("Haver.Models.EmployeeThumbnail", "EmployeeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
+                });
+
             modelBuilder.Entity("Haver.Models.Engineering", b =>
                 {
                     b.HasOne("Haver.Models.EngReview", "EngReview")
@@ -625,17 +977,37 @@ namespace Haver.Data.HMigrations
 
             modelBuilder.Entity("Haver.Models.NCR", b =>
                 {
+                    b.HasOne("Haver.DraftModels.DraftEngineering", "DraftEngineering")
+                        .WithMany()
+                        .HasForeignKey("DraftEngineeringID");
+
+                    b.HasOne("Haver.DraftModels.DraftOperations", "DraftOperations")
+                        .WithMany()
+                        .HasForeignKey("DraftOperationsID");
+
+                    b.HasOne("Haver.DraftModels.DraftProcurement", "DraftProcurement")
+                        .WithMany()
+                        .HasForeignKey("DraftProcurementID");
+
+                    b.HasOne("Haver.DraftModels.DraftQualityRepresentative", "DraftQualityRepresentative")
+                        .WithMany()
+                        .HasForeignKey("DraftQualityRepresentativeID");
+
+                    b.HasOne("Haver.DraftModels.DraftReinspection", "DraftReinspection")
+                        .WithMany()
+                        .HasForeignKey("DraftReinspectionID");
+
                     b.HasOne("Haver.Models.Engineering", "Engineering")
                         .WithMany()
                         .HasForeignKey("EngineeringID");
 
+                    b.HasOne("Haver.Models.Operations", "Operations")
+                        .WithMany()
+                        .HasForeignKey("OperationsID");
+
                     b.HasOne("Haver.Models.Procurement", "Procurement")
                         .WithMany()
                         .HasForeignKey("ProcurementID");
-
-                    b.HasOne("Haver.Models.Purchasing", "Purchasing")
-                        .WithMany()
-                        .HasForeignKey("PurchasingID");
 
                     b.HasOne("Haver.Models.QualityRepresentative", "QualityRepresentative")
                         .WithMany()
@@ -645,15 +1017,36 @@ namespace Haver.Data.HMigrations
                         .WithMany()
                         .HasForeignKey("ReinspectionID");
 
+                    b.Navigation("DraftEngineering");
+
+                    b.Navigation("DraftOperations");
+
+                    b.Navigation("DraftProcurement");
+
+                    b.Navigation("DraftQualityRepresentative");
+
+                    b.Navigation("DraftReinspection");
+
                     b.Navigation("Engineering");
 
-                    b.Navigation("Procurement");
+                    b.Navigation("Operations");
 
-                    b.Navigation("Purchasing");
+                    b.Navigation("Procurement");
 
                     b.Navigation("QualityRepresentative");
 
                     b.Navigation("Reinspection");
+                });
+
+            modelBuilder.Entity("Haver.Models.Operations", b =>
+                {
+                    b.HasOne("Haver.Models.PrelDecision", "PrelDecision")
+                        .WithMany("OperationsS")
+                        .HasForeignKey("PrelDecisionID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PrelDecision");
                 });
 
             modelBuilder.Entity("Haver.Models.Part", b =>
@@ -665,30 +1058,44 @@ namespace Haver.Data.HMigrations
                     b.Navigation("Supplier");
                 });
 
-            modelBuilder.Entity("Haver.Models.Purchasing", b =>
-                {
-                    b.HasOne("Haver.Models.PrelDecision", "PrelDecision")
-                        .WithMany("Purchasings")
-                        .HasForeignKey("PrelDecisionID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("PrelDecision");
-                });
-
             modelBuilder.Entity("Haver.Models.QualityPhoto", b =>
                 {
+                    b.HasOne("Haver.DraftModels.DraftEngineering", "DraftEngineering")
+                        .WithMany("QualityPhotos")
+                        .HasForeignKey("DraftEngineeringID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Haver.DraftModels.DraftOperations", "DraftOperations")
+                        .WithMany("QualityPhotos")
+                        .HasForeignKey("DraftOperationsID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Haver.DraftModels.DraftProcurement", "DraftProcurement")
+                        .WithMany("QualityPhotos")
+                        .HasForeignKey("DraftProcurementID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Haver.DraftModels.DraftQualityRepresentative", "DraftQualityRepresentative")
+                        .WithMany("QualityPhotos")
+                        .HasForeignKey("DraftQualityRepresentativeID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Haver.DraftModels.DraftReinspection", "DraftReinspection")
+                        .WithMany("QualityPhotos")
+                        .HasForeignKey("DraftReinspectionID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("Haver.Models.Engineering", "Engineering")
                         .WithMany("QualityPhotos")
                         .HasForeignKey("EngineeringID");
 
+                    b.HasOne("Haver.Models.Operations", "Operations")
+                        .WithMany("QualityPhotos")
+                        .HasForeignKey("OperationsID");
+
                     b.HasOne("Haver.Models.Procurement", "Procurement")
                         .WithMany("QualityPhotos")
                         .HasForeignKey("ProcurementID");
-
-                    b.HasOne("Haver.Models.Purchasing", "Purchasing")
-                        .WithMany("QualityPhotos")
-                        .HasForeignKey("PurchasingID");
 
                     b.HasOne("Haver.Models.QualityRepresentative", "QualityRepresentative")
                         .WithMany("QualityPhotos")
@@ -698,11 +1105,21 @@ namespace Haver.Data.HMigrations
                         .WithMany("QualityPhotos")
                         .HasForeignKey("ReinspectionID");
 
+                    b.Navigation("DraftEngineering");
+
+                    b.Navigation("DraftOperations");
+
+                    b.Navigation("DraftProcurement");
+
+                    b.Navigation("DraftQualityRepresentative");
+
+                    b.Navigation("DraftReinspection");
+
                     b.Navigation("Engineering");
 
-                    b.Navigation("Procurement");
+                    b.Navigation("Operations");
 
-                    b.Navigation("Purchasing");
+                    b.Navigation("Procurement");
 
                     b.Navigation("QualityRepresentative");
 
@@ -712,7 +1129,7 @@ namespace Haver.Data.HMigrations
             modelBuilder.Entity("Haver.Models.QualityRepresentative", b =>
                 {
                     b.HasOne("Haver.Models.Part", "Part")
-                        .WithMany()
+                        .WithMany("QualityRepresentatives")
                         .HasForeignKey("PartID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -757,39 +1174,111 @@ namespace Haver.Data.HMigrations
 
             modelBuilder.Entity("Haver.Models.VideoLink", b =>
                 {
+                    b.HasOne("Haver.DraftModels.DraftEngineering", "DraftEngineering")
+                        .WithMany("VideoLinks")
+                        .HasForeignKey("DraftEngineeringID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Haver.DraftModels.DraftOperations", "DraftOperations")
+                        .WithMany("VideoLinks")
+                        .HasForeignKey("DraftOperationsID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Haver.DraftModels.DraftProcurement", "DraftProcurement")
+                        .WithMany("VideoLinks")
+                        .HasForeignKey("DraftProcurementID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Haver.DraftModels.DraftQualityRepresentative", "DraftQualityRepresentative")
+                        .WithMany("VideoLinks")
+                        .HasForeignKey("DraftQualityRepresentativeID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Haver.DraftModels.DraftReinspection", "DraftReinspection")
+                        .WithMany("VideoLinks")
+                        .HasForeignKey("DraftReinspectionID")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("Haver.Models.Engineering", "Engineering")
                         .WithMany("VideoLinks")
                         .HasForeignKey("EngineeringID");
+
+                    b.HasOne("Haver.Models.Operations", "Operations")
+                        .WithMany("VideoLinks")
+                        .HasForeignKey("OperationsID");
 
                     b.HasOne("Haver.Models.Procurement", "Procurement")
                         .WithMany("VideoLinks")
                         .HasForeignKey("ProcurementID");
 
-                    b.HasOne("Haver.Models.Purchasing", "Purchasing")
-                        .WithMany("VideoLinks")
-                        .HasForeignKey("PurchasingID");
-
                     b.HasOne("Haver.Models.QualityRepresentative", "QualityRepresentative")
                         .WithMany("VideoLinks")
                         .HasForeignKey("QualityRepresentativeID");
 
-                    b.HasOne("Haver.Models.Reinspection", "Reinspection")
+                    b.HasOne("Haver.Models.Reinspection", null)
                         .WithMany("VideoLinks")
                         .HasForeignKey("ReinspectionID");
 
+                    b.Navigation("DraftEngineering");
+
+                    b.Navigation("DraftOperations");
+
+                    b.Navigation("DraftProcurement");
+
+                    b.Navigation("DraftQualityRepresentative");
+
+                    b.Navigation("DraftReinspection");
+
                     b.Navigation("Engineering");
+
+                    b.Navigation("Operations");
 
                     b.Navigation("Procurement");
 
-                    b.Navigation("Purchasing");
-
                     b.Navigation("QualityRepresentative");
+                });
 
-                    b.Navigation("Reinspection");
+            modelBuilder.Entity("Haver.DraftModels.DraftEngineering", b =>
+                {
+                    b.Navigation("QualityPhotos");
+
+                    b.Navigation("VideoLinks");
+                });
+
+            modelBuilder.Entity("Haver.DraftModels.DraftOperations", b =>
+                {
+                    b.Navigation("QualityPhotos");
+
+                    b.Navigation("VideoLinks");
+                });
+
+            modelBuilder.Entity("Haver.DraftModels.DraftProcurement", b =>
+                {
+                    b.Navigation("QualityPhotos");
+
+                    b.Navigation("VideoLinks");
+                });
+
+            modelBuilder.Entity("Haver.DraftModels.DraftQualityRepresentative", b =>
+                {
+                    b.Navigation("QualityPhotos");
+
+                    b.Navigation("VideoLinks");
+                });
+
+            modelBuilder.Entity("Haver.DraftModels.DraftReinspection", b =>
+                {
+                    b.Navigation("QualityPhotos");
+
+                    b.Navigation("VideoLinks");
                 });
 
             modelBuilder.Entity("Haver.Models.Employee", b =>
                 {
+                    b.Navigation("EmployeePhoto");
+
+                    b.Navigation("EmployeeThumbnail");
+
                     b.Navigation("Subscriptions");
                 });
 
@@ -805,9 +1294,21 @@ namespace Haver.Data.HMigrations
                     b.Navigation("VideoLinks");
                 });
 
+            modelBuilder.Entity("Haver.Models.Operations", b =>
+                {
+                    b.Navigation("QualityPhotos");
+
+                    b.Navigation("VideoLinks");
+                });
+
+            modelBuilder.Entity("Haver.Models.Part", b =>
+                {
+                    b.Navigation("QualityRepresentatives");
+                });
+
             modelBuilder.Entity("Haver.Models.PrelDecision", b =>
                 {
-                    b.Navigation("Purchasings");
+                    b.Navigation("OperationsS");
                 });
 
             modelBuilder.Entity("Haver.Models.Problem", b =>
@@ -821,13 +1322,6 @@ namespace Haver.Data.HMigrations
                 });
 
             modelBuilder.Entity("Haver.Models.Procurement", b =>
-                {
-                    b.Navigation("QualityPhotos");
-
-                    b.Navigation("VideoLinks");
-                });
-
-            modelBuilder.Entity("Haver.Models.Purchasing", b =>
                 {
                     b.Navigation("QualityPhotos");
 

@@ -32,7 +32,7 @@ namespace Haver.Models
         public int? UpdatedRevisionNum { get; set; } // LaterAdd - Only if DrawReqUpdating True
 
         [Display(Name = "Revision Date")]
-        public DateTime? RevisionDate { get; set; } // LaterAdd - Only if DrawReqUpdating True
+        public DateTime? RevisionDate { get; set; }
 
         [Required(ErrorMessage = "The Engineer's signature is required.")]
         [StringLength(55, ErrorMessage = "Engineer sign is limited to 55 characters.")]

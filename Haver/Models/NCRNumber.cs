@@ -1,4 +1,6 @@
-﻿namespace Haver.Models
+﻿using Haver.DraftModels;
+
+namespace Haver.Models
 {
     public class NCRNumber
     {
@@ -19,5 +21,6 @@
             Counter++;
             return $"{Year}-{Counter.ToString().PadLeft(3, '0')}";
         }
+
     }
 }

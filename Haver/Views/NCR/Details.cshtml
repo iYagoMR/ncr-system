@@ -109,7 +109,7 @@
                     </div>
                 </div>
 
-                @if (Model.QualityRepresentative != null)
+                @if (Model.QualityRepresentative != null && (Model.QualityRepresentative.QualityPhotos.Any() || Model.QualityRepresentative.VideoLinks.Any()))
                 {
                     <div class="section-form multimedia">
                         <div class="section-label">
@@ -249,7 +249,7 @@
                     </div>
                 </div>
 
-                @if (Model.Engineering != null)
+                @if (Model.Engineering != null && (Model.Engineering.QualityPhotos.Any() || Model.Engineering.VideoLinks.Any()))
                 {
                     <div class="section-form multimedia">
                         <div class="section-label">
@@ -292,70 +292,70 @@
     </div>
     <div class="accordion-item">
         <h2 class="accordion-header" id="panelsStayOpen-headingThree">
-            <button class="accordion-button" id="Purchasing-Section" type="button" data-bs-toggle="collapse" data-bs-target="#PurchasingForm" aria-expanded="false" aria-controls="PurchasingForm">
+            <button class="accordion-button" id="Operations-Section" type="button" data-bs-toggle="collapse" data-bs-target="#OperationsForm" aria-expanded="false" aria-controls="OperationsForm">
                 <i class="bi bi-receipt"></i>Operations
             </button>
         </h2>
-        <div id="PurchasingForm" class="accordion-collapse collapse show" aria-labelledby="Purchasing-Section">
+        <div id="OperationsForm" class="accordion-collapse collapse show" aria-labelledby="Operations-Section">
             <div class="accordion-body">
                 <div class="section-form">
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label asp-for="Purchasing.PrelDecisionID" class="control-label"></label>
-                                <input asp-for="Purchasing.PrelDecisionID" class="form-control" readonly>
-                                <span asp-validation-for="Purchasing.PrelDecisionID" class="text-danger"></span>
+                                <label asp-for="Operations.PrelDecisionID" class="control-label"></label>
+                                <input asp-for="Operations.PrelDecision.Decision" class="form-control" readonly>
+                                <span asp-validation-for="Operations.PrelDecisionID" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label asp-for="Purchasing.CarRaised" class="custom-control-label"></label><br />
-                                <input class="form-check-input" asp-for="Purchasing.CarRaised" id="carRaisedCheckbox" oninput="this.value = Math.abs(this.value)" disabled />
+                                <label asp-for="Operations.CarRaised" class="custom-control-label"></label><br />
+                                <input class="form-check-input" asp-for="Operations.CarRaised" id="carRaisedCheckbox" oninput="this.value = Math.abs(this.value)" disabled />
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label asp-for="Purchasing.IsFollowUpReq" class="custom-control-label"></label><br />
-                                <input class="form-check-input" asp-for="Purchasing.IsFollowUpReq" id="followUpReqCheckbox" disabled />
+                                <label asp-for="Operations.IsFollowUpReq" class="custom-control-label"></label><br />
+                                <input class="form-check-input" asp-for="Operations.IsFollowUpReq" id="followUpReqCheckbox" disabled />
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label asp-for="Purchasing.CarNum" class="control-label"></label>
-                                <input asp-for="Purchasing.CarNum" class="form-control" id="carNumField" oninput="this.value = Math.abs(this.value)" readonly />
-                                <span asp-validation-for="Purchasing.CarNum" class="text-danger"></span>
+                                <label asp-for="Operations.CarNum" class="control-label"></label>
+                                <input asp-for="Operations.CarNum" class="form-control" id="carNumField" oninput="this.value = Math.abs(this.value)" readonly />
+                                <span asp-validation-for="Operations.CarNum" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label asp-for="Purchasing.ExpecDate" class="control-label"></label>
-                                <input asp-for="Purchasing.ExpecDate" class="form-control" id="followUpTypeFieldTwo" readonly />
-                                <span asp-validation-for="Purchasing.ExpecDate" class="text-danger"></span>
+                                <label asp-for="Operations.ExpecDate" class="control-label"></label>
+                                <input asp-for="Operations.ExpecDate" class="form-control" id="followUpTypeFieldTwo" readonly />
+                                <span asp-validation-for="Operations.ExpecDate" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label asp-for="Purchasing.FollowUpType" class="control-label"></label>
-                                <input asp-for="Purchasing.FollowUpType" class="form-control" id="followUpTypeField" readonly />
-                                <span asp-validation-for="Purchasing.FollowUpType" class="text-danger"></span>
+                                <label asp-for="Operations.FollowUpType" class="control-label"></label>
+                                <input asp-for="Operations.FollowUpType" class="form-control" id="followUpTypeField" readonly />
+                                <span asp-validation-for="Operations.FollowUpType" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label asp-for="Purchasing.OpManagerSign" class="control-label"></label>
-                                <input asp-for="Purchasing.OpManagerSign" class="form-control" readonly />
-                                <span asp-validation-for="Purchasing.OpManagerSign" class="text-danger"></span>
+                                <label asp-for="Operations.OpManagerSign" class="control-label"></label>
+                                <input asp-for="Operations.OpManagerSign" class="form-control" readonly />
+                                <span asp-validation-for="Operations.OpManagerSign" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label asp-for="Purchasing.PurchasingDate" class="control-label"></label>
-                                <input asp-for="Purchasing.PurchasingDate" class="form-control" id="purchasingDate" readonly />
-                                <span asp-validation-for="Purchasing.PurchasingDate" class="text-danger"></span>
+                                <label asp-for="Operations.OperationsDate" class="control-label"></label>
+                                <input asp-for="Operations.OperationsDate" class="form-control" id="operationsDate" readonly />
+                                <span asp-validation-for="Operations.OperationsDate" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
@@ -368,25 +368,25 @@
                     </div>
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label asp-for="Purchasing.Message" class="control-label"></label>
-                            <textarea asp-for="Purchasing.Message" rows="5" class="form-control" readonly></textarea>
-                            <span asp-validation-for="Purchasing.Message" class="text-danger"></span>
+                            <label asp-for="Operations.Message" class="control-label"></label>
+                            <textarea asp-for="Operations.Message" rows="5" class="form-control" readonly></textarea>
+                            <span asp-validation-for="Operations.Message" class="text-danger"></span>
                         </div>
                     </div>
                 </div>
 
-                @if (Model.Purchasing != null)
+                @if (Model.Operations != null && (Model.Operations.QualityPhotos.Any() || Model.Operations.VideoLinks.Any()))
                 {
                     <div class="section-form multimedia">
                         <div class="section-label">
                             <h4>Multimedia</h4>
                             <hr />
                         </div>
-                        @if (Model.Purchasing.QualityPhotos?.Any() ?? false)
+                        @if (Model.Operations.QualityPhotos?.Any() ?? false)
                         {
                             <p class="control-label">Images</p>
                             <div class="form-group details-images">
-                                @foreach (var image in Model.Purchasing.QualityPhotos)
+                                @foreach (var image in Model.Operations.QualityPhotos)
                                 {
                                     string imageBase64 = Convert.ToBase64String(image.Content);
                                     string imageSrc = string.Format("data:" + image.MimeType + ";base64,{0}", imageBase64);
@@ -397,12 +397,12 @@
                                 }
                             </div>
                         }
-                        @if (Model.Purchasing.VideoLinks != null && Model.Purchasing.VideoLinks.Any())
+                        @if (Model.Operations.VideoLinks != null && Model.Operations.VideoLinks.Any())
                         {
                             <div class="form-group details-links">
                                 <p class="control-label">Video links</p>
                                 <ul>
-                                    @foreach (var link in Model.Purchasing.VideoLinks)
+                                    @foreach (var link in Model.Operations.VideoLinks)
                                     {
                                         <li>
                                             <a href="@link.Link" target="_blank">@link.Link</a>
@@ -499,7 +499,7 @@
                     </div>
                 </div>
 
-                @if (Model.Procurement != null)
+                @if (Model.Procurement != null && (Model.Operations.QualityPhotos.Any() || Model.Operations.VideoLinks.Any()))
                 {
                     <div class="section-form multimedia">
                         <div class="section-label">
@@ -576,7 +576,7 @@
                     </div>
                 </div>
 
-                @if (Model.Reinspection != null)
+                @if (Model.Reinspection != null && (Model.QualityRepresentative.QualityPhotos.Any() || Model.QualityRepresentative.VideoLinks.Any()))
                 {
                     <div class="section-form multimedia">
                         <div class="section-label">
@@ -617,34 +617,36 @@
         </div>
     </div>
 </div>
+@section Scripts {
+    <script>
 
-<script>
-    // Get the images
-    // var images = document.querySelectorAll(".img-fluid");
+        // Get the images
+        // var images = document.querySelectorAll(".img-fluid");
 
-    // images.forEach(function (image) {
+        // images.forEach(function (image) {
 
-    //     //Get the image clicked
-    //     image.onclick = function () {
-    //         let imageRow = image.closest(".card");
+        //     //Get the image clicked
+        //     image.onclick = function () {
+        //         let imageRow = image.closest(".card");
 
-    //         image.classList.toggle("expanded");
-    //         imageRow.classList.toggle("image-modal");
-    //         imageRow.style.display = "flex";
+        //         image.classList.toggle("expanded");
+        //         imageRow.classList.toggle("image-modal");
+        //         imageRow.style.display = "flex";
 
-    //         //Toggle id
-    //         if (image.id === "clickedImage") {
-    //             image.removeAttribute("id");
-    //         } else {
-    //             image.id = "clickedImage";
-    //         }
+        //         //Toggle id
+        //         if (image.id === "clickedImage") {
+        //             image.removeAttribute("id");
+        //         } else {
+        //             image.id = "clickedImage";
+        //         }
 
-    //         // Hide images other than the clicked one
-    //         images.forEach(function (otherImage) {
-    //             if (otherImage !== image) {
-    //                 otherImage.classList.toggle("hide-other-imgs")
-    //             }
-    //         });
-    //     }
-    // });
-</script>
+        //         // Hide images other than the clicked one
+        //         images.forEach(function (otherImage) {
+        //             if (otherImage !== image) {
+        //                 otherImage.classList.toggle("hide-other-imgs")
+        //             }
+        //         });
+        //     }
+        // });
+    </script>
+}

@@ -1,9 +1,10 @@
 ﻿@model Haver.ViewModels.EmployeeAdminVM
 
 
-<div>
+<div class="standard-page-header">
+    <partial name="_BackToList" />
     <h1>Create Employee</h1>
-    <hr/>
+    <hr class="standard-border-bottom"/>
 </div>
 <form asp-action="Create">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -59,18 +60,15 @@
                             }
                         @:</tr>
                         }
-                    </table>
-                </div>
+                </table>
             </div>
         </div>
-        <div class="form-group">
-            <input type="submit" value="Create" class="btn btn-primary" />
-        </div>
-    </form>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary" />
+    </div>
+</form>
 
-<div>
-    <partial name="_BackToList" />
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

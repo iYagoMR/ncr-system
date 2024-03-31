@@ -27,15 +27,15 @@ function fill2() {
     $('textarea[name="Engineering.CustIssueMsg"]').val('Customer issue message...');
 }
 function fill3() {
-    // Purchasing Section
-    $('input[name="Purchasing.CarRaised"]').prop('checked', true);
-    $('input[name="Purchasing.IsFollowUpReq"]').prop('checked', true);
-    $('input[name="Purchasing.CarNum"]').val('456');
-    $('input[name="Purchasing.FollowUpType"]').val('FollowUpTypeXYZ');
-    $('input[name="Purchasing.ExpecDate"]').val(getCurrentDate());
-    $('input[name="Purchasing.OpManagerSign"]').val('ManagerZ');
-    $('input[name="Purchasing.PurchasingDate"]').val(getCurrentDate());
-    $('textarea[name="Purchasing.Message"]').val('Purchasing message...');
+    // Operations Section
+    $('input[name="Operations.CarRaised"]').prop('checked', true);
+    $('input[name="Operations.IsFollowUpReq"]').prop('checked', true);
+    $('input[name="Operations.CarNum"]').val('456');
+    $('input[name="Operations.FollowUpType"]').val('FollowUpTypeXYZ');
+    $('input[name="Operations.ExpecDate"]').val(getCurrentDate());
+    $('input[name="Operations.OpManagerSign"]').val('ManagerZ');
+    $('input[name="Operations.OperationsDate"]').val(getCurrentDate());
+    $('textarea[name="Operations.Message"]').val('Operations message...');
 }
 function fill4() {
     // Procurement Section

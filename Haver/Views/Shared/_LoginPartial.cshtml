@@ -1,23 +1,43 @@
-﻿@using Microsoft.AspNetCore.Identity
+﻿@using Microsoft.EntityFrameworkCore;
+@using Microsoft.AspNetCore.Identity
+@using Haver.Data;
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
+@inject HaverContext _context
 @*For Cookies*@
 @inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
 
 <ul class="navbar-nav">
     @if (SignInManager.IsSignedIn(User))
     {
-        var userName = HttpContextAccessor.HttpContext.Request.Cookies["userName"] ?? UserManager.GetUserName(User);
+        //Get user logged in
         var user = await UserManager.GetUserAsync(User);
-        var userRole = (await UserManager.GetRolesAsync(user)).FirstOrDefault();
+        //Get user role
+        string userRole = (await UserManager.GetRolesAsync(user)).FirstOrDefault();
+        //User employee account
+        var emp = _context.Employees
+            .Include(e => e.EmployeePhoto)
+            .Where(e => e.Email == user.Email).FirstOrDefault();
 
         <li class="nav-item dropdown">
             <a class="nav-link text-white" href="#" id="navbarIDDropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <div class="user-nav">
+                    @{
+                        if (emp.EmployeePhoto?.Content != null)
+                        {
+                            string imageBase64 = Convert.ToBase64String(emp.EmployeePhoto.Content);
+                            string imageSrc = string.Format("data:" + emp.EmployeePhoto.MimeType + ";base64,{0}", imageBase64);
+                            <img src="@imageSrc" alt="Profile Picture of @emp.FullName" title="Profile Picture of @emp.FullName" class="img-fluid emp-image-nav" />
+                        }
+                        else
+                        {
+                            <img src="~/assets/images/user-pic-default.jpg" alt="Default profile picture" title="Default profile picture" class="img-fluid emp-image-nav" />
+                        }
+                    }
                     <div class="name-role">
-                        @userName
+                        @emp.FullName
                         <span>
-                            @userRole
+                        @userRole
                         </span>
                     </div>
                     <div>
@@ -27,8 +47,8 @@
 
             </a>
             <ul class="header-user-dropd dropdown-menu" aria-labelledby="navbarIDDropdown">
-                <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Change Security Settings</a></li>
-                <li><a class="dropdown-item" asp-area="" asp-controller="EmployeeAccount" asp-action="Details">Manage Account</a></li>
+                <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Security Settings</a></li>
+                <li><a class="dropdown-item" asp-area="" asp-controller="EmployeeAccount" asp-action="Details">Account Details</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
                     <button type="submit" class="dropdown-item btn btn-link">Logout</button>

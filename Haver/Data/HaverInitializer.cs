@@ -27,14 +27,14 @@ namespace Haver.Data
                      {
                          FirstName = "Fred",
                          LastName = "Flintstone",
-                         Email = "super@outlook.com"
+                         Email = "admin@outlook.com"
                      },
-                     new Employee
-                     {
-                         FirstName = "Betty",
-                         LastName = "Rubble",
-                         Email = "user@outlook.com"
-                     });
+                    new Employee
+                    {
+                        FirstName = "Peter",
+                        LastName = "Parker",
+                        Email = "engineer@outlook.com"
+                    });
 
                     context.SaveChanges();
                 }

@@ -16,7 +16,7 @@ namespace Haver.Data
 
                 var RoleManager = applicastionBuilder.ApplicationServices.CreateScope()
                     .ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-                string[] roleNames = new string[] { "Admin", "Engineering", "Procurement", "Operations Manager", "Quality Inspector" };
+                string[] roleNames = new string[] { "Admin", "Engineer", "Procurement", "Operations Manager", "Quality Inspector" };
                 IdentityResult roleResult;
                 foreach (var roleName in roleNames)
                 {
@@ -44,12 +44,12 @@ namespace Haver.Data
                         userManager.AddToRoleAsync(user, "Admin").Wait();
                     }
                 }
-                if (userManager.FindByEmailAsync("super@outlook.com").Result == null)
+                if (userManager.FindByEmailAsync("engineer@outlook.com").Result == null)
                 {
                     IdentityUser user = new IdentityUser
                     {
-                        UserName = "super@outlook.com",
-                        Email = "super@outlook.com",
+                        UserName = "engineer@outlook.com",
+                        Email = "engineer@outlook.com",
                         EmailConfirmed = true
                     };
 
@@ -57,15 +57,15 @@ namespace Haver.Data
 
                     if (result.Succeeded)
                     {
-                        userManager.AddToRoleAsync(user, "Engineering").Wait();
+                        userManager.AddToRoleAsync(user, "Engineer").Wait();
                     }
                 }
-                if (userManager.FindByEmailAsync("user@outlook.com").Result == null)
+                if (userManager.FindByEmailAsync("admin@outlook.com").Result == null)
                 {
                     IdentityUser user = new IdentityUser
                     {
-                        UserName = "user@outlook.com",
-                        Email = "user@outlook.com",
+                        UserName = "admin@outlook.com",
+                        Email = "admin@outlook.com",
                         EmailConfirmed = true
                     };
 
@@ -73,7 +73,7 @@ namespace Haver.Data
 
                     if (result.Succeeded)
                     {
-                        userManager.AddToRoleAsync(user, "Procurement").Wait();
+                        userManager.AddToRoleAsync(user, "Admin").Wait();
                     }
                 }
             }
