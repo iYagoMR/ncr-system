@@ -28,6 +28,11 @@ namespace Haver.CustomControllers
             ViewData["ControllerFriendlyName"] = SplitCamelCase(ControllerName());
             ViewData["ActionName"] = ActionName();
             ViewData["Title"] = ControllerName() + " " + ActionName();
+            if (!ViewData.ContainsKey("returnURL"))
+            {
+                ViewData["returnURL"] = "/" + ControllerName();
+            }
+
             base.OnActionExecuting(context);
         }
 
@@ -40,6 +45,11 @@ namespace Haver.CustomControllers
             ViewData["ControllerFriendlyName"] = SplitCamelCase(ControllerName());
             ViewData["ActionName"] = ActionName();
             ViewData["Title"] = ControllerName() + " " + ActionName();
+            if (!ViewData.ContainsKey("returnURL"))
+            {
+                ViewData["returnURL"] = "/" + ControllerName();
+            }
+
             return base.OnActionExecutionAsync(context, next);
         }
     }

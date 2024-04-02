@@ -4,10 +4,17 @@
     ViewData["Title"] = "Details";
 }
 
-<div class="page-sub-title">
-    <a asp-action="Index"><i class="bi bi-arrow-left"></i></a>
+<div class="standard-page-header">
+    <partial name="_BackToList" />
     <h1>Details</h1>
 </div>
+@if(Model.VoidingReason != null)
+{
+<div class="form-group">
+    <label asp-for="VoidingReason" class="control-label"></label>
+    <input asp-for="VoidingReason" class="form-control" readonly>
+</div>
+}
 
 
 <div class="accordion" id="accordionPanelsStayOpenExample">

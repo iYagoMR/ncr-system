@@ -39,9 +39,18 @@ main {
 
 /*Universal*/
 
-.row {
+.graphs-charts.row {
     --bs-gutter-x: 2rem;
     --bs-gutter-y: 2rem;
+}
+.stats-cards-dashboard .row{
+    --bs-gutter-y: 1rem;
+}
+.filtering-fields .row{
+    --bs-gutter-y: 0rem;
+}
+.row {
+    --bs-gutter-x: 2rem;
 }
 
 .dropdown-item{
@@ -111,7 +120,7 @@ main {
 }
 
 th, td{
-    text-align: center;
+    text-align: left;
     vertical-align: middle;
 }
 
@@ -134,10 +143,18 @@ th{
 
 
 .ncr-list-row > tr > td:nth-child(1) > div {
+    max-width: 150px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-align: center;
     background-color: var(--blue-light);
     border-radius: 8px;
-    padding: 8px 8px;
+    padding: 8px 12px;
     color: var(--haver-blue);
+}
+.ncr-list-row > tr > td:nth-child(1) > div:hover {
+    overflow-x: visible;
+    white-space: normal;
 }
 
 .ncr-list-row label {
@@ -363,7 +380,10 @@ tbody tr.grey-rows td {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: center;
+    justify-content: left;
+}
+.sorting-headers .btn{
+    padding: 0 10px 0 0;
 }
 
 /*Colors*/
@@ -1088,19 +1108,20 @@ main > form > table > tbody > tr > td:nth-child(7){
 }
 
 /*List configs*/
-.positive-change-list{ color: var(--positive); }
+.positive-change-list{ color: var(--red); }
 .negative-change-list{ color: var(--green); }
 
 .list .navigator {margin-top: auto;}
 .list .navigator ul{margin-bottom: 0;}
 
 .standard-card.list td:last-child {
-    text-align: center;
+    text-align: left;
 }
 
 .standard-card.list .standard-card-header div:nth-child(2){
     min-width: 150px;
 }
+
 /*Standad card header*/
 .standard-card-header div:nth-child(2) > div:nth-child(2) {
     position: relative;
@@ -1156,8 +1177,12 @@ main > form > table > tbody > tr > td:nth-child(7){
     text-align: center;
 }
 
-/*Standard Card */
+/*NCRT List min-heigh*/
+body > div > main > div.col-lg-12 > div {
+    min-height: 446.33px;
+}
 
+/*Standard Card */
 .standard-card th input {
     width: 60px;
     cursor: pointer;
@@ -1220,8 +1245,8 @@ main > form > table > tbody > tr > td:nth-child(7){
 .notEnoughDataText {
     opacity: 0.5;
     text-align: center;
-    margin-top: auto;
-    margin-bottom: 50%;
+/*    margin-top: auto;
+    margin-bottom: 50%;*/
 }
 #EnoughData, #supEnoughData {
     height: 100%;
@@ -1238,10 +1263,10 @@ main > form > table > tbody > tr > td:nth-child(7){
 
 .dashboard-btns div div{
     grid-template-areas:
-        'A B'
+        'C B'
         'C D'
-        'C E'
-        'C F';
+        'A E'
+        'A F';
 }
 .dashboard-btns div div a:nth-child(1){ grid-area: A; }
 .dashboard-btns div div a:nth-child(2){ grid-area: B; }
@@ -1286,6 +1311,10 @@ main > form > table > tbody > tr > td:nth-child(7){
     margin-top: unset;
 }
 
+.dashboard-btns .row .col-md-12{
+    height: 100%;
+}
+
 /*.stats-cards-dashboard div div {
     grid-template-areas:
         'A B'
@@ -1299,7 +1328,6 @@ main > form > table > tbody > tr > td:nth-child(7){
 .dashboard-btns div div a:nth-child(4){ grid-area: D; }
 .dashboard-btns div div a:nth-child(5){ grid-area: E; }
 .dashboard-btns div div a:nth-child(6){ grid-area: F; }*/
-
 .stats-cards-dashboard > div > div > div:nth-child(1) {
     margin-top: unset;
 }
@@ -1320,6 +1348,47 @@ h5{
     color: var(--blue);
     font-size: 1.5rem;
     font-weight: 500;
+}
+/*Detailed cards*/
+.detailed-cards .card-title{
+    margin-bottom: 1rem;
+}
+
+/*Time counters*/
+.time-counters {
+    background-color: white;
+    border-radius: 8px;
+    padding: 8px 20px;
+    align-content: center;
+    justify-content: space-between;
+    display: flex;
+    gap: 1.2rem;
+}
+
+.time-counters a{
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    text-align: center; 
+}
+.time-counters p {
+    margin-bottom: 0;
+}
+
+.time-counters a:nth-child(2) p{
+    color: var(--yellow);
+}
+.time-counters a:nth-child(3) p {
+    color: var(--red);
+}
+.time-counters a:nth-child(4) p {
+    color: black;
+}
+
+.time-counters span{
+    font-weight: 400;
+    font-size: 12px;
+    color: var(--text2);
 }
 
 /*Lookups*/
@@ -1489,9 +1558,23 @@ input[type="file"]::file-selector-button {
     .row.analytics .col-md-6:nth-child(2){
         margin-top: 0;
     }
-
+    /*Dashboard Cards, detailed cards*/
+    .stats-cards-dashboard.detailed-cards .row {
+        display: flex;
+        flex-direction: column;
+    }
+    .stats-cards-dashboard.detailed-cards .row .col-md-6{
+        flex: 1; 
+        width: 100%;
+    }
 
 }
+
+/*@media (min-width: 768px) and (max-width: 991px) {
+    .login-page .col-md-4 {
+        width: 50%;
+    }
+}*/
 
 @media (min-width: 768px) and (max-width: 1199px) {
     .login-page .col-md-4 {
@@ -1571,6 +1654,17 @@ input[type="file"]::file-selector-button {
     .standard-card-header div:nth-child(2) {
         flex-direction: column;
         align-items: unset;
+    }
+
+    .stats-cards-dashboard div div {
+        grid-template-areas:
+            'A A'
+            'B B'
+            'C C';
+    }
+
+    .time-counters{
+        width: 100%;
     }
     
 }

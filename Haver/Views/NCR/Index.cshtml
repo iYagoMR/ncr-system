@@ -22,7 +22,7 @@
                     <a class="nav-link" asp-area="" asp-controller="NCR" asp-action="Archived" onclick="activateLink(this)">Archived NCRs</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" asp-area="" asp-controller="NCR" asp-action="Archiving" onclick="activateLink(this)">Archiving helper</a>
+                    <a class="nav-link" asp-area="" asp-controller="NCR" asp-action="Archiving" onclick="activateLink(this)">Bulk Archiving</a>
                 </li>
             }
         </ul>
@@ -39,7 +39,7 @@
                 <li><a class="nav-link" asp-area="" asp-controller="NCR" asp-action="Index" onclick="activateLink(this)">NCR log</a></li>
                 <li><a class="nav-link" asp-area="" asp-controller="NCR" asp-action="Analytics" onclick="activateLink(this)">Analytics</a></li>
                 <li><a class="nav-link" asp-area="" asp-controller="NCR" asp-action="Archived" onclick="activateLink(this)">Archived NCRs</a></li>
-                <li><a class="nav-link" asp-area="" asp-controller="NCR" asp-action="Archiving" onclick="activateLink(this)">Archiving helper</a></li>
+                <li><a class="nav-link" asp-area="" asp-controller="NCR" asp-action="Archiving" onclick="activateLink(this)">Bulk Archiving</a></li>
             </ul>
         }
         <h2>NCR Log</h2>
@@ -201,7 +201,8 @@ else
                                     }
                                     @if (item.Status != "Active" && User.IsInRole("Admin"))
                                     {
-                                        <li><a class="dropdown-item" onclick="retriveID(@item.ID, 'download simple')">Download PDF</a></li>
+                                        <li><a class="dropdown-item" href="@Url.Action("DownloadPDF", "NCR", new { id = @item.ID })">Download PDF</a></li>
+                                        
                                     }
                                     @if (item.PrevNCRID != null)
                                     {
@@ -337,7 +338,7 @@ else
                                 }
                                 @if (item.Status != "Active" && User.IsInRole("Admin"))
                                 {
-                                    <a class="btn btn-primary" onclick="retriveID(@item.ID, 'download simple')">Download PDF</a>
+                                    <a class="btn btn-primary" href="@Url.Action("DownloadPDF", "NCR", new { id = @item.ID })">Download PDF</a>
                                 }
                                 @if (item.PrevNCRID != null)
                                 {

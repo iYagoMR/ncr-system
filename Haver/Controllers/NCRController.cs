@@ -36,12 +36,13 @@ using QuestPDF.Fluent;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 using Microsoft.AspNetCore.Http;
+using Haver.CustomControllers;
 
 
 namespace Haver.Controllers
 {
-    //[Authorize]
-    public class NCRController : Controller
+    [Authorize]
+    public class NCRController : ElephantController
     {
         private readonly IMyEmailSender _emailSender;
         private readonly HaverContext _context;
@@ -55,9 +56,11 @@ namespace Haver.Controllers
         }
 
         //GET: NCR
-        public async Task<IActionResult> Index(string SearchString, int? SupplierID, int? page, int? pageSizeID, string SelectedOption
+        public async Task<IActionResult> Index(string filter1, string SearchString, int? SupplierID, int? page, int? pageSizeID, string SelectedOption
             , string actionButton, string active, string sortDirection = "desc", string sortField = "CREATED ON")
         {
+            //var countersConstructor = new CalculateNCRTimeCounters();
+
             PopulateList();
 
             string[] sortOptions = new[] { "NCR NO.", "CREATED ON" };
@@ -70,6 +73,28 @@ namespace Haver.Controllers
                                             .Where(n => !n.IsNCRArchived)
                                             .AsNoTracking();
 
+            ////Redirect counters handler
+            //// Filter NCR records with Active phase
+            //var activeNCRs = _context.NCRs.Where(ncr => ncr.Status == "Active")
+            //                              .Where(ncr => !ncr.IsNCRDraft);
+
+            ////Get NCRs in Each section
+            //var QualNCRs = activeNCRs.Where(ncr => ncr.Phase == "Quality Representative").ToList();
+            //var EngNCRs = activeNCRs.Include(ncr => ncr.QualityRepresentative).Where(ncr => ncr.Phase == "Engineering").ToList();
+            //var OperNCRs = activeNCRs.Include(ncr => ncr.Engineering).Include(ncr => ncr.QualityRepresentative).Where(ncr => ncr.Phase == "Operations").ToList();
+            //var ProcNCRs = activeNCRs.Include(ncr => ncr.Procurement).Where(ncr => ncr.Phase == "Procurement").ToList();
+            //var ReinspNCRs = activeNCRs.Include(ncr => ncr.Operations).Where(ncr => ncr.Phase == "Reinspection").ToList();
+
+            //(int qual24, int qual48, int qual5, int qualTotal, List<NCR> qualNCR) qualCounters = countersConstructor.QualCounters(QualNCRs);
+            //(int eng24, int eng48, int eng5, int engTotal) engCounters = countersConstructor.EngCounters(EngNCRs);
+            //(int oper24, int oper48, int oper5, int operTotal) operCounters = countersConstructor.OperCounters(OperNCRs);
+            //(int proc24, int proc48, int proc5, int procTotal) procCounters = countersConstructor.ProcCounters(ProcNCRs);
+            //(int reinsp24, int reinsp48, int reinsp5, int reinspTotal) reinspCounters = countersConstructor.ReinspCounters(ReinspNCRs);
+
+            if (filter1 != null)
+            {
+                haverContext = haverContext.Where(p => p.Phase == filter1);
+            }
             if (SupplierID.HasValue)
             {
                 haverContext = haverContext.Where(p => p.QualityRepresentative.SupplierID == SupplierID);
@@ -420,6 +445,97 @@ namespace Haver.Controllers
             return View(pagedData);
         }
 
+        public IActionResult SuppliersList(string actionButton, string sortDirection = "desc", string sortField = "TOTAL", string period = "Monthly", int page = 1)
+        {
+            try
+            {
+                string[] sortOptions = new[] { "TOTAL" };
+
+                //Method to get time span
+                var timeSpan = GetTimeSpan(period);
+
+                //Get parts
+                var suppliers = _context.Suppliers.ToList();
+                var defectivePartsList = new List<PartsDefectiveVM>();
+
+                //Retrieve a list containing the parts Linked to each Quality Representative section
+                foreach (var supplier in suppliers)
+                {
+                    List<QualityRepresentative> items = GetQualRepsBySupplier(Convert.ToString(supplier.SupplierCode), timeSpan, false);
+
+                    int sumQuantDefective = items.Sum(p => p.QuantDefective);
+
+                    //Method to calculate PoP change
+                    (double periodChange, int total, int previousTotal) periodChange = PoPChange(Convert.ToString(supplier.SupplierCode), timeSpan, "supplier");
+
+                    PartsDefectiveVM partDefective = new PartsDefectiveVM
+                    {
+                        SupplierName = supplier.SupplierName,
+                        PartsDefectiveAmount = sumQuantDefective,
+                        PeriodChange = double.IsNaN(periodChange.periodChange) || double.IsInfinity(periodChange.periodChange) ? null : Math.Abs(periodChange.periodChange),
+                        IsChangePositive = periodChange.previousTotal >= periodChange.total ? false : true
+                    };
+
+                    // Add to the list, only if quantity defective is bigger than zero
+                    if (sumQuantDefective > 0)
+                    {
+                        defectivePartsList.Add(partDefective);
+                    }
+                }
+
+                //Before we sort, see if we have called for a change of filtering or sorting
+                if (!string.IsNullOrEmpty(actionButton)) //Form Submitted!
+                {
+
+                    //page = 1;//Reset Page 
+
+                    if (sortOptions.Contains(actionButton))//Change of sort is requested
+                    {
+                        if (actionButton == sortField) //Reverse order on same field
+                        {
+                            sortDirection = sortDirection == "asc" ? "desc" : "asc";
+                        }
+                        sortField = actionButton;//Sort by the button clicked
+                    }
+                }
+
+                //Now we know which field and direction to sort by
+                if (sortField == "TOTAL")
+                {
+                    if (sortDirection == "asc")
+                    {
+                        defectivePartsList = defectivePartsList.OrderBy(d => d.PartsDefectiveAmount).ToList();
+                    }
+                    else
+                    {
+                        defectivePartsList = defectivePartsList.OrderByDescending(d => d.PartsDefectiveAmount).ToList();
+                    }
+                }
+
+                ViewData["sortDirection"] = sortDirection;
+
+                // Pagination
+                int pageSize = 5; // Number of items per page
+                int recordsInTheList = defectivePartsList.Count();
+                int numbOfPages = (int)Math.Ceiling((double)recordsInTheList / pageSize);
+
+                var pagedData = defectivePartsList.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+
+                var response = new ComposedAnalyticsListsVM
+                {
+                    PagedData = pagedData,
+                    NumbOfPages = numbOfPages,
+                    PageNum = page
+                };
+
+                return Ok(response);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
         public IActionResult SuppliersChartModel(string period = null, string supplierSelected = null)
         {
             PartsDefectiveVM partsDefectiveVM = new PartsDefectiveVM();
@@ -448,7 +564,7 @@ namespace Haver.Controllers
                 partsDefectiveVM.StartDate = formattedStartDate;
                 partsDefectiveVM.EndDate = formattedEndDate;
                 partsDefectiveVM.PartsDefectiveAmount = periodChange.total;
-                partsDefectiveVM.PeriodChange = double.IsNaN(periodChange.periodChange) || double.IsInfinity(periodChange.periodChange) ? null : periodChange.periodChange;
+                partsDefectiveVM.PeriodChange = double.IsNaN(periodChange.periodChange) || double.IsInfinity(periodChange.periodChange) ? null : Math.Abs(periodChange.periodChange);
                 partsDefectiveVM.IsChangePositive = periodChange.previousTotal >= periodChange.total ? false : true;
 
                 return Ok(partsDefectiveVM);
@@ -554,17 +670,23 @@ namespace Haver.Controllers
             return null;
         }
 
-        public IActionResult GetNCRTimeList(string actionButton, string sortDirection = "desc", string sortField = "SINCE CREATED", int page = 1)
+        public IActionResult GetNCRTimeList(string actionButton, string sortDirection = "desc", string sortField = "SINCE CREATION", int page = 1)
         {
             try
             {
-                string[] sortOptions = new[] { "SINCE CREATED", "LAST FILLED" };
+                string[] sortOptions = new[] { "SINCE CREATION", "LAST FILLED" };
 
 
                 //Get parts
                 var NCRs = _context.NCRs
                     .Where(ncr => ncr.Status == "Active")
+                    .Where(ncr => !ncr.IsNCRArchived)
                     .Include(ncr => ncr.QualityRepresentative.Problem)
+                    .Include(ncr => ncr.QualityRepresentative)
+                    .Include(ncr => ncr.Engineering)
+                    .Include(ncr => ncr.Procurement)
+                    .Include(ncr => ncr.Operations)
+                    .Include(ncr => ncr.Reinspection)
                     .ToList();
                 var ncrTimeList = new List<NCRTimeListVM>();
 
@@ -573,32 +695,36 @@ namespace Haver.Controllers
                 {
                     //Get the number of days since last filled
                     TimeSpan differenceLastFilled;
-                    int lastFilled = 0;
+                    NCRTimeListVM ncrRecord = new NCRTimeListVM();
 
-                    if (NCR.Phase == "Quality Representative")
+                    if (NCR.Phase == "Engineering")
                     {
-                        differenceLastFilled = DateTime.Now - Convert.ToDateTime(NCR.QualityRepresentative?.QualityRepDate);
-                        lastFilled = differenceLastFilled.Days;
-                    }
-                    else if (NCR.Phase == "Egineering")
-                    {
-                        differenceLastFilled = DateTime.Now - Convert.ToDateTime(NCR.Engineering?.EngineeringDate);
-                        lastFilled = differenceLastFilled.Days;
-                    }
-                    else if (NCR.Phase == "Procurement")
-                    {
-                        differenceLastFilled = DateTime.Now - Convert.ToDateTime(NCR.Procurement?.ProcurementDate);
-                        lastFilled = differenceLastFilled.Days;
+                        // Converting DateOnly to DateTime by providing Time Info
+                        DateTime testDateTime = (DateTime)(NCR.QualityRepresentative?.QualityRepDate.ToDateTime(TimeOnly.Parse(Convert.ToString(NCR.CreatedOn.TimeOfDay))));
+                        differenceLastFilled = DateTime.Now - testDateTime;
+                        ncrRecord.LastFilled = differenceLastFilled.Days;
                     }
                     else if (NCR.Phase == "Operations")
                     {
-                        differenceLastFilled = DateTime.Now - Convert.ToDateTime(NCR.Operations?.OperationsDate);
-                        lastFilled = differenceLastFilled.Days;
+                        
+                        // Converting DateOnly to DateTime by providing Time Info
+                        DateTime testDateTime = (DateTime)(NCR.Engineering?.EngineeringDate.ToDateTime(TimeOnly.Parse("11:59 PM")));
+                        differenceLastFilled = DateTime.Now - testDateTime;
+                        ncrRecord.LastFilled = differenceLastFilled.Days;
+                    }
+                    else if (NCR.Phase == "Procurement")
+                    {
+                        // Converting DateOnly to DateTime by providing Time Info
+                        DateTime testDateTime = (DateTime)(NCR.Operations?.OperationsDate.ToDateTime(TimeOnly.Parse("11:59 PM")));
+                        differenceLastFilled = DateTime.Now - testDateTime;
+                        ncrRecord.LastFilled = differenceLastFilled.Days;
                     }
                     else if (NCR.Phase == "Reinspection")
                     {
-                        differenceLastFilled = DateTime.Now - Convert.ToDateTime(NCR.Reinspection?.ReinspectionDate);
-                        lastFilled = differenceLastFilled.Days;
+                        // Converting DateOnly to DateTime by providing Time Info
+                        DateTime testDateTime = (DateTime)(NCR.Procurement?.ProcurementDate.ToDateTime(TimeOnly.Parse("11:59 PM")));
+                        differenceLastFilled = DateTime.Now - testDateTime;
+                        ncrRecord.LastFilled = differenceLastFilled.Days;
                     }
 
                     //Get the number of days since created
@@ -608,17 +734,16 @@ namespace Haver.Controllers
                     differenceCreated = DateTime.Now - Convert.ToDateTime(NCR.CreatedOn);
                     sinceCreated = differenceCreated.Days;
 
-                    NCRTimeListVM ncrRecord = new NCRTimeListVM
-                    {
-                        NCRNo = NCR.NCRNum,
-                        Problem = NCR.QualityRepresentative?.Problem.ProblemDescription,
-                        Phase = NCR.Phase,
-                        LastFilled = lastFilled,
-                        SinceCreated = sinceCreated
-                    };
+                    ncrRecord.NCRNo = NCR.NCRNum;
+                    ncrRecord.Problem = NCR.QualityRepresentative?.Problem.ProblemDescription;
+                    ncrRecord.Phase = NCR.Phase;
+                    ncrRecord.SinceCreated = sinceCreated;
 
                     // Add to the list
-                    ncrTimeList.Add(ncrRecord);
+                    if (sinceCreated >= 1)
+                    {
+                        ncrTimeList.Add(ncrRecord);
+                    }
                 }
 
                 //Before we sort, see if we have called for a change of filtering or sorting
@@ -638,7 +763,7 @@ namespace Haver.Controllers
                 }
 
                 //Now we know which field and direction to sort by
-                if (sortField == "SINCE CREATED")
+                if (sortField == "SINCE CREATION")
                 {
                     if (sortDirection == "asc")
                     {
@@ -701,12 +826,15 @@ namespace Haver.Controllers
                     {
                         PartNumber = part.PartNumber,
                         PartsDefectiveAmount = sumQuantDefective,
-                        PeriodChange = double.IsNaN(periodChange.periodChange) || double.IsInfinity(periodChange.periodChange) ? null : periodChange.periodChange,
+                        PeriodChange = double.IsNaN(periodChange.periodChange) || double.IsInfinity(periodChange.periodChange) ? null : Math.Abs(periodChange.periodChange),
                         IsChangePositive = periodChange.previousTotal >= periodChange.total ? false : true
                     };
 
                     // Add to the list
-                    defectivePartsList.Add(partDefective);
+                    if (sumQuantDefective > 0)
+                    {
+                        defectivePartsList.Add(partDefective);
+                    }
                 }
 
                 //Before we sort, see if we have called for a change of filtering or sorting
@@ -790,7 +918,7 @@ namespace Haver.Controllers
                 partsDefectiveVM.StartDate = formattedStartDate;
                 partsDefectiveVM.EndDate = formattedEndDate;
                 partsDefectiveVM.PartsDefectiveAmount = periodChange.total;
-                partsDefectiveVM.PeriodChange = double.IsNaN(periodChange.periodChange) || double.IsInfinity(periodChange.periodChange) ? null : periodChange.periodChange;
+                partsDefectiveVM.PeriodChange = double.IsNaN(periodChange.periodChange) || double.IsInfinity(periodChange.periodChange) ? null : Math.Abs(periodChange.periodChange);
                 partsDefectiveVM.IsChangePositive = periodChange.previousTotal >= periodChange.total ? false : true;
 
                 return Ok(partsDefectiveVM);

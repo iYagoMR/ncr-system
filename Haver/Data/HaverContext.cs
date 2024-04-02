@@ -44,6 +44,16 @@ namespace Haver.Data
             .HasIndex(a => new { a.Email })
             .IsUnique();
 
+            //Add a unique index to the Parts Number
+            modelBuilder.Entity<Part>()
+            .HasIndex(a => new { a.PartNumber })
+            .IsUnique();
+
+            //Add a unique index to the Supplier code
+            modelBuilder.Entity<Supplier>()
+            .HasIndex(a => new { a.SupplierCode })
+            .IsUnique();
+
             // Configure cascading delete for DraftEngineering related entities
             modelBuilder.Entity<DraftQualityRepresentative>()
                 .HasMany(draftQualityRepresentative => draftQualityRepresentative.QualityPhotos)

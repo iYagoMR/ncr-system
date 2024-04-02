@@ -558,6 +558,9 @@ namespace Haver.Data.HMigrations
 
                     b.HasKey("ID");
 
+                    b.HasIndex("PartNumber")
+                        .IsUnique();
+
                     b.HasIndex("SupplierID");
 
                     b.ToTable("Parts");
@@ -851,6 +854,9 @@ namespace Haver.Data.HMigrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("SupplierCode")
+                        .IsUnique();
 
                     b.ToTable("Suppliers");
                 });

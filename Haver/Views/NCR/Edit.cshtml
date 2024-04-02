@@ -890,13 +890,12 @@
         <script src="~/js/photos-adder.js"></script>
     <script src="~/js/form-fill.js"></script>
     <script src="~/js/form-dates-filler.js"></script>
-    <script src="~/js/block-fields.js"></script>
+@*     <script src="~/js/block-fields.js"></script> *@
     @*     <script src="~/js/multiselect.js"></script> *@
     @*     <script src="~/js/expand-images.js"></script> *@
     <script src="~/js/video-link.js"></script>
 
     <script>
-
         // Helper method to unfold sections
         function toggleAccordion(sectionId, sectionButtonId, section) {
             const formControls = document.querySelectorAll('.form-control, .form-check-input, .form-select')
@@ -905,19 +904,18 @@
             $(sectionButtonId).removeClass('collapsed')
 
             //Block all the fields that do not belong to the current section
-            for (let item of formControls) {
-                let parentDiv = item.closest('.accordion-collapse');
-
-                if (parentDiv.id != section) {
-                    item.disabled = true;
-                }
-            }
+            // for (let item of formControls) {
+            //     let parentDiv = item.closest('.accordion-collapse');
+            //     if (parentDiv.id != section) {
+            //         item.disabled = true;
+            //     }
+            // }
         }
 
         // Unfold section according to NCR Phase
         $(document).ready(function () {
-
             var currentSection = '@Model.Phase';
+            
             @{
                 //Get user logged in
                 var user = await UserManager.GetUserAsync(User);
@@ -928,7 +926,9 @@
                     .Include(e => e.EmployeePhoto)
                     .Where(e => e.Email == user.Email).FirstOrDefault();
             }
+
             var role = '@userRole';
+            console.log(role)
 
             if (role == "Quality Inspector") {
                 toggleAccordion('#QualityForm', '#Quality-Section', 'QualityForm');

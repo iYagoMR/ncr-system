@@ -20,7 +20,7 @@
                 <a class="nav-link" asp-area="" asp-controller="NCR" asp-action="Archived" onclick="activateLink(this)">Archived NCRs</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" asp-area="" asp-controller="NCR" asp-action="Archiving" onclick="activateLink(this)">Archiving helper</a>
+                <a class="nav-link" asp-area="" asp-controller="NCR" asp-action="Archiving" onclick="activateLink(this)">Bulk Archiving</a>
             </li>
 
         </ul>
@@ -35,7 +35,7 @@
             <li><a class="nav-link" asp-area="" asp-controller="NCR" asp-action="Index" onclick="activateLink(this)">NCR log</a></li>
             <li><a class="nav-link" asp-area="" asp-controller="NCR" asp-action="Analytics" onclick="activateLink(this)">Analytics</a></li>
             <li><a class="nav-link" asp-area="" asp-controller="NCR" asp-action="Archived" onclick="activateLink(this)">Archived NCRs</a></li>
-            <li><a class="nav-link" asp-area="" asp-controller="NCR" asp-action="Archiving" onclick="activateLink(this)">Archiving helper</a></li>
+            <li><a class="nav-link" asp-area="" asp-controller="NCR" asp-action="Archiving" onclick="activateLink(this)">Bulk Archiving</a></li>
         </ul>
         <h2>Analytics</h2>
         <hr />
@@ -131,7 +131,7 @@
                 </div>
                 <div id="NotEnoughData">
                     <div class="chart-container">
-                        <h1>Not enough data</h1>
+                        <h1 class="notEnoughDataText">Not enough data</h1>
                     </div>
                 </div>
             </div>
@@ -291,19 +291,19 @@
                 </div>
                 <div id="supNotEnoughData">
                     <div class="chart-container">
-                        <h1>Not enough data</h1>
+                        <h1 class="notEnoughDataText">Not enough data</h1>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-@*     <div class="col-lg-5">
+    <div class="col-lg-5">
         <div class="card standard-card list">
             <div id="SupEnoughDataList" class="card-body">
                 <div class="standard-card-header">
                     <div>
-                        <h5 class="card-title">Parts list</h5>
+                        <h5 class="card-title">Suppliers list</h5>
                         <i class="bi bi-info-circle-fill" data-tooltip="This list provides a ranking of the most defective parts grouped by supplier, accompanied by their total count and the Period-over-Period (PoP) change."></i>
                     </div>
                     <div>
@@ -350,7 +350,7 @@
             </div>
         </div>
 
-    </div> *@
+    </div>
 
 </div>
 
@@ -360,6 +360,121 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
         
     <script>
+        //Parts defective by supplier
+        //initialize variables
+        var suppliersListPageNumber = 1;
+        var suppliesListTotalPages = 0;
+
+        loadSuppliersList();
+
+        var suppliersActionButtonName; // Initially false
+
+        // Function to toggle the state of the button and update the UI
+        function sortSuppliersList() {
+            if (suppliersActionButtonName == 'TOTAL') {
+                suppliersActionButtonName = null;
+            }
+            else {
+                suppliersActionButtonName = 'TOTAL';
+            }
+            loadSuppliersList();
+        }
+
+        function loadSuppliersList() {
+            var period = document.getElementById("SuppliersListPeriod").value;
+            var sortDirection = document.getElementById("SuppliersListPeriod").value;
+
+            loadPage(1);
+
+            // Event handler for pagination links
+            window.changePage = function (btn) {
+                if (btn == "previous" && suppliersListPageNumber != 1) {
+                    var prevPage = suppliersListPageNumber - 1;
+                    suppliersListPageNumber--;
+                    loadPage(prevPage);
+                }
+                if (btn == "next" && suppliersListPageNumber < suppliesListTotalPages) {
+                    var nextPage = suppliersListPageNumber + 1;
+                    suppliersListPageNumber++;
+                    loadPage(nextPage);
+                }
+            };
+
+            function loadPage(pageNum) {
+                $.ajax({
+                    type: 'GET',
+                    url: "/NCR/SuppliersList",
+                    dataType: 'json',
+                    data:
+                    {
+                        actionButton: suppliersActionButtonName,
+                        period: period,
+                        page: suppliersListPageNumber,
+                    },
+                    contextType: "application/json; charset=utf8",
+                    dataType: "json",
+                    success: function (response) {
+
+                        //Assign number of pages to the the universal variable
+                        partsListTotalPages = response.numbOfPages;
+
+                        // Clear existing table rows
+                        $('.ncr-list-row.suppliers-list').empty();
+
+                        // Populate table with new data
+                        $.each(response.pagedData, function (index, item) {
+                            //Decide color of the period change number
+                            var colorClass = '';
+                            if (item.periodChange != null) {
+                                if (item.isChangePositive) {
+                                    colorClass = 'positive-change-list';
+                                } else {
+                                    colorClass = 'negative-change-list';
+                                }
+                            }
+
+                            var row = '<tr class="grey-rows">' +
+                                '<td><div>' + item.supplierName + '</td></div>' +
+                                '<td>' + item.partsDefectiveAmount + '</td>' +
+                                //If period change not null assign it to the list record
+                                '<td class="' + colorClass + '">' + (item.periodChange != null ? (item.isChangePositive ? '+' : '-') + item.periodChange + '%' : '---') + '</td>' +
+                                '</tr>';
+                            $('.ncr-list-row.suppliers-list').append(row);
+                        });
+
+                        $('#SupEnoughDataList').css('display', 'flex');
+
+                        $('#navigator-SuppliersList .page-counter-suppliers').text(response.pageNum + ' Of ' + response.numbOfPages);
+
+                        //Disable previous btn if in page one
+                        $('#navigator-SuppliersList .previous').css('background-color', '#19416d');
+                        if (partsListPageNumber <= 1) {
+                            $('#navigator-SuppliersList .previous').css('background-color', 'grey');
+                        }
+                        //Disable next btn if in last page
+                        $('#navigator-SuppliersList .next').css('background-color', '#19416d');
+                        if (partsListPageNumber == partsListTotalPages) {
+                            $('#navigator-SuppliersList .next').css('background-color', 'grey');
+                        }
+                        if (response.pagedData.length < 1) {
+                            $('#SupEnoughDataList .table').css('display', 'none');
+                            var NotEnoughDataText = '<div style="display: flex; align-items: center; justify-content: center; flex: 1;"><h1 class="notEnoughDataText">Not enough data</h1></div>'
+                            $('#SupEnoughDataList').append(NotEnoughDataText);
+                            $('#SupEnoughDataList .navigator').css('display', 'none');
+                        }
+                    },
+                    error: function (error) {
+                        $('#SupEnoughDataList .table').css('display', 'none');
+                        var NotEnoughDataText = '<div style="display: flex; align-items: center; justify-content: center; flex: 1;"><h1 class="notEnoughDataText">Not enough data</h1></div>'
+                        $('#SupEnoughDataList').append(NotEnoughDataText);
+                        $('#SupEnoughDataList .navigator').css('display', 'none');
+                        console.log(error);
+                    }
+                });
+            }
+        };
+
+
         //Suppliers chart
         //Initialize variables
         var mySuppliersChart;
@@ -388,7 +503,6 @@
                 contextType: "application/json; charset=utf8",
                 dataType: "json",
                 success: function (response) {
-                    console.log(response); // Log the response object to the console
 
                     var startDate = response.startDate;
                     var endDate = response.endDate;
@@ -565,11 +679,12 @@
 
                         // Populate table with new data
                         $.each(response.ncrtPagedData, function (index, item) {
+                            var lastFilledNum = item.lastFilled == null ? '---' : item.lastFilled;
 
                             var row = '<tr class="grey-rows">' +
                                 '<td><div>' + item.ncrNo + '</td></div>' +
                                 '<td>' + item.phase + '</td>' +
-                                '<td>' + item.lastFilled + '</td>' +
+                                '<td>' + lastFilledNum + '</td>' +
                                 '<td>' + item.sinceCreated + '</td>' +
                                 '</tr>';
                             $('.ncr-list-row.ncr-time-list').append(row);
@@ -580,25 +695,25 @@
                         $('#navigator-ncr-time-list .page-counter').text(response.pageNum + ' Of ' + response.numbOfPages);
 
                         //Disable previous btn if in page one
-                        $('#navigator-ncr-time-list  .previous').css('background-color', '#19416d');
-                        if (partsListPageNumber <= 1) {
-                            $('#navigator-ncr-time-list  .previous').css('background-color', 'grey');
+                        $('#navigator-ncr-time-list .previous').css('background-color', '#19416d');
+                        if (NCRTimeListPageNumber <= 1) {
+                            $('#navigator-ncr-time-list .previous').css('background-color', 'grey');
                         }
                         //Disable next btn if in last page
-                        $('#navigator-ncr-time-list  .next').css('background-color', '#19416d');
-                        if (partsListPageNumber == NCRTimeListTotalPages) {
+                        $('#navigator-ncr-time-list .next').css('background-color', '#19416d');
+                        if (NCRTimeListPageNumber == NCRTimeListTotalPages) {
                             $('#navigator-ncr-time-list .next').css('background-color', 'grey');
                         }
                         if (response.ncrtPagedData.length < 1) {
-                            $('#EnoughDataNCRT .table').css('display', 'none');
-                            var NotEnoughDataText = '<h1 class="notEnoughDataText">Not enough data</h1>'
+                            $('#EnoughDataNCRT .table-container').css('display', 'none');
+                            var NotEnoughDataText = '<div style="display: flex; align-items: center; justify-content: center; flex: 1;"><h1 class="notEnoughDataText">Not enough data</h1></div>'
                             $('#EnoughDataNCRT').append(NotEnoughDataText);
                             $('#EnoughDataNCRT .navigator').css('display', 'none');
                         }
                     },
                     error: function (error) {
-                        $('#EnoughDataNCRT .table').css('display', 'none');
-                        var NotEnoughDataText = '<h1 class="notEnoughDataText">Not enough data</h1>'
+                        $('#EnoughDataNCRT .table-container').css('display', 'none');
+                        var NotEnoughDataText = '<div style="display: flex; align-items: center; justify-content: center; flex: 1;"><h1 class="notEnoughDataText">Not enough data</h1></div>'
                         $('#EnoughDataNCRT').append(NotEnoughDataText);
                         $('#EnoughDataNCRT .navigator').css('display', 'none');
                         console.log(error);
@@ -661,7 +776,6 @@
                     contextType: "application/json; charset=utf8",
                     dataType: "json",
                     success: function (response) {
-                        console.log(response);
 
                         //Assign number of pages to the the universal variable
                         partsListTotalPages = response.numbOfPages;
@@ -706,14 +820,14 @@
                         }
                         if(response.pagedData.length < 1){
                             $('#EnoughDataPartsList .table').css('display', 'none');
-                            var NotEnoughDataText = '<h1 class="notEnoughDataText">Not enough data</h1>'
+                            var NotEnoughDataText = '<div style="display: flex; align-items: center; justify-content: center; flex: 1;"><h1 class="notEnoughDataText">Not enough data</h1></div>'
                             $('#EnoughDataPartsList').append(NotEnoughDataText);
                             $('#EnoughDataPartsList .navigator').css('display', 'none');
                         }
                     },
                     error: function (error) {
                         $('#EnoughDataPartsList .table').css('display', 'none');
-                        var NotEnoughDataText = '<h1 class="notEnoughDataText">Not enough data</h1>'
+                        var NotEnoughDataText = '<div style="display: flex; align-items: center; justify-content: center; flex: 1;"><h1 class="notEnoughDataText">Not enough data</h1></div>'
                         $('#EnoughDataPartsList').append(NotEnoughDataText);
                         $('#EnoughDataPartsList .navigator').css('display', 'none');
                         console.log(error);
@@ -750,7 +864,6 @@
                 contextType: "application/json; charset=utf8",
                 dataType: "json",
                 success: function (response) {
-                    console.log(response); // Log the response object to the console
 
                     var startDate = response.startDate;
                     var endDate = response.endDate;

@@ -34,6 +34,24 @@ namespace Haver.Data
                         FirstName = "Peter",
                         LastName = "Parker",
                         Email = "engineer@outlook.com"
+                    },
+                    new Employee
+                    {
+                        FirstName = "Margaret",
+                        LastName = "Thompson",
+                        Email = "procurement@outlook.com"
+                    },
+                    new Employee
+                    {
+                        FirstName = "Mary",
+                        LastName = "Grayson",
+                        Email = "qualityinsp@outlook.com"
+                    },
+                    new Employee
+                    {
+                        FirstName = "Jhoon",
+                        LastName = "Cook",
+                        Email = "opmanager@outlook.com"
                     });
 
                     context.SaveChanges();
@@ -41,39 +59,39 @@ namespace Haver.Data
 
 
 
-                if (!context.Suppliers.Any())
-                {
-                    context.Suppliers.AddRange(
-                        new Supplier
-                        {
-                            SupplierName = "Supplier 1"
-                        }, new Supplier
-                        {
-                            SupplierName = "Supplier 2"
-                        }, new Supplier
-                        {
-                            SupplierName = "Supplier 3"
-                        }, new Supplier
-                        {
-                            SupplierName = "Supplier 4"
-                        });
-                    context.SaveChanges();
-                }
-                if (!context.Problems.Any())
-                {
-                    context.Problems.AddRange(
-                        new Problem
-                        {
-                            ProblemDescription = "incorrect fit"
-                        }, new Problem
-                        {
-                            ProblemDescription = "Poor quality surface finish"
-                        }, new Problem
-                        {
-                            ProblemDescription = "Incorrect Dimensions"
-                        });
-                    context.SaveChanges();
-                }
+                //if (!context.Suppliers.Any())
+                //{
+                //    context.Suppliers.AddRange(
+                //        new Supplier
+                //        {
+                //            SupplierName = "Supplier 1"
+                //        }, new Supplier
+                //        {
+                //            SupplierName = "Supplier 2"
+                //        }, new Supplier
+                //        {
+                //            SupplierName = "Supplier 3"
+                //        }, new Supplier
+                //        {
+                //            SupplierName = "Supplier 4"
+                //        });
+                //    context.SaveChanges();
+                //}
+                //if (!context.Problems.Any())
+                //{
+                //    context.Problems.AddRange(
+                //        new Problem
+                //        {
+                //            ProblemDescription = "incorrect fit"
+                //        }, new Problem
+                //        {
+                //            ProblemDescription = "Poor quality surface finish"
+                //        }, new Problem
+                //        {
+                //            ProblemDescription = "Incorrect Dimensions"
+                //        });
+                //    context.SaveChanges();
+                //}
                 if (!context.ProcessesApplicable.Any())
                 {
                     context.ProcessesApplicable.AddRange(
@@ -123,29 +141,29 @@ namespace Haver.Data
                     context.SaveChanges();
                 }
 
-                if (!context.Parts.Any())
-                {
-                    context.Parts.AddRange(
-                        new Part
-                        {
-                            PartDesc = "Part 1",
-                            PartNumber = 1231241,
-                            SupplierID = context.Suppliers.FirstOrDefault(s => s.SupplierName == "Supplier 3").ID
-                        },
-                        new Part
-                        {
-                            PartDesc = "Part 2",
-                            PartNumber = 4234125,
-                            SupplierID = context.Suppliers.FirstOrDefault(s => s.SupplierName == "Supplier 2").ID
-                        },
-                        new Part
-                        {
-                            PartDesc = "Part 3",
-                            PartNumber = 1414156,
-                            SupplierID = context.Suppliers.FirstOrDefault(s => s.SupplierName == "Supplier 1").ID
-                        });
-                    context.SaveChanges();
-                }
+                //if (!context.Parts.Any())
+                //{
+                //    context.Parts.AddRange(
+                //        new Part
+                //        {
+                //            PartDesc = "Part 1",
+                //            PartNumber = 1231241,
+                //            SupplierID = context.Suppliers.FirstOrDefault(s => s.SupplierName == "Supplier 3").ID
+                //        },
+                //        new Part
+                //        {
+                //            PartDesc = "Part 2",
+                //            PartNumber = 4234125,
+                //            SupplierID = context.Suppliers.FirstOrDefault(s => s.SupplierName == "Supplier 2").ID
+                //        },
+                //        new Part
+                //        {
+                //            PartDesc = "Part 3",
+                //            PartNumber = 1414156,
+                //            SupplierID = context.Suppliers.FirstOrDefault(s => s.SupplierName == "Supplier 1").ID
+                //        });
+                //    context.SaveChanges();
+                //}
 
 
             }

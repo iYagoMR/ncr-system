@@ -14,25 +14,64 @@
 
 
 <div class="row dashboard-cards">
-    <div class="col-md-6 stats-cards-dashboard">
+    <div class="col-md-6 stats-cards-dashboard detailed-cards">
         <div class="row">
             <div class="col-md-6">
                 <div class="card" style="width: 100%;">
                     <div class="card-body">
                         <h5 class="card-title">NCRs in <b>Quality Rep.</b></h5>
-                        <p class="card-text">@ViewBag.QualityRepresentativeCount</p>
+                        <div class="time-counters">
+                            <a asp-controller="NCR" asp-action="Index" asp-route-filter1="Quality Representative">
+                                <p class="card-text">@ViewBag.QualTotal</p><span>Total</span>
+                            </a>
+                            <a href="#">
+                                <p class="card-text">@ViewBag.Qual24</p><span>24h</span>
+                            </a>
+                            <a href="#">
+                                <p class="card-text">@ViewBag.Qual48</p><span>48h</span>
+                            </a>
+                            <a href="#">
+                                <p class="card-text">@ViewBag.Qual5</p><span>+5d</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
                 <div class="card" style="width: 100%;">
                     <div class="card-body">
                         <h5 class="card-title">NCRs in <b>Engineering</b></h5>
-                        <p class="card-text">@ViewBag.EngineeringCount</p>
+                        <div class="time-counters">
+                            <a asp-controller="NCR" asp-action="Index" asp-route-filter1="Engineering">
+                                <p class="card-text">@ViewBag.EngTotal</p><span>Total</span>
+                            </a>
+                            <a href="#">
+                                <p class="card-text">@ViewBag.Eng24</p><span>24h</span>
+                            </a>
+                            <a href="#">
+                                <p class="card-text">@ViewBag.Eng48</p><span>48h</span>
+                            </a>
+                            <a href="#">
+                                <p class="card-text">@ViewBag.Eng5</p><span>+5d</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
                 <div class="card" style="width: 100%;">
                     <div class="card-body">
                         <h5 class="card-title">NCRs in <b>Operations</b></h5>
-                        <p class="card-text">@ViewBag.OperationsCount</p>
+                        <div class="time-counters">
+                            <a asp-controller="NCR" asp-action="Index" asp-route-filter1="Operations">
+                                <p class="card-text">@ViewBag.OperTotal</p><span>Total</span>
+                            </a>
+                            <a href="#">
+                                <p class="card-text">@ViewBag.Oper24</p><span>24h</span>
+                            </a>
+                            <a href="#">
+                                <p class="card-text">@ViewBag.Oper48</p><span>48h</span>
+                            </a>
+                            <a href="#">
+                                <p class="card-text">@ViewBag.Oper5</p><span>+5d</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -40,19 +79,58 @@
                 <div class="card" style="width: 100%;">
                     <div class="card-body">
                         <h5 class="card-title">NCRs in <b>Procurement</b></h5>
-                        <p class="card-text">@ViewBag.ProcurementCount</p>
+                        <div class="time-counters">
+                            <a asp-controller="NCR" asp-action="Index" asp-route-filter1="Procurement">
+                                <p class="card-text">@ViewBag.ProcTotal</p><span>Total</span>
+                            </a>
+                            <a href="#">
+                                <p class="card-text">@ViewBag.Proc24</p><span>24h</span>
+                            </a>
+                            <a href="#">
+                                <p class="card-text">@ViewBag.Proc48</p><span>48h</span>
+                            </a>
+                            <a href="#">
+                                <p class="card-text">@ViewBag.Proc5</p><span>+5d</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
                 <div class="card" style="width: 100%;">
                     <div class="card-body">
                         <h5 class="card-title">NCRs in <b>Reinspection</b></h5>
-                        <p class="card-text">@ViewBag.ReinspectionCount</p>
+                        <div class="time-counters">
+                            <a asp-controller="NCR" asp-action="Index" asp-route-filter1="Reinspection">
+                                <p class="card-text">@ViewBag.ReinspTotal</p><span>Total</span>
+                            </a>
+                            <a href="#">
+                                <p class="card-text">@ViewBag.Reinsp24</p><span>24h</span>
+                            </a>
+                            <a href="#">
+                                <p class="card-text">@ViewBag.Reinsp48</p><span>48h</span>
+                            </a>
+                            <a href="#">
+                                <p class="card-text">@ViewBag.Reinsp5</p><span>+5d</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
                 <div class="card" style="width: 100%;">
                     <div class="card-body">
                         <h5 class="card-title">Active NCRs</h5>
-                        <p class="card-text">@ViewBag.ncrCount</p>
+                        <div class="time-counters">
+                            <a asp-controller="NCR" asp-action="Index">
+                                <p class="card-text">@ViewBag.ActiveTotal</p><span>Total</span>
+                            </a>
+                            <a href="#">
+                                <p class="card-text">@ViewBag.Active24</p><span>24h</span>
+                            </a>
+                            <a href="#">
+                                <p class="card-text">@ViewBag.Active48</p><span>48h</span>
+                            </a>
+                            <a href="#">
+                                <p class="card-text">@ViewBag.Active5</p><span>+5d</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -65,21 +143,28 @@
                 {
                     <a class="btn btn-primary" asp-area="" asp-controller="Lookup" asp-action="Index"><i class="bi bi-file-earmark-spreadsheet"></i>Lookups</a>
                     <a class="btn btn-primary" asp-area="" asp-controller="Employee" asp-action="Index"><i class="bi bi-person"></i>Employees</a>
-                    <a class="btn btn-primary" asp-area="" asp-controller="NCR" asp-action="Index"><i class="bi bi-card-list"></i>NCR</a>
-                    <a class="btn btn-secondary app-actions" asp-area="" asp-controller="NCR" asp-action="CreateQualityRepresentative"><i class="bi bi-pencil-square"></i>Create NCR</a>
+                    <a class="btn btn-primary" asp-area="" asp-controller="NCR" asp-action="CreateQualityRepresentative"><i class="bi bi-pencil-square"></i>Create NCR</a>
+                    <a class="btn btn-secondary app-actions" asp-area="" asp-controller="NCR" asp-action="Index"><i class="bi bi-card-list"></i>NCR Log</a>
                     <a class="btn btn-secondary app-actions" asp-area="" asp-controller="Employee" asp-action="Create"><i class="bi bi-person-plus"></i>Create Employee</a>
-                    <a class="btn btn-secondary app-actions disabled" asp-area="" aria-disabled="true"><i class="bi bi-bar-chart"></i>Analytics</a>
+                    <a class="btn btn-secondary app-actions" asp-area="" asp-controller="NCR" asp-action="Analytics"><i class="bi bi-bar-chart"></i>Analytics</a>
                 }
-                @if (User.IsInRole("Procurement") || User.IsInRole("Engineer") || User.IsInRole("Quality Inspector") || User.IsInRole("Operations Manager"))
+                else if (User.IsInRole("Procurement") || User.IsInRole("Engineer") || User.IsInRole("Operations Manager") || User.IsInRole("Quality Inspector"))
                 {
                     <a class="btn btn-primary disabled" asp-area="" asp-controller="Lookup" asp-action="Index" aria-disabled="true"><i class="bi bi-file-earmark-spreadsheet"></i>Lookups</a>
                     <a class="btn btn-primary disabled" asp-area="" asp-controller="Employee" asp-action="Index" aria-disabled="true"><i class="bi bi-person"></i>Employees</a>
-                    <a class="btn btn-primary" asp-area="" asp-controller="NCR" asp-action="Index"><i class="bi bi-card-list"></i>NCR</a>
-                    <a class="btn btn-secondary app-actions disabled" asp-area="" asp-controller="NCR" asp-action="CreateQualityRepresentative" aria-disabled="true"><i class="bi bi-pencil-square"></i>Create NCR</a>
+                    @if (User.IsInRole("Quality Inspector"))
+                    {
+                        <a class="btn btn-primary" asp-area="" asp-controller="NCR" asp-action="CreateQualityRepresentative"><i class="bi bi-pencil-square"></i>Create NCR</a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-primary disabled" asp-area="" asp-controller="NCR" asp-action="CreateQualityRepresentative" aria-disabled="true"><i class="bi bi-pencil-square"></i>Create NCR</a>
+                    }
+                    <a class="btn btn-secondary app-actions" asp-area="" asp-controller="NCR" asp-action="Index"><i class="bi bi-card-list"></i>NCR Log</a>
                     <a class="btn btn-secondary app-actions disabled" asp-area="" asp-controller="Employee" asp-action="Create" aria-disabled="true"><i class="bi bi-person-plus"></i>Create Employee</a>
                     <a class="btn btn-secondary app-actions disabled" asp-area="" aria-disabled="true"><i class="bi bi-bar-chart"></i>Analytics</a>
                 }
-                
+
             </div>
         </div>
     </div>
@@ -146,7 +231,7 @@
                             @Html.DisplayFor(modelItem => item.QualityRepresentative.Supplier.SupplierName)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.CreatedOn)
+                            @Html.DisplayFor(modelItem => item.CreatedOnDO)
                         </td>
                         <td>
                             <a class="btn btn-primary" asp-controller="NCR" asp-action="Details" asp-route-id="@item.ID"><i class="bi bi-card-list"></i>Details</a>

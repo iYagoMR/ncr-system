@@ -156,11 +156,15 @@ namespace Haver.Controllers
 
             //Get the user from the Identity system
             var user = await _userManager.FindByEmailAsync(employee.Email);
+            var loggedInUser = User.Identity.Name;
             if (user != null)
             {
                 //Add the current roles
                 var r = await _userManager.GetRolesAsync(user);
-                employee.UserRoles = (List<string>)r;
+                if (user.Email != loggedInUser)
+                {
+                    employee.UserRoles = (List<string>)r;
+                }
             }
             PopulateAssignedRoleData(employee);
 

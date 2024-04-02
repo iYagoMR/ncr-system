@@ -1,4 +1,16 @@
 ﻿@model Haver.ViewModels.EmployeeAdminVM
+@using Microsoft.EntityFrameworkCore;
+@using Microsoft.AspNetCore.Identity
+@using Haver.Data;
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@inject HaverContext _context
+@*For Cookies*@
+@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    var user = await UserManager.GetUserAsync(User);
+}
+
 
 <div class="standard-page-header">
     <partial name="_BackToList" />
@@ -37,6 +49,9 @@
                     Note:  Changing Email will reset the password for the new Login and the user will need to use Forgot Password with the new Email.
                 </div>
             </div>
+            @{
+            if(Model.Email != user.Email)
+            {
             <div class="form-group create-employee-switches">
                 <div class="form-check form-switch">
                     <label class="form-check-label">
@@ -59,34 +74,41 @@
                     }
                 </div>
             </div>
-            <div class="form-group">
-                <label asp-for="UserRoles" class="control-label"></label>
-                <table class="create-employee-switches">
-                    <tr>
-                        @{
-                            int cnt = 0;
-                            List<Haver.ViewModels.RoleVM> roles = ViewBag.Roles;
-                            foreach (var role in roles)
-                            {
-                                if (cnt++ % 3 == 0)
+            
+                
+
+
+                <div class="form-group">
+                    <label asp-for="UserRoles" class="control-label"></label>
+                    <table class="create-employee-switches">
+                        <tr>
+                            @{
+                                int cnt = 0;
+                                List<Haver.ViewModels.RoleVM> roles = ViewBag.Roles;
+                                foreach (var role in roles)
                                 {
-                                @:</tr><tr>
+                                    if (cnt++ % 3 == 0)
+                                    {
+                                    @:</tr><tr>
+                                    }
+                                    @:<td>
+                                        <div class="form-check form-switch">
+                                            <label class="form-check-label" "@role.RoleName-CheckBox">@role.RoleName  &nbsp;&nbsp;</label>
+                                            <input class="form-check-input" type="checkbox"
+                                                   id="@role.RoleName-CheckBox"
+                                                   name="selectedRoles"
+                                                   value="@role.RoleName"
+                                                   @(Html.Raw(role.Assigned ? "checked=\"checked\"" : "")) />
+                                        </div>
+                                    @:</td>
                                 }
-                                @:<td>
-                                    <div class="form-check form-switch">
-                                        <label class="form-check-label" "@role.RoleName-CheckBox">@role.RoleName  &nbsp;&nbsp;</label>
-                                        <input class="form-check-input" type="checkbox"
-                                               id="@role.RoleName-CheckBox"
-                                               name="selectedRoles"
-                                               value="@role.RoleName"
-                                               @(Html.Raw(role.Assigned ? "checked=\"checked\"" : "")) />
-                                    </div>
-                                @:</td>
+                            @:</tr>
                             }
-                        @:</tr>
-                        }
-                    </table>
-                </div>
+                        </table>
+                    </div>
+                    
+                }
+                }
             </div>
         </div>
     <div class="form-group">

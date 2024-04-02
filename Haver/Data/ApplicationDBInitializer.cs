@@ -44,6 +44,22 @@ namespace Haver.Data
                         userManager.AddToRoleAsync(user, "Admin").Wait();
                     }
                 }
+                if (userManager.FindByEmailAsync("qualityinsp@outlook.com").Result == null)
+                {
+                    IdentityUser user = new IdentityUser
+                    {
+                        UserName = "qualityinsp@outlook.com",
+                        Email = "qualityinsp@outlook.com",
+                        EmailConfirmed = true
+                    };
+
+                    IdentityResult result = userManager.CreateAsync(user, "Pa55w@rd").Result;
+
+                    if (result.Succeeded)
+                    {
+                        userManager.AddToRoleAsync(user, "Quality Inspector").Wait();
+                    }
+                }
                 if (userManager.FindByEmailAsync("engineer@outlook.com").Result == null)
                 {
                     IdentityUser user = new IdentityUser
@@ -58,6 +74,38 @@ namespace Haver.Data
                     if (result.Succeeded)
                     {
                         userManager.AddToRoleAsync(user, "Engineer").Wait();
+                    }
+                }
+                if (userManager.FindByEmailAsync("opmanager@outlook.com").Result == null)
+                {
+                    IdentityUser user = new IdentityUser
+                    {
+                        UserName = "opmanager@outlook.com",
+                        Email = "opmanager@outlook.com",
+                        EmailConfirmed = true
+                    };
+
+                    IdentityResult result = userManager.CreateAsync(user, "Pa55w@rd").Result;
+
+                    if (result.Succeeded)
+                    {
+                        userManager.AddToRoleAsync(user, "Operations Manager").Wait();
+                    }
+                }
+                if (userManager.FindByEmailAsync("procurement@outlook.com").Result == null)
+                {
+                    IdentityUser user = new IdentityUser
+                    {
+                        UserName = "procurement@outlook.com",
+                        Email = "procurement@outlook.com",
+                        EmailConfirmed = true
+                    };
+
+                    IdentityResult result = userManager.CreateAsync(user, "Pa55w@rd").Result;
+
+                    if (result.Succeeded)
+                    {
+                        userManager.AddToRoleAsync(user, "Procurement").Wait();
                     }
                 }
                 if (userManager.FindByEmailAsync("admin@outlook.com").Result == null)

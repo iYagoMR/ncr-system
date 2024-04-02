@@ -11,5 +11,6 @@
         public int PartNumber {  get; set; }
         public string PartDescription { get; set; }
         public string SupplierSummary { get; set; }
+        public string SupplierName { get; set; }
     }
 }
