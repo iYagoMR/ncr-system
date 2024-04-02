@@ -2693,11 +2693,17 @@ namespace Haver.Controllers
             return View(ncrToUpdate);
         }
 
+
         private SelectList SupplierList(int? selectedId)
         {
             return new SelectList(_context
                 .Suppliers
                 .OrderBy(m => m.SupplierName), "ID", "SupplierName", selectedId);
+        }
+        [HttpGet]
+        public JsonResult GetSuppliers(int? id)
+        {
+            return Json(SupplierList(id));
         }
         private SelectList ProblemList(int? selectedId)
         {

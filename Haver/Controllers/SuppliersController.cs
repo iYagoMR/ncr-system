@@ -42,12 +42,14 @@ namespace Haver.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,SupplierName")] Supplier Supplier)
+        public async Task<IActionResult> Create([Bind("ID,SupplierName, SupplierCode")] Supplier Supplier)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
+                    var dosSupCodeExists = _context.Suppliers.FirstOrDefault(s => s.SupplierCode == Supplier.SupplierCode);
+
                     _context.Add(Supplier);
                     await _context.SaveChangesAsync();
                     return Redirect(ViewData["returnURL"].ToString());

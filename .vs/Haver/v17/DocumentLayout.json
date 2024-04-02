@@ -3,24 +3,16 @@
   "WorkspaceRootPath": "D:\\My Work\\backup5\\haver7-iago\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|d:\\my work\\backup5\\haver7-iago\\haver\\views\\ncr\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|solutionrelative:haver\\views\\ncr\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|d:\\my work\\backup5\\haver7-iago\\haver\\views\\part\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|solutionrelative:haver\\views\\part\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|d:\\my work\\backup5\\haver7-iago\\haver\\views\\ncr\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|solutionrelative:haver\\views\\ncr\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|d:\\my work\\backup5\\haver7-iago\\haver\\views\\part\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|solutionrelative:haver\\views\\part\\edit.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|d:\\my work\\backup5\\haver7-iago\\haver\\utilities\\calculatencrtimecounters.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|solutionrelative:haver\\utilities\\calculatencrtimecounters.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|d:\\my work\\backup5\\haver7-iago\\haver\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|solutionrelative:haver\\controllers\\homecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|d:\\my work\\backup5\\haver7-iago\\haver\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|solutionrelative:haver\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|d:\\my work\\backup5\\haver7-iago\\haver\\controllers\\ncrcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|solutionrelative:haver\\controllers\\ncrcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,7 +22,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 402,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 11,
           "Children": [
             {
               "$type": "Bookmark",
@@ -71,72 +63,44 @@
             {
               "$type": "Bookmark",
               "Name": "ST:1128506700:0:{bf84ea66-d821-4dba-b1b1-2777d8574775}"
-            }
-          ]
-        },
-        {
-          "DockedWidth": 316,
-          "SelectedChildIndex": 4,
-          "Children": [
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "CalculateNCRTimeCounters.cs",
-              "DocumentMoniker": "D:\\My Work\\backup5\\haver7-iago\\Haver\\Utilities\\CalculateNCRTimeCounters.cs",
-              "RelativeDocumentMoniker": "Haver\\Utilities\\CalculateNCRTimeCounters.cs",
-              "ToolTip": "D:\\My Work\\backup5\\haver7-iago\\Haver\\Utilities\\CalculateNCRTimeCounters.cs",
-              "RelativeToolTip": "Haver\\Utilities\\CalculateNCRTimeCounters.cs",
-              "ViewState": "AQIAAHAAAAAAAAAAAAAAAH4AAAAIAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-01T10:05:17.068Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "Index.cshtml",
-              "DocumentMoniker": "D:\\My Work\\backup5\\haver7-iago\\Haver\\Views\\Home\\Index.cshtml",
-              "RelativeDocumentMoniker": "Haver\\Views\\Home\\Index.cshtml",
-              "ToolTip": "D:\\My Work\\backup5\\haver7-iago\\Haver\\Views\\Home\\Index.cshtml",
-              "RelativeToolTip": "Haver\\Views\\Home\\Index.cshtml",
-              "ViewState": "AQIAAGMAAAAAAAAAAAAAAGYAAABJAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-04-01T10:03:09.82Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "HomeController.cs",
-              "DocumentMoniker": "D:\\My Work\\backup5\\haver7-iago\\Haver\\Controllers\\HomeController.cs",
-              "RelativeDocumentMoniker": "Haver\\Controllers\\HomeController.cs",
-              "ToolTip": "D:\\My Work\\backup5\\haver7-iago\\Haver\\Controllers\\HomeController.cs",
-              "RelativeToolTip": "Haver\\Controllers\\HomeController.cs",
-              "ViewState": "AQIAAB4AAAAAAAAAAAAowDQAAABGAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-01T10:02:51.403Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
               "Title": "Edit.cshtml",
-              "DocumentMoniker": "D:\\My Work\\backup5\\haver7-iago\\Haver\\Views\\NCR\\Edit.cshtml",
-              "RelativeDocumentMoniker": "Haver\\Views\\NCR\\Edit.cshtml",
-              "ToolTip": "D:\\My Work\\backup5\\haver7-iago\\Haver\\Views\\NCR\\Edit.cshtml",
-              "RelativeToolTip": "Haver\\Views\\NCR\\Edit.cshtml",
-              "ViewState": "AQIAAGwDAAAAAAAAAAAAAHkDAAA0AAAA",
+              "DocumentMoniker": "D:\\My Work\\backup5\\haver7-iago\\Haver\\Views\\Part\\Edit.cshtml",
+              "RelativeDocumentMoniker": "Haver\\Views\\Part\\Edit.cshtml",
+              "ToolTip": "D:\\My Work\\backup5\\haver7-iago\\Haver\\Views\\Part\\Edit.cshtml",
+              "RelativeToolTip": "Haver\\Views\\Part\\Edit.cshtml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABwAAAAGAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-04-01T09:01:49.13Z"
+              "WhenOpened": "2024-04-02T05:08:09.994Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "Create.cshtml",
-              "DocumentMoniker": "D:\\My Work\\backup5\\haver7-iago\\Haver\\Views\\NCR\\Create.cshtml",
-              "RelativeDocumentMoniker": "Haver\\Views\\NCR\\Create.cshtml",
-              "ToolTip": "D:\\My Work\\backup5\\haver7-iago\\Haver\\Views\\NCR\\Create.cshtml",
-              "RelativeToolTip": "Haver\\Views\\NCR\\Create.cshtml",
-              "ViewState": "AQIAAGAAAAAAAAAAAAAAAIkAAAA7AAAA",
+              "DocumentMoniker": "D:\\My Work\\backup5\\haver7-iago\\Haver\\Views\\Part\\Create.cshtml",
+              "RelativeDocumentMoniker": "Haver\\Views\\Part\\Create.cshtml",
+              "ToolTip": "D:\\My Work\\backup5\\haver7-iago\\Haver\\Views\\Part\\Create.cshtml",
+              "RelativeToolTip": "Haver\\Views\\Part\\Create.cshtml",
+              "ViewState": "AQIAABEAAAAAAAAAAAAUwBMAAAASAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-04-01T08:57:35.801Z",
+              "WhenOpened": "2024-04-02T05:03:01.231Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "NCRController.cs",
+              "DocumentMoniker": "D:\\My Work\\backup5\\haver7-iago\\Haver\\Controllers\\NCRController.cs",
+              "RelativeDocumentMoniker": "Haver\\Controllers\\NCRController.cs",
+              "ToolTip": "D:\\My Work\\backup5\\haver7-iago\\Haver\\Controllers\\NCRController.cs",
+              "RelativeToolTip": "Haver\\Controllers\\NCRController.cs",
+              "ViewState": "AQIAACcCAAAAAAAAAIAwwDsCAAAMAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-02T04:59:32.382Z",
               "EditorCaption": ""
             }
           ]

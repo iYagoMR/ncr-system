@@ -1,0 +1,17 @@
+﻿<!-- Modal-->
+<div class="modal fade" id="addProblemModal" tabindex="-1" role="dialog" aria-labelledby="ProblemModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="ProblemmyModalLabel">Add New Problem</h4>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                @{
+                    var p = new Haver.Models.Problem();
+                    <partial name="_ProblemCreate" model="p" />
+                }
+            </div>
+        </div> 
+    </div>
+</div>

@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "2C66JIlRuKWcrIlgZ1BOJ7nUxo/t7J9X8PYIQML/DS0=",
+  "Hash": "6+DsovVGiM78Vmn5dUsY5eUvEzJsKJLB7LsU6zyQRT0=",
   "Source": "Haver",
   "BasePath": "_content/Haver",
   "Mode": "Default",
@@ -1858,6 +1858,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\js\\qr.js"
+    },
+    {
+      "Identity": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\js\\refreshDDL.js",
+      "SourceId": "Haver",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\",
+      "BasePath": "_content/Haver",
+      "RelativePath": "js/refreshDDL.js",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\js\\refreshDDL.js"
     },
     {
       "Identity": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\js\\site.js",

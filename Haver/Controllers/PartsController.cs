@@ -31,7 +31,6 @@ namespace Haver.Controllers
         // GET: Part/Create
         public IActionResult Create()
         {
-            PopulateList();
 
             return View();
         }
@@ -41,7 +40,7 @@ namespace Haver.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,PartDesc, PartNumber, SupplierID")] Part Part)
+        public async Task<IActionResult> Create([Bind("ID,PartDesc, PartNumber")] Part Part)
         {
             try
             {
@@ -56,7 +55,6 @@ namespace Haver.Controllers
             {
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
-            PopulateList();
 
             return View(Part);
         }
@@ -213,20 +211,6 @@ namespace Haver.Controllers
                                     p.PartDesc = workSheet.Cells[row, 1].Text;
                                     p.PartNumber = workSheet.Cells[row, 2].GetValue<int>();
 
-                                    //Convert supplier name to ID
-                                    string supName = workSheet.Cells[row, 3].Text;
-                                    var supplier = _context.Suppliers.FirstOrDefault(s => s.SupplierName == supName);
-                                    if (supplier != null)
-                                    {
-                                        p.SupplierID = supplier.ID;
-                                    }
-                                    //Add the part number with incalid suppliers to a list
-                                    if (supplier  == null)
-                                    {
-                                        partsWithSupplierNull.Add(Convert.ToString(p.PartNumber));
-                                    }
-
-
                                     _context.Parts.Add(p);
                                     _context.SaveChanges();
                                     successCount++;
@@ -316,14 +300,5 @@ namespace Haver.Controllers
                 .OrderBy(m => m.SupplierName), "ID", "SupplierName", selectedId);
         }
 
-
-        private void PopulateList()
-        {
-            Part part = null;
-
-            ViewData["SupplierID"] = SupplierList(part?.SupplierID);
-
-
-        }
     }
 }

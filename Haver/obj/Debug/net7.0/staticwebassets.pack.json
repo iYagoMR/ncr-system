@@ -145,6 +145,10 @@
       "PackagePath": "staticwebassets\\js\\qr.js"
     },
     {
+      "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\js\\refreshDDL.js",
+      "PackagePath": "staticwebassets\\js\\refreshDDL.js"
+    },
+    {
       "Id": "D:\\My Work\\backup5\\haver7-iago\\Haver\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
     },

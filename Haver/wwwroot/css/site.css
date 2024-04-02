@@ -480,8 +480,20 @@ h1 {
 
 /*Form layout config*/
 
+/* Adding items to the drop down; "+" sign */
+.btn-plus {
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+    outline: none;
+}
+
+.btn-plus:focus {
+    box-shadow: none;
+}
 .section-label {
-    margin-bottom: 1.875rem;
+margin-bottom: 1.875rem;
 }
 .section-label hr {
     margin-bottom: 0;

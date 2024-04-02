@@ -3,6 +3,9 @@
 @{
     ViewData["Title"] = "Create";
 }
+<partial name="_addProblemModal" />
+<partial name="_addPartModal" />
+<partial name="_addSupplierModal" />
 
 <div class="standard-page-header">
     <partial name="_BackToList" />
@@ -63,11 +66,20 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label asp-for="QualityRepresentative.SupplierID" class="control-label"></label><span> (required)</span>
-                                    <select asp-for="QualityRepresentative.SupplierID" class="form-select" asp-items="ViewBag.SupplierID" data-val="disabled">
-                                        <option value="">Select a Supplier</option>
-                                    </select>
-                                    <span asp-validation-for="QualityRepresentative.SupplierID" class="text-danger"></span>
+                                    <label asp-for="QualityRepresentative.SupplierID" class="control-label"></label>
+                                    <div class="input-group mb-3">
+                                        <select asp-for="QualityRepresentative.SupplierID" class="form-control" asp-items="ViewBag.SupplierID">
+                                            <option value="">Select a Supplier</option>
+                                        </select>
+                                        <button class="btn-plus" type="button" id="nowAddSupplier" data-bs-toggle="modal" data-bs-target="#addSupplierModal" typeof="button">
+                                            <svg width="53" height="48" viewBox="0 0 53 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M0.333252 0H47.3333C50.0947 0 52.3333 2.23858 52.3333 5V43C52.3333 45.7614 50.0947 48 47.3333 48H0.333252V0Z" fill="#19416D" />
+                                                <path d="M26.3333 13.3334V34.6667" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+                                                <path d="M15.6665 24H36.9998" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+                                            </svg>
+                                        </button>
+                                        <span asp-validation-for="QualityRepresentative.SupplierID" class="text-danger"></span>
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label asp-for="QualityRepresentative.QuantReceived" class="control-label"></label><span> (required)</span>
@@ -1373,11 +1385,182 @@ Regards
     <script src="~/js/form-fill.js"></script>
     <script src="~/js/form-dates-filler.js"></script>
     <script src="~/js/block-fields.js"></script>
-@*     <script src="~/js/multiselect.js"></script> *@
-@*     <script src="~/js/expand-images.js"></script> *@
+    <script src="~/js/refreshDDL.js"></script>
     <script src="~/js/video-link.js"></script>
 
     <script>
+
+        //First Lookup value adder
+        $('#submitPartCreate').click(function (event) {
+            event.preventDefault();
+            ClearErrors();
+            var form = $('#createPartForm');
+
+            $.ajax({
+                type: "POST",
+                url: form.attr('action'),
+                data: form.serialize(),
+                success: function () {
+                    $('#addPartModal').modal('hide');
+                },
+                error: function (xhr) { //Note: xhr is the XMLHttpRequest
+                    var errorMessages = [];
+                    switch (xhr.status) {
+                        case 401:
+                            errorMessages.push("You must be logged in first.");
+                            break;
+                        case 403:
+                            errorMessages.push("You are not authorized for this action.");
+                            break;
+                        default:
+                            //Messages coming from the Model State Errors
+                            //We split on the | delimeter and the .slice removes the last one
+                            errorMessages = xhr.responseText.split("|").slice(0, -1);
+                    }
+                    //This checks if there are any elements with some content
+                    //and if not then it provides a default feedback message.
+                    if (!errorMessages.some((str) => str !== "")) {
+                        errorMessages.push("Error: Unable to complete operation");
+                    }
+                    //Put the messages in the ErrorList ul contained in the 'ValidaitonSummary' div.
+                    var ul = document.getElementById("ErrorList");
+                    for (var i = 0; i < errorMessages.length; i++) {
+                        var errorMessage = errorMessages[i];
+                        var li = document.createElement("li");
+                        li.innerHTML = errorMessage;
+                        ul.appendChild(li);
+                    }
+                }
+            });
+            // if (form.valid()) {
+            // }
+            return false;
+        });
+
+        $('#addPartModal').on('hide.bs.modal', function () {
+            document.getElementById("createPartForm").reset();//to clear the data in the popup form
+            ClearErrors();
+            var selectedOption = $('#PartID').val();//Return to the current selected value
+            refreshDDL('PartID', '/NCR/GetParts/' + selectedOption, false, null, true, 'None', true);
+        });
+
+        //Second Lookup value adder
+        $('#submitProblemCreate').click(function (event) {
+            event.preventDefault();
+            ClearErrors();
+            var form = $('#createProblemForm');
+
+            $.ajax({
+                type: "POST",
+                url: form.attr('action'),
+                data: form.serialize(),
+                success: function () {
+                    $('#addProblemModal').modal('hide');
+                },
+                error: function (xhr) { //Note: xhr is the XMLHttpRequest
+                    var errorMessages = [];
+                    switch (xhr.status) {
+                        case 401:
+                            errorMessages.push("You must be logged in first.");
+                            break;
+                        case 403:
+                            errorMessages.push("You are not authorized for this action.");
+                            break;
+                        default:
+                            //Messages coming from the Model State Errors
+                            //We split on the | delimeter and the .slice removes the last one
+                            errorMessages = xhr.responseText.split("|").slice(0, -1);
+                    }
+                    //This checks if there are any elements with some content
+                    //and if not then it provides a default feedback message.
+                    if (!errorMessages.some((str) => str !== "")) {
+                        errorMessages.push("Error: Unable to complete operation");
+                    }
+                    //Put the messages in the ErrorList ul contained in the 'ValidaitonSummary' div.
+                    var ul = document.getElementById("ErrorList");
+                    for (var i = 0; i < errorMessages.length; i++) {
+                        var errorMessage = errorMessages[i];
+                        var li = document.createElement("li");
+                        li.innerHTML = errorMessage;
+                        ul.appendChild(li);
+                    }
+                }
+            });
+            // if (form.valid()) {
+            // }
+            return false;
+        });
+
+        $('#addProblemModal').on('hide.bs.modal', function () {
+            document.getElementById("createProblemForm").reset();//to clear the data in the popup form
+            ClearErrors();
+            var selectedOption = $('#ProblemID').val();//Return to the current selected value
+            refreshDDL('ProblemID', '/NCR/GetProblems/' + selectedOption, false, null, true, 'None', true);
+        });
+
+
+        //Third Lookup value adder
+        $('#submitSupplierCreate').click(function (event) {
+            event.preventDefault();
+            ClearErrors();
+            var form = $('#createSupplierForm');
+
+            $.ajax({
+                type: "POST",
+                url: form.attr('action'),
+                data: form.serialize(),
+                success: function () {
+                    $('#addSupplierModal').modal('hide');
+                },
+                error: function (xhr) { //Note: xhr is the XMLHttpRequest
+                    var errorMessages = [];
+                    switch (xhr.status) {
+                        case 401:
+                            errorMessages.push("You must be logged in first.");
+                            break;
+                        case 403:
+                            errorMessages.push("You are not authorized for this action.");
+                            break;
+                        default:
+                            //Messages coming from the Model State Errors
+                            //We split on the | delimeter and the .slice removes the last one
+                            errorMessages = xhr.responseText.split("|").slice(0, -1);
+                    }
+                    //This checks if there are any elements with some content
+                    //and if not then it provides a default feedback message.
+                    if (!errorMessages.some((str) => str !== "")) {
+                        errorMessages.push("Error: Unable to complete operation");
+                    }
+                    //Put the messages in the ErrorList ul contained in the 'ValidaitonSummary' div.
+                    var ul = document.getElementById("ErrorList");
+                    for (var i = 0; i < errorMessages.length; i++) {
+                        var errorMessage = errorMessages[i];
+                        var li = document.createElement("li");
+                        li.innerHTML = errorMessage;
+                        ul.appendChild(li);
+                    }
+                }
+            });
+            // if (form.valid()) {
+            // }
+            return false;
+        });
+
+        $('#addSupplierModal').on('hide.bs.modal', function () {
+            document.getElementById("createSupplierForm").reset();//to clear the data in the popup form
+            ClearErrors();
+            var selectedOption = $('#SupplierID').val();//Return to the current selected value
+            refreshDDL('SupplierID', '/NCR/GetSuppliers/' + selectedOption, false, null, true, 'None', true);
+        });
+
+        function ClearErrors() {
+            //Empty out the list of validation errors if there are any
+            var ul = document.getElementById("ErrorList");
+            while (ul.firstChild) {
+                ul.removeChild(ul.firstChild);
+            }
+        }
+
 
         // Helper method to unfold sections
         function toggleAccordion(sectionId, sectionButtonId, section) {

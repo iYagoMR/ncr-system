@@ -1,0 +1,16 @@
+﻿@model Haver.Models.Problem
+<form asp-controller="Problem" asp-action="Create" id="createProblemForm">
+    <div class="text-danger validation-summary-errors"><ul id="ErrorList"></ul></div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="form-group">
+                <label asp-for="ProblemDescription" class="control-label"></label>
+                <input asp-for="ProblemDescription" class="form-control" />
+                <span asp-validation-for="ProblemDescription" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" id="submitProblemCreate" class="btn btn-outline-secondary" />
+            </div>
+        </div>
+    </div>
+</form>

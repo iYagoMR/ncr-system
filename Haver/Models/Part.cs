@@ -25,10 +25,6 @@ namespace Haver.Models
         [Required(ErrorMessage = "Part Description is Required")]
         public string PartDesc { get; set; }
 
-        [Display(Name = "Supplier")]
-        public int? SupplierID { get; set; }
-        public Supplier Supplier { get; set; }
-
         public ICollection<QualityRepresentative> QualityRepresentatives { get; set; } = new HashSet<QualityRepresentative>();
     }
 }

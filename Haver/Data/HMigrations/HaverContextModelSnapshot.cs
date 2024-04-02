@@ -553,15 +553,10 @@ namespace Haver.Data.HMigrations
                     b.Property<int>("PartNumber")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("SupplierID")
-                        .HasColumnType("INTEGER");
-
                     b.HasKey("ID");
 
                     b.HasIndex("PartNumber")
                         .IsUnique();
-
-                    b.HasIndex("SupplierID");
 
                     b.ToTable("Parts");
                 });
@@ -1053,15 +1048,6 @@ namespace Haver.Data.HMigrations
                         .IsRequired();
 
                     b.Navigation("PrelDecision");
-                });
-
-            modelBuilder.Entity("Haver.Models.Part", b =>
-                {
-                    b.HasOne("Haver.Models.Supplier", "Supplier")
-                        .WithMany()
-                        .HasForeignKey("SupplierID");
-
-                    b.Navigation("Supplier");
                 });
 
             modelBuilder.Entity("Haver.Models.QualityPhoto", b =>
