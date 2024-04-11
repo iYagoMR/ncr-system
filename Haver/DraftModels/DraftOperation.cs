@@ -35,7 +35,7 @@ namespace Haver.DraftModels
         public string Message { get; set; }
 
         [Display(Name = "Quality Photos")]
-        public List<QualityPhoto> QualityPhotos { get; set; }
+        public List<Photo> QualityPhotos { get; set; }
 
         // FOREIGN KEYS :
         [Display(Name = "Purchasing's Preliminary Decision")]

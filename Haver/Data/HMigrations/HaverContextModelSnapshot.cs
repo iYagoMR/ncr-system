@@ -118,10 +118,16 @@ namespace Haver.Data.HMigrations
                     b.Property<bool>("ChargeSupplier")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("DisposeOnSite")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime?>("ExpecDateOfReturn")
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("IsCreditExpec")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("NCRValue")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateOnly?>("ProcurementDate")
@@ -240,9 +246,6 @@ namespace Haver.Data.HMigrations
                     b.Property<string>("Email")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("FirstAid")
-                        .HasColumnType("INTEGER");
-
                     b.Property<string>("FirstName")
                         .HasColumnType("TEXT");
 
@@ -252,8 +255,10 @@ namespace Haver.Data.HMigrations
                     b.Property<string>("Phone")
                         .HasColumnType("TEXT");
 
-                    b.Property<bool>("Prescriber")
-                        .HasColumnType("INTEGER");
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("BLOB");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(256)
@@ -340,6 +345,13 @@ namespace Haver.Data.HMigrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("CustIssueMsg")
                         .HasMaxLength(3000)
                         .HasColumnType("TEXT");
@@ -375,6 +387,13 @@ namespace Haver.Data.HMigrations
                     b.Property<string>("RevisionedBy")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("TEXT");
+
                     b.Property<int?>("UpdatedRevisionNum")
                         .HasColumnType("INTEGER");
 
@@ -391,7 +410,11 @@ namespace Haver.Data.HMigrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("CreatedOn")
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("CreatedOn")
                         .HasColumnType("TEXT");
 
                     b.Property<DateOnly>("CreatedOnDO")
@@ -413,9 +436,6 @@ namespace Haver.Data.HMigrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("EngineeringID")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("IsEngineerRequired")
                         .HasColumnType("INTEGER");
 
                     b.Property<bool>("IsNCRArchived")
@@ -448,7 +468,19 @@ namespace Haver.Data.HMigrations
                     b.Property<int?>("ReinspectionID")
                         .HasColumnType("INTEGER");
 
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("BLOB");
+
                     b.Property<string>("Status")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedOn")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("VoidingReason")
@@ -467,6 +499,9 @@ namespace Haver.Data.HMigrations
                     b.HasIndex("DraftReinspectionID");
 
                     b.HasIndex("EngineeringID");
+
+                    b.HasIndex("NCRNum")
+                        .IsUnique();
 
                     b.HasIndex("OperationsID");
 
@@ -493,6 +528,9 @@ namespace Haver.Data.HMigrations
 
                     b.HasKey("ID");
 
+                    b.HasIndex("Year", "Counter")
+                        .IsUnique();
+
                     b.ToTable("NCRNumbers");
                 });
 
@@ -507,6 +545,13 @@ namespace Haver.Data.HMigrations
 
                     b.Property<bool>("CarRaised")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("TEXT");
 
                     b.Property<DateTime?>("ExpecDate")
                         .HasColumnType("TEXT");
@@ -532,6 +577,13 @@ namespace Haver.Data.HMigrations
 
                     b.Property<int>("PrelDecisionID")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("TEXT");
 
                     b.HasKey("ID");
 
@@ -561,95 +613,7 @@ namespace Haver.Data.HMigrations
                     b.ToTable("Parts");
                 });
 
-            modelBuilder.Entity("Haver.Models.PrelDecision", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Decision")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("PrelDecisions");
-                });
-
-            modelBuilder.Entity("Haver.Models.Problem", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("ProblemDescription")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Problems");
-                });
-
-            modelBuilder.Entity("Haver.Models.ProcessApplicable", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("ProcessName")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("ProcessesApplicable");
-                });
-
-            modelBuilder.Entity("Haver.Models.Procurement", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("CarrierInfo")
-                        .HasMaxLength(3000)
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("ChargeSupplier")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("ExpecDateOfReturn")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsCreditExpec")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateOnly>("ProcurementDate")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ProcurementSign")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("RMANo")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("SuppItemsBack")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<bool>("SuppReturnCompleted")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Procurement");
-                });
-
-            modelBuilder.Entity("Haver.Models.QualityPhoto", b =>
+            modelBuilder.Entity("Haver.Models.Photo", b =>
                 {
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd()
@@ -717,6 +681,117 @@ namespace Haver.Data.HMigrations
                     b.ToTable("QualityPhotos");
                 });
 
+            modelBuilder.Entity("Haver.Models.PrelDecision", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Decision")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("PrelDecisions");
+                });
+
+            modelBuilder.Entity("Haver.Models.Problem", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ProblemDescription")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("ProblemDescription")
+                        .IsUnique();
+
+                    b.ToTable("Problems");
+                });
+
+            modelBuilder.Entity("Haver.Models.ProcessApplicable", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("ProcessName")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("ProcessesApplicable");
+                });
+
+            modelBuilder.Entity("Haver.Models.Procurement", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CarrierInfo")
+                        .HasMaxLength(3000)
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("ChargeSupplier")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("DisposeOnSite")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("ExpecDateOfReturn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsCreditExpec")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("NCRValue")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateOnly>("ProcurementDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ProcurementSign")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("RMANo")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("SuppItemsBack")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("SuppReturnCompleted")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Procurements");
+                });
+
             modelBuilder.Entity("Haver.Models.QualityRepresentative", b =>
                 {
                     b.Property<int>("ID")
@@ -725,6 +800,13 @@ namespace Haver.Data.HMigrations
 
                     b.Property<bool>("ConfirmingEng")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("DescDefect")
                         .IsRequired()
@@ -768,6 +850,13 @@ namespace Haver.Data.HMigrations
                     b.Property<int>("SupplierID")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("ID");
 
                     b.HasIndex("PartID");
@@ -787,6 +876,13 @@ namespace Haver.Data.HMigrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("CreatedBy")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("NewNCRNum")
                         .HasColumnType("TEXT");
 
@@ -801,37 +897,16 @@ namespace Haver.Data.HMigrations
                     b.Property<DateOnly>("ReinspectionDate")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("UpdatedBy")
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("ID");
 
-                    b.ToTable("Reinspection");
-                });
-
-            modelBuilder.Entity("Haver.Models.Subscription", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("EmployeeID")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("PushAuth")
-                        .HasMaxLength(512)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("PushEndpoint")
-                        .HasMaxLength(512)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("PushP256DH")
-                        .HasMaxLength(512)
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("EmployeeID");
-
-                    b.ToTable("Subscriptions");
+                    b.ToTable("Reinspections");
                 });
 
             modelBuilder.Entity("Haver.Models.Supplier", b =>
@@ -918,29 +993,6 @@ namespace Haver.Data.HMigrations
                     b.HasIndex("ReinspectionID");
 
                     b.ToTable("VideoLinks");
-                });
-
-            modelBuilder.Entity("Haver.User", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("FirstName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Role")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Haver.Models.EmployeePhoto", b =>
@@ -1050,7 +1102,7 @@ namespace Haver.Data.HMigrations
                     b.Navigation("PrelDecision");
                 });
 
-            modelBuilder.Entity("Haver.Models.QualityPhoto", b =>
+            modelBuilder.Entity("Haver.Models.Photo", b =>
                 {
                     b.HasOne("Haver.DraftModels.DraftEngineering", "DraftEngineering")
                         .WithMany("QualityPhotos")
@@ -1151,17 +1203,6 @@ namespace Haver.Data.HMigrations
                     b.Navigation("ProcessApplicable");
 
                     b.Navigation("Supplier");
-                });
-
-            modelBuilder.Entity("Haver.Models.Subscription", b =>
-                {
-                    b.HasOne("Haver.Models.Employee", "Employee")
-                        .WithMany("Subscriptions")
-                        .HasForeignKey("EmployeeID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("Haver.Models.VideoLink", b =>
@@ -1270,8 +1311,6 @@ namespace Haver.Data.HMigrations
                     b.Navigation("EmployeePhoto");
 
                     b.Navigation("EmployeeThumbnail");
-
-                    b.Navigation("Subscriptions");
                 });
 
             modelBuilder.Entity("Haver.Models.EngReview", b =>

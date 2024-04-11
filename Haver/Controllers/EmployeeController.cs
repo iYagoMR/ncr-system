@@ -36,19 +36,16 @@ namespace Haver.Controllers
         public async Task<IActionResult> Index()
         {
             var employees = await _context.Employees
-                .Include(e => e.Subscriptions)
                 .Select(e => new EmployeeAdminVM
                 {
                     Email = e.Email,
-                    Prescriber = e.Prescriber,
-                    FirstAid = e.FirstAid,
                     Active = e.Active,
                     ID = e.ID,
                     FirstName = e.FirstName,
                     EmployeeThumbnail = e.EmployeeThumbnail,
                     LastName = e.LastName,
                     Phone = e.Phone,
-                    NumberOfPushSubscriptions = e.Subscriptions.Count(),
+                    RowVersion = e.RowVersion,
                 }).ToListAsync();
 
             foreach (var e in employees)
@@ -76,7 +73,7 @@ namespace Haver.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("FirstName,LastName,Phone," +
-            "FirstAid,Prescriber,Email")] Employee employee, string[] selectedRoles)
+            "Email")] Employee employee, string[] selectedRoles)
         {
 
             try
@@ -109,8 +106,6 @@ namespace Haver.Controllers
             EmployeeAdminVM employeeAdminVM = new EmployeeAdminVM
             {
                 Email = employee.Email,
-                Prescriber = employee.Prescriber,
-                FirstAid = employee.FirstAid,
                 Active = employee.Active,
                 ID = employee.ID,
                 EmployeeThumbnail = employee.EmployeeThumbnail,
@@ -139,14 +134,13 @@ namespace Haver.Controllers
                 .Select(e => new EmployeeAdminVM
                 {
                     Email = e.Email,
-                    Prescriber = e.Prescriber,
-                    FirstAid = e.FirstAid,
                     Active = e.Active,
                     ID = e.ID,
                     EmployeeThumbnail = e.EmployeeThumbnail,
                     FirstName = e.FirstName,
                     LastName = e.LastName,
-                    Phone = e.Phone
+                    Phone = e.Phone,
+                    RowVersion = e.RowVersion
                 }).FirstOrDefaultAsync();
 
             if (employee == null)
@@ -156,15 +150,11 @@ namespace Haver.Controllers
 
             //Get the user from the Identity system
             var user = await _userManager.FindByEmailAsync(employee.Email);
-            var loggedInUser = User.Identity.Name;
             if (user != null)
             {
                 //Add the current roles
                 var r = await _userManager.GetRolesAsync(user);
-                if (user.Email != loggedInUser)
-                {
-                    employee.UserRoles = (List<string>)r;
-                }
+                employee.UserRoles = (List<string>)r;
             }
             PopulateAssignedRoleData(employee);
 
@@ -176,7 +166,7 @@ namespace Haver.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, bool Active, string[] selectedRoles)
+        public async Task<IActionResult> Edit(int id, bool Active, string[] selectedRoles, Byte[] RowVersion)
         {
             var employeeToUpdate = await _context.Employees
                 .FirstOrDefaultAsync(m => m.ID == id);
@@ -184,6 +174,9 @@ namespace Haver.Controllers
             {
                 return NotFound();
             }
+
+            _context.Entry(employeeToUpdate).Property("RowVersion").OriginalValue = RowVersion;
+
             var user = await _userManager.Users.FirstOrDefaultAsync(u => u.Email == employeeToUpdate.Email);
 
             //Note the current Email and Active Status
@@ -193,12 +186,10 @@ namespace Haver.Controllers
 
 
             if (await TryUpdateModelAsync<Employee>(employeeToUpdate, "",
-                e => e.FirstName, e => e.LastName, e => e.Phone, e => e.Email, e => e.Prescriber,
-                e => e.FirstAid, e => e.Active))
+                e => e.FirstName, e => e.LastName, e => e.Phone, e => e.Email, e => e.Active))
             {
                 try
                 {
-
                     await _context.SaveChangesAsync();
                     //Save successful so go on to related changes
 
@@ -241,17 +232,20 @@ namespace Haver.Controllers
                         }
                     }
 
+                    TempData["SuccessAlert"] = "Employee was successfully edited.";
                     return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!EmployeeExists(employeeToUpdate.ID))
                     {
-                        return NotFound();
+                        TempData["ErrorAlert"] = "This Employee was deleted";
+                        return RedirectToAction("Index");
                     }
                     else
                     {
-                        throw;
+                        TempData["ErrorAlert"] = "This Employee was edited or modified by another user, try again and if problems persist see your system administrator";
+                        return RedirectToAction("Index");
                     }
                 }
                 catch (DbUpdateException dex)
@@ -270,13 +264,12 @@ namespace Haver.Controllers
             EmployeeAdminVM employeeAdminVM = new EmployeeAdminVM
             {
                 Email = employeeToUpdate.Email,
-                Prescriber = employeeToUpdate.Prescriber,
-                FirstAid = employeeToUpdate.FirstAid,
                 Active = employeeToUpdate.Active,
                 ID = employeeToUpdate.ID,
                 FirstName = employeeToUpdate.FirstName,
                 LastName = employeeToUpdate.LastName,
-                Phone = employeeToUpdate.Phone
+                Phone = employeeToUpdate.Phone,
+                RowVersion = employeeToUpdate.RowVersion,
             };
             foreach (var role in selectedRoles)
             {
@@ -413,12 +406,12 @@ namespace Haver.Controllers
                         "Set Password",
                         $"Hello {employee.FullName} please set your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
                 
-                    TempData["messageGreen"] = "Invitation email sent to " + employee.FullName + " at " + employee.Email;
+                    TempData["SuccessAlert"] = "Invitation email sent to " + employee.FullName + " at " + employee.Email;
                 }
             }
             catch (Exception)
             {
-                TempData["message"] = "Could not send Invitation email to " + employee.FullName + " at " + employee.Email;
+                TempData["ErrorAlert"] = "Could not send Invitation email to " + employee.FullName + " at " + employee.Email;
             }
         }
 

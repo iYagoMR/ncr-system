@@ -4,6 +4,10 @@
     ViewData["Title"] = "Details";
 }
 
+@{
+    var sectionEdited = TempData["SectionEdited"] as string;
+}
+
 <div class="standard-page-header">
     <partial name="_BackToList" />
     <h1>Details</h1>
@@ -47,6 +51,11 @@
                             <div class="form-group form-check">
                                 <label class="form-check-label">
                                     <input class="form-check-input" asp-for="QualityRepresentative.NonConforming" checked disabled /> @Html.DisplayNameFor(model => model.QualityRepresentative.NonConforming)
+                                </label>
+                            </div>
+                            <div class="form-group form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" asp-for="QualityRepresentative.ConfirmingEng" disabled/> @Html.DisplayNameFor(model => model.QualityRepresentative.ConfirmingEng)
                                 </label>
                             </div>
                         </div>
@@ -444,6 +453,11 @@
                                     <input class="form-check-input" asp-for="Procurement.SuppReturnCompleted" disabled /> @Html.DisplayNameFor(model => model.Procurement.SuppReturnCompleted)
                                 </label>
                             </div>
+                            <div class="form-group form-check">
+                                <label class="form-check-label">
+                                    <input class="form-check-input" asp-for="Procurement.DisposeOnSite" disabled /> @Html.DisplayNameFor(model => model.Procurement.DisposeOnSite)
+                                </label>
+                            </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group form-check">
@@ -464,6 +478,11 @@
                                 <label asp-for="Procurement.RMANo" class="control-label"></label>
                                 <input asp-for="Procurement.RMANo" class="form-control" oninput="this.value = Math.abs(this.value)" readonly/>
                                 <span asp-validation-for="Procurement.RMANo" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Procurement.NCRValue" class="control-label"></label>
+                                <input asp-for="Procurement.NCRValue" class="form-control" oninput="this.value = Math.abs(this.value)" readonly />
+                                <span asp-validation-for="Procurement.NCRValue" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -506,7 +525,8 @@
                     </div>
                 </div>
 
-                @if (Model.Procurement != null && (Model.Operations.QualityPhotos.Any() || Model.Operations.VideoLinks.Any()))
+
+                @if (Model.Procurement != null && (Model.Procurement.QualityPhotos.Any() || Model.Procurement.VideoLinks.Any()))
                 {
                     <div class="section-form multimedia">
                         <div class="section-label">
@@ -583,7 +603,7 @@
                     </div>
                 </div>
 
-                @if (Model.Reinspection != null && (Model.QualityRepresentative.QualityPhotos.Any() || Model.QualityRepresentative.VideoLinks.Any()))
+                @if (Model.Reinspection != null && (Model.Reinspection.QualityPhotos.Any() || Model.Reinspection.VideoLinks.Any()))
                 {
                     <div class="section-form multimedia">
                         <div class="section-label">
@@ -626,34 +646,34 @@
 </div>
 @section Scripts {
     <script>
+        // Define ScrollIntoSection function globally
+        function ScrollIntoSection(targetElementID) {
+            var targetElement = document.getElementById(targetElementID);
+            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
 
-        // Get the images
-        // var images = document.querySelectorAll(".img-fluid");
+        // Scroll to section edited
+        $(document).ready(function () {
 
-        // images.forEach(function (image) {
+            var sectionEdited = "@sectionEdited"; // Properly format Razor variable
 
-        //     //Get the image clicked
-        //     image.onclick = function () {
-        //         let imageRow = image.closest(".card");
-
-        //         image.classList.toggle("expanded");
-        //         imageRow.classList.toggle("image-modal");
-        //         imageRow.style.display = "flex";
-
-        //         //Toggle id
-        //         if (image.id === "clickedImage") {
-        //             image.removeAttribute("id");
-        //         } else {
-        //             image.id = "clickedImage";
-        //         }
-
-        //         // Hide images other than the clicked one
-        //         images.forEach(function (otherImage) {
-        //             if (otherImage !== image) {
-        //                 otherImage.classList.toggle("hide-other-imgs")
-        //             }
-        //         });
-        //     }
-        // });
+            if (sectionEdited != null) {
+                if (sectionEdited == "QualityRepresentative") {
+                    ScrollIntoSection('panelsStayOpen-headingOne');
+                }
+                else if (sectionEdited == "Engineering") {
+                    ScrollIntoSection('panelsStayOpen-headingTwo');
+                }
+                else if (sectionEdited == "Operations") {
+                    ScrollIntoSection('panelsStayOpen-headingThree');
+                }
+                else if (sectionEdited == "Procurement") {
+                    ScrollIntoSection('panelsStayOpen-headingFour');
+                }
+                else if (sectionEdited == "Reinspection") {
+                    ScrollIntoSection('panelsStayOpen-headingFive');
+                }
+            }
+        });
     </script>
 }

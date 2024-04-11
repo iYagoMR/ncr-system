@@ -46,15 +46,13 @@ namespace Haver.Models
 
         public string Phone { get; set; }
 
-        public bool Prescriber { get; set; }
-
-        public FirstAid FirstAid { get; set; }
-
         public string Email { get; set; }
 
         public bool Active { get; set; } = true;
 
-        public ICollection<Subscription> Subscriptions { get; set; }
+        [ScaffoldColumn(false)]
+        [Timestamp]
+        public Byte[] RowVersion { get; set; }//Added for concurrency
 
         public EmployeePhoto EmployeePhoto { get; set; }
         public EmployeeThumbnail EmployeeThumbnail { get; set; }

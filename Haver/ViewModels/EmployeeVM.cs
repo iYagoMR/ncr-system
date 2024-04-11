@@ -38,8 +38,9 @@ namespace Haver.ViewModels
         public string LastName { get; set; }
         public string Phone { get; set; }
 
-        [Display(Name = "Number Of Push Subscriptions")]
-        public int NumberOfPushSubscriptions { get; set; }
+        [ScaffoldColumn(false)]
+        [Timestamp]
+        public Byte[] RowVersion { get; set; }//Added for concurrency
 
         public EmployeePhoto EmployeePhoto { get; set; }
         public EmployeeThumbnail EmployeeThumbnail { get; set; }

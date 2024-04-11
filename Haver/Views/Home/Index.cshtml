@@ -205,7 +205,14 @@
                 {
                     <tr class="grey-rows">
                         <td>
-                            <div>@Html.DisplayFor(modelItem => item.NCRNum)</div>
+                            @if (item.NCRNum == null)
+                            {
+                                <div>0000-000</div>
+                            }
+                            else
+                            {
+                                <div>@Html.DisplayFor(modelItem => item.NCRNum)</div>
+                            }
                         </td>
                         <td>
                             @if (item.Status == "Active")
@@ -249,7 +256,14 @@
             {
                 <div class="card mb-3">
                     <div class="card-header">
-                        <p>@Html.DisplayFor(modelItem => item.NCRNum)</p>
+                        @if (item.NCRNum == null)
+                        {
+                            <p>0000-000</p>
+                        }
+                        else
+                        {
+                            <p>@Html.DisplayFor(modelItem => item.NCRNum)</p>
+                        }
                         @if (item.Status == "Active")
                         {
                             <span style="color: var(--green);">@Html.DisplayFor(modelItem => item.Status)</span>

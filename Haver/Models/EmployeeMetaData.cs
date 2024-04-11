@@ -45,12 +45,6 @@ namespace Haver.Models
         [StringLength(10)]
         public string Phone { get; set; }
 
-        [Required(ErrorMessage = "Perscriber status required.")]
-        public bool Prescriber { get; set; }
-
-        [Display(Name = "First Aid Training")]
-        public FirstAid FirstAid { get; set; }
-
         [Required(ErrorMessage = "Email Address is required.")]
         [StringLength(255)]
         [DataType(DataType.EmailAddress)]

@@ -45,7 +45,6 @@ namespace Haver.Controllers
         {
 
             var employee = await _context.Employees
-               .Include(e => e.Subscriptions)
                .Where(e => e.Email == User.Identity.Name)
                .Select(e => new EmployeeVM
                {
@@ -54,7 +53,6 @@ namespace Haver.Controllers
                    LastName = e.LastName,
                    Phone = e.Phone,
                    EmployeePhoto = e.EmployeePhoto,
-                   NumberOfPushSubscriptions = e.Subscriptions.Count()
                })
                .FirstOrDefaultAsync();
             if (employee == null)
@@ -80,7 +78,6 @@ namespace Haver.Controllers
                     Phone = e.Phone,
                     EmployeePhoto = e.EmployeePhoto,
                     EmployeeThumbnail = e.EmployeeThumbnail,
-                    NumberOfPushSubscriptions = e.Subscriptions.Count()
                 })
                 .FirstOrDefaultAsync();
             if (employee == null)

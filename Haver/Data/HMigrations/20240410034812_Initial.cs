@@ -63,11 +63,13 @@ namespace Haver.Data.HMigrations
                         .Annotation("Sqlite:Autoincrement", true),
                     SuppItemsBack = table.Column<bool>(type: "INTEGER", nullable: false),
                     RMANo = table.Column<int>(type: "INTEGER", nullable: true),
+                    NCRValue = table.Column<int>(type: "INTEGER", nullable: true),
                     CarrierInfo = table.Column<string>(type: "TEXT", maxLength: 3000, nullable: true),
                     ExpecDateOfReturn = table.Column<DateTime>(type: "TEXT", nullable: true),
                     SuppReturnCompleted = table.Column<bool>(type: "INTEGER", nullable: false),
                     IsCreditExpec = table.Column<bool>(type: "INTEGER", nullable: false),
                     ChargeSupplier = table.Column<bool>(type: "INTEGER", nullable: false),
+                    DisposeOnSite = table.Column<bool>(type: "INTEGER", nullable: false),
                     ProcurementDate = table.Column<DateOnly>(type: "TEXT", nullable: true),
                     ProcurementSign = table.Column<string>(type: "TEXT", nullable: true)
                 },
@@ -126,10 +128,9 @@ namespace Haver.Data.HMigrations
                     FirstName = table.Column<string>(type: "TEXT", nullable: true),
                     LastName = table.Column<string>(type: "TEXT", nullable: true),
                     Phone = table.Column<string>(type: "TEXT", nullable: true),
-                    Prescriber = table.Column<bool>(type: "INTEGER", nullable: false),
-                    FirstAid = table.Column<int>(type: "INTEGER", nullable: false),
                     Email = table.Column<string>(type: "TEXT", nullable: true),
                     Active = table.Column<bool>(type: "INTEGER", nullable: false),
+                    RowVersion = table.Column<byte[]>(type: "BLOB", rowVersion: true, nullable: true),
                     CreatedBy = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "TEXT", nullable: true),
                     UpdatedBy = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -221,28 +222,34 @@ namespace Haver.Data.HMigrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Procurement",
+                name: "Procurements",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     SuppItemsBack = table.Column<bool>(type: "INTEGER", nullable: false),
                     RMANo = table.Column<int>(type: "INTEGER", nullable: true),
+                    NCRValue = table.Column<int>(type: "INTEGER", nullable: true),
                     CarrierInfo = table.Column<string>(type: "TEXT", maxLength: 3000, nullable: true),
                     ExpecDateOfReturn = table.Column<DateTime>(type: "TEXT", nullable: false),
                     SuppReturnCompleted = table.Column<bool>(type: "INTEGER", nullable: false),
                     IsCreditExpec = table.Column<bool>(type: "INTEGER", nullable: false),
                     ChargeSupplier = table.Column<bool>(type: "INTEGER", nullable: false),
+                    DisposeOnSite = table.Column<bool>(type: "INTEGER", nullable: false),
                     ProcurementDate = table.Column<DateOnly>(type: "TEXT", nullable: false),
-                    ProcurementSign = table.Column<string>(type: "TEXT", nullable: false)
+                    ProcurementSign = table.Column<string>(type: "TEXT", nullable: false),
+                    CreatedBy = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Procurement", x => x.ID);
+                    table.PrimaryKey("PK_Procurements", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Reinspection",
+                name: "Reinspections",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "INTEGER", nullable: false)
@@ -250,11 +257,15 @@ namespace Haver.Data.HMigrations
                     ReinspecAccepted = table.Column<bool>(type: "INTEGER", nullable: false),
                     NewNCRNum = table.Column<string>(type: "TEXT", nullable: true),
                     ReinspectionDate = table.Column<DateOnly>(type: "TEXT", nullable: false),
-                    ReinspecInspectorSign = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false)
+                    ReinspecInspectorSign = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false),
+                    CreatedBy = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Reinspection", x => x.ID);
+                    table.PrimaryKey("PK_Reinspections", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -269,22 +280,6 @@ namespace Haver.Data.HMigrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Suppliers", x => x.ID);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Users",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    FirstName = table.Column<string>(type: "TEXT", nullable: true),
-                    LastName = table.Column<string>(type: "TEXT", nullable: true),
-                    Email = table.Column<string>(type: "TEXT", nullable: true),
-                    Role = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Users", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -330,28 +325,6 @@ namespace Haver.Data.HMigrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Subscriptions",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    PushEndpoint = table.Column<string>(type: "TEXT", maxLength: 512, nullable: true),
-                    PushP256DH = table.Column<string>(type: "TEXT", maxLength: 512, nullable: true),
-                    PushAuth = table.Column<string>(type: "TEXT", maxLength: 512, nullable: true),
-                    EmployeeID = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Subscriptions", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Subscriptions_Employees_EmployeeID",
-                        column: x => x.EmployeeID,
-                        principalTable: "Employees",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Engineerings",
                 columns: table => new
                 {
@@ -367,7 +340,11 @@ namespace Haver.Data.HMigrations
                     RevisionDate = table.Column<DateTime>(type: "TEXT", nullable: true),
                     EngineerSign = table.Column<string>(type: "TEXT", maxLength: 55, nullable: false),
                     EngineeringDate = table.Column<DateOnly>(type: "TEXT", nullable: false),
-                    EngReviewID = table.Column<int>(type: "INTEGER", nullable: false)
+                    EngReviewID = table.Column<int>(type: "INTEGER", nullable: false),
+                    CreatedBy = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -394,7 +371,11 @@ namespace Haver.Data.HMigrations
                     OperationsDate = table.Column<DateOnly>(type: "TEXT", nullable: false),
                     OpManagerSign = table.Column<string>(type: "TEXT", maxLength: 255, nullable: false),
                     Message = table.Column<string>(type: "TEXT", maxLength: 3000, nullable: true),
-                    PrelDecisionID = table.Column<int>(type: "INTEGER", nullable: false)
+                    PrelDecisionID = table.Column<int>(type: "INTEGER", nullable: false),
+                    CreatedBy = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -425,7 +406,11 @@ namespace Haver.Data.HMigrations
                     ProblemID = table.Column<int>(type: "INTEGER", nullable: false),
                     PartID = table.Column<int>(type: "INTEGER", nullable: false),
                     SupplierID = table.Column<int>(type: "INTEGER", nullable: false),
-                    ProcessApplicableID = table.Column<int>(type: "INTEGER", nullable: false)
+                    ProcessApplicableID = table.Column<int>(type: "INTEGER", nullable: false),
+                    CreatedBy = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -463,14 +448,13 @@ namespace Haver.Data.HMigrations
                     ID = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     NCRNum = table.Column<string>(type: "TEXT", nullable: true),
-                    IsEngineerRequired = table.Column<bool>(type: "INTEGER", nullable: false),
                     IsNCRArchived = table.Column<bool>(type: "INTEGER", nullable: false),
                     IsNCRDraft = table.Column<bool>(type: "INTEGER", nullable: false),
                     VoidingReason = table.Column<string>(type: "TEXT", nullable: true),
                     Status = table.Column<string>(type: "TEXT", nullable: true),
                     Phase = table.Column<string>(type: "TEXT", nullable: true),
-                    CreatedOn = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CreatedOnDO = table.Column<DateOnly>(type: "TEXT", nullable: false),
+                    RowVersion = table.Column<byte[]>(type: "BLOB", rowVersion: true, nullable: true),
                     QualityRepresentativeID = table.Column<int>(type: "INTEGER", nullable: true),
                     EngineeringID = table.Column<int>(type: "INTEGER", nullable: true),
                     OperationsID = table.Column<int>(type: "INTEGER", nullable: true),
@@ -482,7 +466,11 @@ namespace Haver.Data.HMigrations
                     DraftEngineeringID = table.Column<int>(type: "INTEGER", nullable: true),
                     DraftOperationsID = table.Column<int>(type: "INTEGER", nullable: true),
                     DraftProcurementID = table.Column<int>(type: "INTEGER", nullable: true),
-                    DraftReinspectionID = table.Column<int>(type: "INTEGER", nullable: true)
+                    DraftReinspectionID = table.Column<int>(type: "INTEGER", nullable: true),
+                    CreatedBy = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    UpdatedBy = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    UpdatedOn = table.Column<DateTime>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -523,9 +511,9 @@ namespace Haver.Data.HMigrations
                         principalTable: "OperationsS",
                         principalColumn: "ID");
                     table.ForeignKey(
-                        name: "FK_NCRs_Procurement_ProcurementID",
+                        name: "FK_NCRs_Procurements_ProcurementID",
                         column: x => x.ProcurementID,
-                        principalTable: "Procurement",
+                        principalTable: "Procurements",
                         principalColumn: "ID");
                     table.ForeignKey(
                         name: "FK_NCRs_QualityRepresentatives_QualityRepresentativeID",
@@ -533,9 +521,9 @@ namespace Haver.Data.HMigrations
                         principalTable: "QualityRepresentatives",
                         principalColumn: "ID");
                     table.ForeignKey(
-                        name: "FK_NCRs_Reinspection_ReinspectionID",
+                        name: "FK_NCRs_Reinspections_ReinspectionID",
                         column: x => x.ReinspectionID,
-                        principalTable: "Reinspection",
+                        principalTable: "Reinspections",
                         principalColumn: "ID");
                 });
 
@@ -602,9 +590,9 @@ namespace Haver.Data.HMigrations
                         principalTable: "OperationsS",
                         principalColumn: "ID");
                     table.ForeignKey(
-                        name: "FK_QualityPhotos_Procurement_ProcurementID",
+                        name: "FK_QualityPhotos_Procurements_ProcurementID",
                         column: x => x.ProcurementID,
-                        principalTable: "Procurement",
+                        principalTable: "Procurements",
                         principalColumn: "ID");
                     table.ForeignKey(
                         name: "FK_QualityPhotos_QualityRepresentatives_QualityRepresentativeID",
@@ -612,9 +600,9 @@ namespace Haver.Data.HMigrations
                         principalTable: "QualityRepresentatives",
                         principalColumn: "ID");
                     table.ForeignKey(
-                        name: "FK_QualityPhotos_Reinspection_ReinspectionID",
+                        name: "FK_QualityPhotos_Reinspections_ReinspectionID",
                         column: x => x.ReinspectionID,
-                        principalTable: "Reinspection",
+                        principalTable: "Reinspections",
                         principalColumn: "ID");
                 });
 
@@ -680,9 +668,9 @@ namespace Haver.Data.HMigrations
                         principalTable: "OperationsS",
                         principalColumn: "ID");
                     table.ForeignKey(
-                        name: "FK_VideoLinks_Procurement_ProcurementID",
+                        name: "FK_VideoLinks_Procurements_ProcurementID",
                         column: x => x.ProcurementID,
-                        principalTable: "Procurement",
+                        principalTable: "Procurements",
                         principalColumn: "ID");
                     table.ForeignKey(
                         name: "FK_VideoLinks_QualityRepresentatives_QualityRepresentativeID",
@@ -690,9 +678,9 @@ namespace Haver.Data.HMigrations
                         principalTable: "QualityRepresentatives",
                         principalColumn: "ID");
                     table.ForeignKey(
-                        name: "FK_VideoLinks_Reinspection_ReinspectionID",
+                        name: "FK_VideoLinks_Reinspections_ReinspectionID",
                         column: x => x.ReinspectionID,
-                        principalTable: "Reinspection",
+                        principalTable: "Reinspections",
                         principalColumn: "ID");
                 });
 
@@ -718,6 +706,12 @@ namespace Haver.Data.HMigrations
                 name: "IX_Engineerings_EngReviewID",
                 table: "Engineerings",
                 column: "EngReviewID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_NCRNumbers_Year_Counter",
+                table: "NCRNumbers",
+                columns: new[] { "Year", "Counter" },
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_NCRs_DraftEngineeringID",
@@ -750,6 +744,12 @@ namespace Haver.Data.HMigrations
                 column: "EngineeringID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_NCRs_NCRNum",
+                table: "NCRs",
+                column: "NCRNum",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_NCRs_OperationsID",
                 table: "NCRs",
                 column: "OperationsID");
@@ -778,6 +778,12 @@ namespace Haver.Data.HMigrations
                 name: "IX_Parts_PartNumber",
                 table: "Parts",
                 column: "PartNumber",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Problems_ProblemDescription",
+                table: "Problems",
+                column: "ProblemDescription",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -851,11 +857,6 @@ namespace Haver.Data.HMigrations
                 column: "SupplierID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Subscriptions_EmployeeID",
-                table: "Subscriptions",
-                column: "EmployeeID");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Suppliers_SupplierCode",
                 table: "Suppliers",
                 column: "SupplierCode",
@@ -910,6 +911,8 @@ namespace Haver.Data.HMigrations
                 name: "IX_VideoLinks_ReinspectionID",
                 table: "VideoLinks",
                 column: "ReinspectionID");
+
+            ExtraMigration.Steps(migrationBuilder);
         }
 
         /// <inheritdoc />
@@ -929,12 +932,6 @@ namespace Haver.Data.HMigrations
 
             migrationBuilder.DropTable(
                 name: "QualityPhotos");
-
-            migrationBuilder.DropTable(
-                name: "Subscriptions");
-
-            migrationBuilder.DropTable(
-                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "VideoLinks");
@@ -964,13 +961,13 @@ namespace Haver.Data.HMigrations
                 name: "OperationsS");
 
             migrationBuilder.DropTable(
-                name: "Procurement");
+                name: "Procurements");
 
             migrationBuilder.DropTable(
                 name: "QualityRepresentatives");
 
             migrationBuilder.DropTable(
-                name: "Reinspection");
+                name: "Reinspections");
 
             migrationBuilder.DropTable(
                 name: "EngReviews");

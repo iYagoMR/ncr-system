@@ -4,20 +4,15 @@ using Haver.DraftModels;
 
 namespace Haver.Models
 {
-    public class NCR
+    public class NCR : Auditable
     {
         public int ID { get; set; }
 
         [Display(Name = "NCR number")]
         public string NCRNum { get; set; }
 
-        [Display(Name = "Is engineering required?")]
-        public bool IsEngineerRequired { get; set; }
-
-        [Display(Name = "Is archived required?")]
         public bool IsNCRArchived { get; set; }
 
-        [Display(Name ="Draft?")]
         public bool IsNCRDraft { get; set; }
 
         [Display(Name = "Voiding reason")]
@@ -29,14 +24,12 @@ namespace Haver.Models
         [Display(Name = "Phase")]
         public string Phase { get; set; }    
 
-        [Display(Name = "Created on")]
-        public DateTime CreatedOn { get; set; }
-
         [Display(Name = "Created on DateOnly")]
         public DateOnly CreatedOnDO { get; set; }
 
-        //Hard Coded role for testing purposes ONLY
-        public string UserRole = "Quality Representative";
+        [ScaffoldColumn(false)]
+        [Timestamp]
+        public Byte[] RowVersion { get; set; }//Added for concurrency
 
         public QualityRepresentative QualityRepresentative { get; set; }
         public Engineering Engineering { get; set; }

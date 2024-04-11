@@ -16,10 +16,12 @@ namespace Haver.Utilities
             int qual24 = 0;
             int qual48 = 0;
             int qual5 = 0;
+            var nowToronto = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time"));
 
             foreach (var ncr in QualNCRs)
             {
-                TimeSpan differenceLastFilled = DateTime.Now - ncr.CreatedOn;
+
+                TimeSpan differenceLastFilled = (TimeSpan)(nowToronto - ncr.CreatedOn);
                 int LastFilled = differenceLastFilled.Days;
                 qualTotal++;
 
@@ -32,7 +34,7 @@ namespace Haver.Utilities
                 {
                     qual48++;
                 }
-                else if (LastFilled >= 5)
+                else if (LastFilled > 2)
                 {
                     qual5++;
                 }
@@ -46,6 +48,7 @@ namespace Haver.Utilities
             int eng24 = 0;
             int eng48 = 0;
             int eng5 = 0;
+            var nowToronto = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time"));
 
             foreach (var ncr in EngNCRs)
             {
@@ -54,8 +57,7 @@ namespace Haver.Utilities
                 // Converting DateOnly to DateTime by providing Time Info
                 if (ncr.QualityRepresentative != null)
                 {
-                    DateTime qualDateTime = ncr.QualityRepresentative.QualityRepDate.ToDateTime(TimeOnly.Parse(Convert.ToString(ncr.CreatedOn.TimeOfDay)));
-                    TimeSpan differenceLastFilled = DateTime.Now - qualDateTime;
+                    TimeSpan differenceLastFilled = (TimeSpan)(nowToronto - ncr.QualityRepresentative.CreatedOn);
                     LastFilled = differenceLastFilled.Days;
                     engTotal++;
                 }
@@ -69,7 +71,7 @@ namespace Haver.Utilities
                 {
                     eng48++;
                 }
-                else if (LastFilled >= 5)
+                else if (LastFilled > 2)
                 {
                     eng5++;
                 }
@@ -84,6 +86,7 @@ namespace Haver.Utilities
             int oper24 = 0;
             int oper48 = 0;
             int oper5 = 0;
+            var nowToronto = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time"));
 
             foreach (var ncr in OperNCRs)
             {
@@ -92,15 +95,13 @@ namespace Haver.Utilities
                 // Converting DateOnly to DateTime by providing Time Info
                 if (ncr.Engineering != null && ncr.QualityRepresentative.ConfirmingEng != false)
                 {
-                    DateTime engDateTime = ncr.Engineering.EngineeringDate.ToDateTime(TimeOnly.Parse(Convert.ToString("11:59 PM")));
-                    TimeSpan differenceLastFilled = DateTime.Now - engDateTime;
+                    TimeSpan differenceLastFilled = (TimeSpan)(nowToronto - ncr.Engineering.CreatedOn);
                     LastFilled = differenceLastFilled.Days;
                     operTotal++;
                 }
                 else if (ncr.QualityRepresentative != null)
                 {
-                    DateTime qualDateTime = ncr.QualityRepresentative.QualityRepDate.ToDateTime(TimeOnly.Parse(Convert.ToString(ncr.CreatedOn.TimeOfDay)));
-                    TimeSpan differenceLastFilled = DateTime.Now - qualDateTime;
+                    TimeSpan differenceLastFilled = (TimeSpan)(nowToronto - ncr.QualityRepresentative.CreatedOn);
                     LastFilled = differenceLastFilled.Days;
                     operTotal++;
                 }
@@ -114,7 +115,7 @@ namespace Haver.Utilities
                 {
                     oper48++;
                 }
-                else if (LastFilled >= 5)
+                else if (LastFilled > 2)
                 {
                     oper5++;
                 }
@@ -129,6 +130,7 @@ namespace Haver.Utilities
             int proc24 = 0;
             int proc48 = 0;
             int proc5 = 0;
+            var nowToronto = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time"));
 
             foreach (var ncr in ProcNCRs)
             {
@@ -137,8 +139,7 @@ namespace Haver.Utilities
                 // Converting DateOnly to DateTime by providing Time Info
                 if (ncr.Operations != null)
                 {
-                    DateTime operDateTime = ncr.Operations.OperationsDate.ToDateTime(TimeOnly.Parse(Convert.ToString("11:59 PM")));
-                    TimeSpan differenceLastFilled = DateTime.Now - operDateTime;
+                    TimeSpan differenceLastFilled = (TimeSpan)(nowToronto - ncr.Operations.CreatedOn);
                     LastFilled = differenceLastFilled.Days;
                     procTotal++;
                 }
@@ -152,7 +153,7 @@ namespace Haver.Utilities
                 {
                     proc48++;
                 }
-                else if (LastFilled >= 5)
+                else if (LastFilled > 2)
                 {
                     proc5++;
                 }
@@ -167,6 +168,7 @@ namespace Haver.Utilities
             int reinsp24 = 0;
             int reinsp48 = 0;
             int reinsp5 = 0;
+            var nowToronto = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time"));
 
             foreach (var ncr in ReinspNCRs)
             {
@@ -175,8 +177,7 @@ namespace Haver.Utilities
                 // Converting DateOnly to DateTime by providing Time Info
                 if (ncr.Procurement != null)
                 {
-                    DateTime prcoDateTime = ncr.Procurement.ProcurementDate.ToDateTime(TimeOnly.Parse(Convert.ToString("11:59 PM")));
-                    TimeSpan differenceLastFilled = DateTime.Now - prcoDateTime;
+                    TimeSpan differenceLastFilled = (TimeSpan)(nowToronto - ncr.Procurement.CreatedOn);
                     LastFilled = differenceLastFilled.Days;
                     reinspTotal++;
                 }
@@ -190,7 +191,7 @@ namespace Haver.Utilities
                 {
                     reinsp48++;
                 }
-                else if (LastFilled >= 5)
+                else if (LastFilled > 2)
                 {
                     reinsp5++;
                 }

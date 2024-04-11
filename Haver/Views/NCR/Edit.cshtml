@@ -1,4 +1,4 @@
-﻿@model NCR
+﻿@model Haver.Models.NCR
 @using Microsoft.EntityFrameworkCore;
 @using Microsoft.AspNetCore.Identity
 @using Haver.Data;
@@ -10,6 +10,23 @@
 
 @{
     ViewData["Title"] = "Edit NCR";
+}
+
+@{
+    //Get user logged in
+    var user = await UserManager.GetUserAsync(User);
+    //Get user role
+    List<string> userRole = (await UserManager.GetRolesAsync(user)).ToList();
+
+    //Scroll to section
+    var sectionEdited = TempData["SectionEdited"] as string;
+
+    //Sections
+    bool isQualRepNull = Model.QualityRepresentative != null ? false : true;
+    bool isEngineeringNull = Model.Engineering != null ? false : true; 
+    bool isOperationsNull = Model.Operations != null ? false : true; 
+    bool isProcurementNull = Model.Procurement != null ? false : true; 
+    bool isReinspectionNull = Model.Reinspection != null ? false : true;
 }
 
 <div class="page-sub-title">
@@ -27,12 +44,15 @@
         <div id="QualityForm" class="accordion-collapse collapse" aria-labelledby="QualityRep-Section">
             <div class="accordion-body">
 
-                <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                <form asp-action="Edit" enctype="multipart/form-data">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                     @Html.AntiForgeryToken()
 
                     @Html.HiddenFor(model => model.Phase)
+
+                    <input type="hidden" asp-for="RowVersion"/>
+                    <input type="hidden" asp-for="ID"/>
 
                     <div class="section-form">
                         <div class="row">
@@ -213,6 +233,7 @@
 
                         <div class="form-group">
                             <input type="submit" value="Save Changes" class="btn btn-primary" />
+                            <input type="number" value="@Model.QualityRepresentative.ID" name="IDEdited" hidden />
                             <input type="text" value="QualityRepresentative" id="sectionEdited" name="sectionEdited" hidden />
                         </div>
                     }
@@ -233,6 +254,9 @@
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                     @Html.AntiForgeryToken()
+
+                    <input type="hidden" asp-for="RowVersion" />
+                    <input type="hidden" asp-for="ID" />
 
                     <div class="section-form">
                         <div class="row">
@@ -422,6 +446,9 @@
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     @Html.AntiForgeryToken()
 
+                    <input type="hidden" asp-for="RowVersion" />
+                    <input type="hidden" asp-for="ID" />
+
                     <div class="section-form">
                         <div class="row">
                             <div class="col-md-6">
@@ -597,6 +624,9 @@
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     @Html.AntiForgeryToken()
 
+                    <input type="hidden" asp-for="RowVersion" />
+                    <input type="hidden" asp-for="ID" />
+
                     <div class="section-form">
                         <div class="row">
                             <div class="col-md-6">
@@ -608,6 +638,11 @@
                                 <div class="form-group form-check">
                                     <label class="form-check-label">
                                         <input class="form-check-input" asp-for="Procurement.SuppReturnCompleted" /> @Html.DisplayNameFor(model => model.Procurement.SuppReturnCompleted)
+                                    </label>
+                                </div>
+                                <div class="form-group form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" asp-for="Procurement.DisposeOnSite" /> @Html.DisplayNameFor(model => model.Procurement.DisposeOnSite)
                                     </label>
                                 </div>
                             </div>
@@ -630,6 +665,11 @@
                                     <label asp-for="Procurement.RMANo" class="control-label"></label>
                                     <input asp-for="Procurement.RMANo" class="form-control" oninput="this.value = Math.abs(this.value)" id="RMANoField" />
                                     <span asp-validation-for="Procurement.RMANo" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Procurement.NCRValue" class="control-label"></label>
+                                    <input asp-for="Procurement.NCRValue" class="form-control" oninput="this.value = Math.abs(this.value)" />
+                                    <span asp-validation-for="Procurement.NCRValue" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -768,6 +808,9 @@
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     @Html.AntiForgeryToken()
 
+                    <input type="hidden" asp-for="RowVersion" />
+                    <input type="hidden" asp-for="ID" />
+
                     <div class="section-form">
                         <div class="row">
                             <div class="col-md-12">
@@ -890,94 +933,97 @@
         <script src="~/js/photos-adder.js"></script>
     <script src="~/js/form-fill.js"></script>
     <script src="~/js/form-dates-filler.js"></script>
-@*     <script src="~/js/block-fields.js"></script> *@
-    @*     <script src="~/js/multiselect.js"></script> *@
-    @*     <script src="~/js/expand-images.js"></script> *@
+    <script src="~/js/block-fields.js"></script>
     <script src="~/js/video-link.js"></script>
 
     <script>
+
+
+        var sectionEdited = "@sectionEdited"; // Properly format Razor variable
+        var currentSection = '@Model.Phase';
+
+        //vars to check if sections are not null
+        var qual = @Html.Raw(Json.Serialize(isQualRepNull));
+        var eng = @Html.Raw(Json.Serialize(isEngineeringNull));
+        var oper = @Html.Raw(Json.Serialize(isOperationsNull));
+        var proc = @Html.Raw(Json.Serialize(isProcurementNull));
+       
+        const userRoles = @Html.Raw(Json.Serialize(userRole));
+
         // Helper method to unfold sections
         function toggleAccordion(sectionId, sectionButtonId, section) {
-            const formControls = document.querySelectorAll('.form-control, .form-check-input, .form-select')
 
             $(sectionId).addClass('show');
-            $(sectionButtonId).removeClass('collapsed')
-
-            //Block all the fields that do not belong to the current section
-            // for (let item of formControls) {
-            //     let parentDiv = item.closest('.accordion-collapse');
-            //     if (parentDiv.id != section) {
-            //         item.disabled = true;
-            //     }
-            // }
+            $(sectionButtonId).removeClass('collapsed');
         }
 
         // Unfold section according to NCR Phase
         $(document).ready(function () {
-            var currentSection = '@Model.Phase';
-            
-            @{
-                //Get user logged in
-                var user = await UserManager.GetUserAsync(User);
-                //Get user role
-                string userRole = (await UserManager.GetRolesAsync(user)).FirstOrDefault();
-                //User employee account
-                var emp = _context.Employees
-                    .Include(e => e.EmployeePhoto)
-                    .Where(e => e.Email == user.Email).FirstOrDefault();
+            //Test with MultipleRoles
+
+            if (userRoles.includes("Quality Inspector") && !qual) {
+                toggleAccordion('#QualityForm', '#Quality-Section', 'QualityForm');
+            } if (userRoles.includes("Engineer") && !eng) {
+                toggleAccordion('#EngineerForm', '#Engineering-Section', 'EngineerForm');
+            } if (userRoles.includes("Operations Manager") && !oper) {
+                toggleAccordion('#OperationsForm', '#Operations-Section', 'OperationsForm');
+            } if (userRoles.includes("Procurement") && !proc) {
+                toggleAccordion('#ProcurementForm', '#Procurement-Section', 'ProcurementForm');
+            }
+            else if (userRoles.includes("Admin")) {
+                if (!qual) {
+                    toggleAccordion('#QualityForm', '#Quality-Section', 'QualityForm');
+                }
+                if (!eng) {
+                    toggleAccordion('#EngineerForm', '#Engineering-Section', 'EngineerForm');
+                }
+                if (!oper) {
+                    toggleAccordion('#OperationsForm', '#Operations-Section', 'OperationsForm');
+                }
+                if (!proc) {
+                    toggleAccordion('#ProcurementForm', '#Procurement-Section', 'ProcurementForm');
+                }
             }
 
-            var role = '@userRole';
-            console.log(role)
+            const formControls = document.querySelectorAll('.accordion-collapse.collapse .form-control, .accordion-collapse.collapse .form-check-input, .accordion-collapse.collapse .form-select');
 
-            if (role == "Quality Inspector") {
-                toggleAccordion('#QualityForm', '#Quality-Section', 'QualityForm');
-            } else if (role == "Engineer") {
-                toggleAccordion('#EngineerForm', '#Engineering-Section', 'EngineerForm');
-            } else if (role == "Operations Manager") {
-                toggleAccordion('#OperationsForm', '#Operations-Section', 'OperationsForm');
-            } else if (role == "Procurement") {
-                toggleAccordion('#ProcurementForm', '#Procurement-Section', 'ProcurementForm');
-            } else if (role == "Quality Inspector") {
-                toggleAccordion('#ReinspectionForm', '#Reinspection-Section', 'ReinspectionForm');
+            //Block all the fields that cannot be edited
+            for (let item of formControls) {
+                let parentDiv = item.closest('.accordion-collapse.show');
+                if(parentDiv == null){
+                    item.disabled = true;
+                }
             }
-            else if (role == "Admin") {
-                toggleAccordion('#QualityForm', '#Quality-Section', 'QualityForm');
-                toggleAccordion('#EngineerForm', '#Engineering-Section', 'EngineerForm');
-                toggleAccordion('#OperationsForm', '#Operations-Section', 'OperationsForm');
-                toggleAccordion('#ProcurementForm', '#Procurement-Section', 'ProcurementForm');
-                toggleAccordion('#ReinspectionForm', '#Reinspection-Section', 'ReinspectionForm');
-            }
+
         });
 
-        // // Get the images
-        // var images = document.querySelectorAll(".img-fluid");
+        // Define ScrollIntoSection function globally
+        function ScrollIntoSection(targetElementID) {
+            var targetElement = document.getElementById(targetElementID);
+            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
 
-        // images.forEach(function (image) {
+        // Scroll to section edited
+        $(document).ready(function () {
 
-        //     //Get the image clicked
-        //     image.onclick = function () {
-        //         let imageRow = image.closest(".row");
-
-        //         image.classList.toggle("expanded");
-        //         imageRow.classList.toggle("image-modal");
-        //         imageRow.style.display = "flex";
-
-        //         //Toggle id
-        //         if (image.id === "clickedImage") {
-        //             image.removeAttribute("id");
-        //         } else {
-        //             image.id = "clickedImage";
-        //         }
-
-        //         // Hide images other than the clicked one
-        //         images.forEach(function (otherImage) {
-        //             if (otherImage !== image) {
-        //                 otherImage.classList.toggle("hide-other-imgs")
-        //             }
-        //         });
-        //     }
-        // });
+            if (sectionEdited != null) {
+                if (sectionEdited == "QualityRepresentative") {
+                    ScrollIntoSection('panelsStayOpen-headingOne');
+                }
+                else if (sectionEdited == "Engineering") {
+                    ScrollIntoSection('panelsStayOpen-headingTwo');
+                }
+                else if (sectionEdited == "Operations") {
+                    ScrollIntoSection('panelsStayOpen-headingThree');
+                }
+                else if (sectionEdited == "Procurement") {
+                    ScrollIntoSection('panelsStayOpen-headingFour');
+                }
+                else if (sectionEdited == "Reinspection") {
+                    ScrollIntoSection('panelsStayOpen-headingFive');
+                }
+            }
+        });
 
     </script>
 

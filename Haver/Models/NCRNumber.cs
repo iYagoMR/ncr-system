@@ -10,14 +10,15 @@ namespace Haver.Models
 
         public string GenerateNCRNumber(bool isNewYear, int? prevNumber)
         {
+            // Increment the counter and format the NCR number
+            Counter = prevNumber.Value;
+
             // Check if it's a new year and reset the counter
             if (isNewYear == true)
             {
                 Counter = 0;
             }
 
-            // Increment the counter and format the NCR number
-            Counter = prevNumber.Value;
             Counter++;
             return $"{Year}-{Counter.ToString().PadLeft(3, '0')}";
         }

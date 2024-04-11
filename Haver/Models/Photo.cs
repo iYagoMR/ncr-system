@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Haver.Models
 {
-    public class QualityPhoto
+    public class Photo
     {
         public int ID { get; set; }
 

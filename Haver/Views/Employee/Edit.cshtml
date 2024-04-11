@@ -19,8 +19,22 @@
     <hr class="standard-border-bottom"/>
 </div>
 
+@if(Model.Email == user.Email) // Check if the alert message is not empty
+{
+    <div class="alert alert-danger d-flex align-items-center standard-border-bottom alert-container conditional" role="alert">
+        <i class="bi bi-exclamation-triangle-fill" style="color: var(--red);"></i>
+        <div>
+            To edit your account details got to the security settings or to the account details.
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
 <form asp-action="Edit">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <input type="hidden" asp-for="RowVersion" />
+
     <div class="row">
         <div class="col-md-6">
             <input type="hidden" asp-for="ID" />
@@ -111,9 +125,11 @@
                 }
             </div>
         </div>
-    <div class="form-group">
-        <input type="submit" value="Save" class="btn btn-primary" />
-    </div>
+    @if(Model.Email != user.Email){
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-primary" />
+        </div>
+    }
 </form>
 
 

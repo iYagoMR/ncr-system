@@ -40,7 +40,7 @@ namespace Haver.DraftModels
         public string? QualityRepresentativeSign { get; set; } // LaterAdd - Automaticaly fill with user's name
 
         [Display(Name = "Quality Photos")]
-        public List<QualityPhoto> QualityPhotos { get; set; }
+        public List<Photo> QualityPhotos { get; set; }
 
         [Display(Name = "Video Links")]
         public List<VideoLink> VideoLinks { get; set; }

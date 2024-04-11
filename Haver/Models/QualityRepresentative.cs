@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Haver.Models
 {
-    public class QualityRepresentative
+    public class QualityRepresentative : Auditable
     {
         public int ID { get; set; }
 
@@ -46,7 +46,7 @@ namespace Haver.Models
         public string QualityRepresentativeSign { get; set; } // LaterAdd - Automaticaly fill with user's name
 
         [Display(Name = "Quality Photos")]
-        public List<QualityPhoto> QualityPhotos { get; set; }
+        public List<Photo> QualityPhotos { get; set; }
 
         //Foreign Key references
         [Required(ErrorMessage = "You must select a Problem.")]

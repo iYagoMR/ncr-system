@@ -39,6 +39,16 @@ main {
 
 /*Universal*/
 
+/*Alert*/
+
+.alert-container i {
+    font-size: 20px;
+    margin-right: 20px;
+}
+.alert-container button {
+    margin-left: auto;
+}
+
 .graphs-charts.row {
     --bs-gutter-x: 2rem;
     --bs-gutter-y: 2rem;

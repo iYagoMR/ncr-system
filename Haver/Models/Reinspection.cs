@@ -2,7 +2,7 @@
 
 namespace Haver.Models
 {
-    public class Reinspection
+    public class Reinspection : Auditable
     {
         public int ID { get; set; }
 
@@ -23,7 +23,7 @@ namespace Haver.Models
         public string ReinspecInspectorSign { get; set; }
 
         [Display(Name = "Quality Photos")]
-        public List<QualityPhoto> QualityPhotos { get; set; }
+        public List<Photo> QualityPhotos { get; set; }
 
         [Display(Name = "Video Links")]
         public List<VideoLink> VideoLinks { get; set; }

@@ -42,7 +42,7 @@ namespace Haver.DraftModels
         public DateOnly? EngineeringDate { get; set; } = DateOnly.FromDateTime(DateTime.Now);
 
         [Display(Name = "Quality Photos")]
-        public List<QualityPhoto> QualityPhotos { get; set; }
+        public List<Photo> QualityPhotos { get; set; }
 
         // Foreign Key references
 

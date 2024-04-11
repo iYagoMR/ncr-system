@@ -92,7 +92,7 @@ namespace Haver.Controllers
             }
 
             //Try updating it with the values posted
-            if (await TryUpdateModelAsync<Part>(PartToUpdate, "",
+            if (await TryUpdateModelAsync<Part>(PartToUpdate, "", d => d.PartNumber,
                 d => d.PartDesc))
             {
                 try
@@ -108,7 +108,8 @@ namespace Haver.Controllers
                     }
                     else
                     {
-                        throw;
+                        ModelState.AddModelError(string.Empty, "The record you attempted to edit "
+                        + "was modified by another user. Please go back and refresh.");
                     }
                 }
                 catch (DbUpdateException)

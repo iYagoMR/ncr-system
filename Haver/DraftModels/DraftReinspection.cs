@@ -21,7 +21,7 @@ namespace Haver.DraftModels
         public string ReinspecInspectorSign { get; set; }
 
         [Display(Name = "Quality Photos")]
-        public List<QualityPhoto> QualityPhotos { get; set; }
+        public List<Photo> QualityPhotos { get; set; }
 
         [Display(Name = "Video Links")]
         public List<VideoLink> VideoLinks { get; set; }

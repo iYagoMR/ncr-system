@@ -2,7 +2,7 @@
 
 namespace Haver.Models
 {
-    public class Procurement
+    public class Procurement : Auditable
     {
         public int ID { get; set; }
 
@@ -13,6 +13,9 @@ namespace Haver.Models
         [Display(Name = "RMA number")]
         public int? RMANo { get; set; } // LaterAdd - Only if SuppItemsBack True
 
+        [Display(Name = "NCR Value")]
+        public int? NCRValue { get; set; }
+
         [Display(Name = "Carrier information")]
         [StringLength(3000, ErrorMessage = "The Carrier information is limited to 3000 characters.")]
         public string? CarrierInfo { get; set; } // LaterAdd - Only if SuppItemsBack True
@@ -21,17 +24,17 @@ namespace Haver.Models
         [Display(Name = "When replaced/reworked items expected to be returned")]
         public DateTime ExpecDateOfReturn { get; set; }
 
-        [Required(ErrorMessage = "Choice is necessary.")]
         [Display(Name = "Has supplier return been completed in SAP?")]
         public bool SuppReturnCompleted { get; set; }
 
-        [Required(ErrorMessage = "Choice is necessary.")]
         [Display(Name = "Is credit expected?")]
         public bool IsCreditExpec { get; set; }
 
-        [Required(ErrorMessage = "Choice is necessary.")]
         [Display(Name = "Charge supplier for expenses?")]
         public bool ChargeSupplier { get; set; }
+
+        [Display(Name = "Dispose on site?")]
+        public bool DisposeOnSite { get; set; }
 
         [Required(ErrorMessage = "Procurement Date is required.")]
         [Display(Name = "Date")]
@@ -42,7 +45,7 @@ namespace Haver.Models
         public string ProcurementSign { get; set; }
 
         [Display(Name = "Quality Photos")]
-        public List<QualityPhoto> QualityPhotos { get; set; }
+        public List<Photo> QualityPhotos { get; set; }
 
         [Display(Name = "Video Links")]
         public List<VideoLink> VideoLinks { get; set; }

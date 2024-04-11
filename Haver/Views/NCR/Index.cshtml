@@ -4,6 +4,70 @@
     ViewData["Title"] = "NCR";
 }
 
+@{
+    var errorAlert = TempData["ErrorAlert"] as string;
+    var successAlert = TempData["SuccessAlert"] as string;
+    var warningAlert = TempData["WarningAlert"] as string;
+    var infoAlert = TempData["InfoAlert"] as string;
+}
+
+@if (!string.IsNullOrEmpty(infoAlert)) // Check if the alert message is not empty
+{
+    <div class="alert alert-primary d-flex align-items-center standard-border-bottom alert-container conditional" role="alert">
+        <i class="bi bi-info-circle-fill" style="color: var(--blue);"></i>
+        <div>
+            @infoAlert
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (!string.IsNullOrEmpty(errorAlert)) // Check if the alert message is not empty
+{
+    <div class="alert alert-danger d-flex align-items-center standard-border-bottom alert-container conditional" role="alert">
+        <i class="bi bi-exclamation-triangle-fill" style="color: var(--red);"></i>
+        <div>
+            @errorAlert 
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+else if (!string.IsNullOrEmpty(warningAlert))
+{
+    <div class="alert alert-warning d-flex align-items-center standard-border-bottom alert-container conditional" role="alert">
+        <i class="bi bi-exclamation-triangle-fill" style="color: var(--yellow);"></i>
+        <div>
+            @warningAlert
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+else if (!string.IsNullOrEmpty(successAlert))
+{
+    <div class="alert alert-success d-flex align-items-center standard-border-bottom alert-container conditional" role="alert">
+        <i class="bi bi-check-circle-fill" style="color: var(--green);"></i>
+        <div>
+            @successAlert 
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@* Alerts loaded by ajax calll *@
+<div class="alert alert-success align-items-center standard-border-bottom alert-container" style="display: none;" role="alert">
+    <i class="bi bi-check-circle-fill" style="color: var(--green);"></i>
+    <div>
+    </div>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+<div class="alert alert-danger align-items-center standard-border-bottom alert-container" style="display:none;" role="alert">
+    <i class="bi bi-exclamation-triangle-fill" style="color: var(--red);"></i>
+    <div>
+    </div>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+
 <div>
     <h1>NCR</h1>
 
@@ -45,7 +109,9 @@
         <h2>NCR Log</h2>
         <hr />
     </div>
+
 </div>
+
 
 @if (User.IsInRole("Admin") || User.IsInRole("Quality Inspector"))
 {
@@ -131,10 +197,17 @@ else
             <tbody class="ncr-list-row">
                 @foreach (var item in Model)
                 {
+                    string rowVersionBase64 = Convert.ToBase64String(item.RowVersion);
 
                     <tr id="tr-@item.ID">
                         <td>
-                            <div>@Html.DisplayFor(modelItem => item.NCRNum)</div>
+                            @if(item.NCRNum == null){
+                                <div>0000-000</div>
+                            }
+                            else
+                            {
+                                <div>@Html.DisplayFor(modelItem => item.NCRNum)</div>
+                            }
                         </td>
                         <td>
                             @if (item.Status == "Active" && item.IsNCRDraft != true)
@@ -181,23 +254,23 @@ else
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
                                     @if (item.Phase == "Quality Representative" && item.Status != "Voided" && (User.IsInRole("Admin") || User.IsInRole("Quality Inspector")))
                                     {
-                                        <li><a class="dropdown-item" asp-action="CreateQualityRepresentative" asp-route-id="@item.ID">Fill section</a></li>
+                                        <li><a class="dropdown-item" asp-action="CreateQualityRepresentative" asp-route-id="@item.ID" asp-route-rowVersion="@rowVersionBase64">Fill section</a></li>
                                     }
                                     else if (item.Phase == "Engineering" && item.Status != "Voided" && (User.IsInRole("Admin") || User.IsInRole("Engineer")))
                                     {
-                                        <li><a class="dropdown-item" asp-action="CreateEngineering" asp-route-id="@item.ID">Fill in section</a></li>
+                                        <li><a class="dropdown-item" asp-action="CreateEngineering" asp-route-id="@item.ID" asp-route-rowVersion="@rowVersionBase64">Fill in section</a></li>
                                     }
                                     else if (item.Phase == "Operations" && item.Status != "Voided" && (User.IsInRole("Admin") || User.IsInRole("Operations Manager")))
                                     {
-                                        <li><a class="dropdown-item" asp-action="CreateOperations" asp-route-id="@item.ID">Fill in section</a></li>
+                                        <li><a class="dropdown-item" asp-action="CreateOperations" asp-route-id="@item.ID" asp-route-rowVersion="@rowVersionBase64">Fill in section</a></li>
                                     }
                                     else if (item.Phase == "Procurement" && item.Status != "Voided" && (User.IsInRole("Admin") || User.IsInRole("Procurement")))
                                     {
-                                        <li><a class="dropdown-item" asp-action="CreateProcurement" asp-route-id="@item.ID">Fill in section</a></li>
+                                        <li><a class="dropdown-item" asp-action="CreateProcurement" asp-route-id="@item.ID" asp-route-rowVersion="@rowVersionBase64">Fill in section</a></li>
                                     }
                                     else if (item.Phase == "Reinspection" && item.Status != "Voided" && (User.IsInRole("Admin") || User.IsInRole("Quality Inspector")))
                                     {
-                                        <li><a class="dropdown-item" asp-action="CreateReinspection" asp-route-id="@item.ID">Fill in section</a></li>
+                                        <li><a class="dropdown-item" asp-action="CreateReinspection" asp-route-id="@item.ID" asp-route-rowVersion="@rowVersionBase64">Fill in section</a></li>
                                     }
                                     @if (item.Status != "Active" && User.IsInRole("Admin"))
                                     {
@@ -212,44 +285,44 @@ else
                                     {
                                         <li><a class="dropdown-item" asp-action="Details" asp-route-id="@item.NewNCRID">Go to new NCR</a></li>
                                     }
-                                    @if (item.Status == "Voided" && item.IsNCRDraft == false && User.IsInRole("Admin"))
+                                    @if (item.Status == "Voided" && User.IsInRole("Admin"))
                                     {
-                                        <li><a class="dropdown-item" asp-action="VoidNCR" asp-route-id="@item.ID">Unvoid NCR</a></li>
+                                        <li><a class="dropdown-item" asp-action="VoidNCR" asp-route-id="@item.ID" asp-route-rowVersion="@rowVersionBase64" asp-route-cancel="cancel">Cancel Void</a></li>
                                     }
                                     @if (item.IsNCRDraft == true)
                                     {
-                                        <li><a class="dropdown-item" asp-action="CancelDraft" asp-route-id="@item.ID">Cancel draft</a></li>
+                                        <li><a class="dropdown-item" asp-action="CancelDraft" asp-route-id="@item.ID" asp-route-rowVersion="@rowVersionBase64">Cancel draft</a></li>
                                     }
                                     @if (item.Status == "Active" && User.IsInRole("Admin"))
                                     {
-                                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#ConfirmationModal" onclick="retrieveID(@item.ID, 'void')">Void NCR</a></li>
+                                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#ConfirmationModal" onclick="retrieveID(@item.ID, 'void', '@rowVersionBase64')">Void NCR</a></li>
                                     }
                                     @if (User.IsInRole("Admin"))
                                     {
-                                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#ConfirmationModal" onclick="retrieveID(@item.ID, 'archive')">Archive NCR</a></li>
+                                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#ConfirmationModal" onclick="retrieveID(@item.ID, 'archive', '@rowVersionBase64')">Archive NCR</a></li>
                                     }
                                     @* Edit *@
                                     @if (item.IsNCRDraft == false && item.Status == "Active")
                                     {
                                         @if ((User.IsInRole("Quality Inspector") || User.IsInRole("Admin")) && item.QualityRepresentative != null)
                                         {
-                                            <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@item.ID">Edit NCR</a></li>
+                                            <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@item.ID" asp-route-rowVersion="@rowVersionBase64">Edit NCR</a></li>
                                         }
                                         else if (User.IsInRole("Engineer") && item.Engineering != null)
                                         {
-                                            <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@item.ID">Edit NCR</a></li>
+                                            <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@item.ID" asp-route-rowVersion="@rowVersionBase64">Edit NCR</a></li>
                                         }
                                         else if (User.IsInRole("Operations Manager") && item.Operations != null)
                                         {
-                                            <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@item.ID">Edit NCR</a></li>
+                                            <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@item.ID" asp-route-rowVersion="@rowVersionBase64">Edit NCR</a></li>
                                         }
                                         else if (User.IsInRole("Procurement") && item.Procurement != null)
                                         {
-                                            <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@item.ID">Edit NCR</a></li>
+                                            <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@item.ID" asp-route-rowVersion="@rowVersionBase64">Edit NCR</a></li>
                                         }
                                         else if (User.IsInRole("Quality Inspector") && item.Reinspection != null)
                                         {
-                                            <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@item.ID">Edit NCR</a></li>
+                                            <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@item.ID" asp-route-rowVersion="@rowVersionBase64">Edit NCR</a></li>
                                         }
                                     }
                                 </ul>
@@ -286,9 +359,18 @@ else
         <div class="row">
             @foreach (var item in Model)
             {
+                string rowVersionBase64 = Convert.ToBase64String(item.RowVersion);
+
                 <div class="card mb-3">
                     <div class="card-header">
-                        <p>@Html.DisplayFor(modelItem => item.NCRNum)</p>
+                        @if (item.NCRNum == null)
+                        {
+                            <p>0000-000</p>
+                        }
+                        else
+                        {
+                            <p>@Html.DisplayFor(modelItem => item.NCRNum)</p>
+                        }
                         @if (item.Status == "Active")
                         {
                             <span style="color: var(--green);">@Html.DisplayFor(modelItem => item.Status)</span>
@@ -318,23 +400,23 @@ else
                                 <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.ID">Details</a>
                                 @if (item.Phase == "Quality Representative" && item.Status != "Voided" && (User.IsInRole("Admin") || User.IsInRole("Quality Inspector")))
                                 {
-                                    <a class="btn btn-primary" asp-action="CreateQualityRepresentative" asp-route-id="@item.ID">Fill section</a>
+                                    <a class="btn btn-primary" asp-action="CreateQualityRepresentative" asp-route-id="@item.ID" asp-route-rowVersion="@rowVersionBase64">Fill section</a>
                                 }
                                 else if (item.Phase == "Engineering" && item.Status != "Voided" && (User.IsInRole("Admin") || User.IsInRole("Engineer")))
                                 {
-                                    <a class="btn btn-primary" asp-action="CreateEngineering" asp-route-id="@item.ID">Fill in section</a>
+                                    <a class="btn btn-primary" asp-action="CreateEngineering" asp-route-id="@item.ID" asp-route-rowVersion="@rowVersionBase64">Fill in section</a>
                                 }
                                 else if (item.Phase == "Operations" && item.Status != "Voided" && (User.IsInRole("Admin") || User.IsInRole("Operations Manager")))
                                 {
-                                    <a class="btn btn-primary" asp-action="CreateOperations" asp-route-id="@item.ID">Fill in section</a>
+                                    <a class="btn btn-primary" asp-action="CreateOperations" asp-route-id="@item.ID" asp-route-rowVersion="@rowVersionBase64">Fill in section</a>
                                 }
                                 else if (item.Phase == "Procurement" && item.Status != "Voided" && (User.IsInRole("Admin") || User.IsInRole("Procurement")))
                                 {
-                                    <a class="btn btn-primary" asp-action="CreateProcurement" asp-route-id="@item.ID">Fill in section</a>
+                                    <a class="btn btn-primary" asp-action="CreateProcurement" asp-route-id="@item.ID" asp-route-rowVersion="@rowVersionBase64">Fill in section</a>
                                 }
                                 else if (item.Phase == "Reinspection" && item.Status != "Voided" && (User.IsInRole("Admin") || User.IsInRole("Quality Inspector")))
                                 {
-                                    <a class="btn btn-primary" asp-action="CreateReinspection" asp-route-id="@item.ID">Fill in section</a>
+                                    <a class="btn btn-primary" asp-action="CreateReinspection" asp-route-id="@item.ID" asp-route-rowVersion="@rowVersionBase64">Fill in section</a>
                                 }
                                 @if (item.Status != "Active" && User.IsInRole("Admin"))
                                 {
@@ -350,42 +432,42 @@ else
                                 }
                                 @if (item.IsNCRDraft == true)
                                 {
-                                    <a class="btn btn-primary" asp-action="CancelDraft" asp-route-id="@item.NewNCRID">Cancel Draft</a>
+                                    <a class="btn btn-primary" asp-action="CancelDraft" asp-route-id="@item.ID" asp-route-rowVersion="@rowVersionBase64">Cancel Draft</a>
                                 }
                                 @if (item.Status == "Voided" && User.IsInRole("Admin"))
                                 {
-                                    <a class="btn btn-primary" asp-action="VoidNCR" asp-route-id="@item.ID">Unvoid NCR</a>
+                                    <a class="btn btn-primary" asp-action="VoidNCR" asp-route-id="@item.ID" asp-route-rowVersion="@rowVersionBase64" asp-route-cancel="cancel">Cancel Void</a>
                                 }
                                 @if (item.Status == "Active" && User.IsInRole("Admin"))
                                 {
-                                    <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ConfirmationModal" onclick="retrieveID(@item.ID, 'void')">Void NCR</a>
+                                    <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ConfirmationModal" onclick="retrieveID(@item.ID, 'void', '@rowVersionBase64')">Void NCR</a>
                                 }
                                 @if (User.IsInRole("Admin"))
                                 {
-                                    <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ConfirmationModal" onclick="retrieveID(@item.ID, 'archive')">Archive NCR</a>
+                                    <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ConfirmationModal" onclick="retrieveID(@item.ID, 'archive', '@rowVersionBase64')">Archive NCR</a>
                                 }
                                 @* Edit *@
                                 @if(item.IsNCRDraft == false && item.Status == "Active")
                                 {
                                     @if ((User.IsInRole("Quality Inspector") || User.IsInRole("Admin")) && item.QualityRepresentative != null)
                                     {
-                                        <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.ID">Edit NCR</a>
+                                        <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.ID" asp-route-rowVersion="@rowVersionBase64">Edit NCR</a>
                                     }
                                     else if (User.IsInRole("Engineer") && item.Engineering != null)
                                     {
-                                        <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.ID">Edit NCR</a>
+                                        <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.ID" asp-route-rowVersion="@rowVersionBase64">Edit NCR</a>
                                     }
                                     else if (User.IsInRole("Operations Manager") && item.Operations != null)
                                     {
-                                        <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.ID">Edit NCR</a>
+                                        <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.ID" asp-route-rowVersion="@rowVersionBase64">Edit NCR</a>
                                     }
                                     else if (User.IsInRole("Procurement") && item.Procurement != null)
                                     {
-                                        <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.ID">Edit NCR</a>
+                                        <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.ID" asp-route-rowVersion="@rowVersionBase64">Edit NCR</a>
                                     }
                                     else if (User.IsInRole("Quality Inspector") && item.Reinspection != null)
                                     {
-                                        <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.ID">Edit NCR</a>
+                                        <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.ID" asp-route-rowVersion="@rowVersionBase64">Edit NCR</a>
                                     }
                                 }
                                 
@@ -430,7 +512,7 @@ else
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">No</button>
-                    <button type="button" class="btn btn-primary" id="confirmBtn" >Yes</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="confirmBtn" >Yes</button>
                 </div>
             </div>
         </div>
@@ -444,29 +526,41 @@ else
 
 @section Scripts {
     <script>
+        
+        //Tooltip
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+
         // Archiving modal
         var ncrIdChoosen;
         var actionChoosen;
+        var itemRowVersion;
 
         //Confirm action
+
         document.getElementById('confirmBtn').addEventListener('click', function () {
-            
+            startAction();
+        });
 
-
+        function startAction(){
             if (actionChoosen == 'archive') {
                 archiveNCR(ncrIdChoosen);
             }
             else if (actionChoosen == 'download simple' || actionChoosen == 'download full') {
             }
-            else if(actionChoosen == 'void') {
+            else if (actionChoosen == 'void') {
                 voidNCR(ncrIdChoosen);
             }
-        });
+        }
 
         //Decide which message the modal should have
-        function retrieveID(id, action) {
+        function retrieveID(id, action, RowVersion) {
             ncrIdChoosen = id;
             actionChoosen = action;
+            itemRowVersion = RowVersion;
+            console.log(itemRowVersion);
 
             $('#modal-body-container').css('display', 'block');
             $('#body-container-download').css('display', 'none');
@@ -490,31 +584,44 @@ else
         }
 
         function archiveNCR(ncrId) {
-            fetch('/NCR/ArchiveNCR/' + ncrId, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
+            $.ajax({
+                type: "POST",
+                url: "/NCR/ArchiveNCR",
+                data:
+                {
+                    id: ncrId,
+                    rowVersion: itemRowVersion
                 },
-                body: JSON.stringify({ id: ncrId }),
-            })
-                .then(response => {
-                    if (response.ok) {
-                        console.log('NCR archived successfully.');
-                        location.reload();
-                    } else {
+                contextType: "application/json; charset=utf8",
+                dataType: "json",
+                success: function (response) {
+                    $(".alert.conditional .btn-close").click();
+                    $(".alert-danger").removeClass("d-flex");
+                    $(".alert-success").removeClass("d-flex");
 
-                        console.error('Error archiving NCR:', response.statusText);
+                    console.log('NCR Voided');
+                    if (response.successAlert) {
+                        // Display success message
+                        $(".alert-success").addClass("d-flex");
+                        $(".alert-success div").show().text(response.successAlert);
                     }
-                    $('#ConfirmationModal').modal('hide');
-                })
-                .catch(error => {
-                    console.error('Error archiving NCR:', error);
-                    $('#ConfirmationModal').modal('hide');
-                });
+                    else if (response.errorAlert) {
+                        // Display error message
+                        $(".alert-danger").addClass("d-flex");
+                        $(".alert-danger div").show().text(response.errorAlert + " Please refresh your page.");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    $(".alert-success").removeClass("d-flex");
+                    // Handle errors if the AJAX request fails
+                    console.error(error); // Log the error to the console
+                    $(".alert-danger").addClass("d-flex");
+                    $(".alert-danger div").show().text("Could not complete task, NCR was modified by another user. Please refresh your page.");
+                }
+            });
         }
 
         //Voiding modal
-
         function voidNCR(ncrId) {
             console.log(ncrIdChoosen);
             var voidReasonInput = document.getElementById("voidReasonInput").value;
@@ -525,24 +632,40 @@ else
                 data:
                 {
                     id: ncrId,
-                    voidingReason: voidReasonInput
+                    voidingReason: voidReasonInput,
+                    rowVersion: itemRowVersion
                 },
                 contextType: "application/json; charset=utf8",
                 dataType: "json",
-                success: function () {
+                success: function (response) {
+                    $(".alert.conditional .btn-close").click();
+                    $(".alert-danger").removeClass("d-flex");
+                    $(".alert-success").removeClass("d-flex");
+
                     console.log('NCR Voided');
-                    location.reload();
+                    if (response.successAlert) {
+                        // Display success message
+                        $(".alert-success").addClass("d-flex");
+                        $(".alert-success div").show().text(response.successAlert);
+                    }
+                    else if (response.errorAlert) {
+                        // Display error message
+                        $(".alert-danger").addClass("d-flex");
+                        $(".alert-danger div").show().text(response.errorAlert + " Please refresh your page.");
+                    }
                 },
                 error: function (xhr, status, error) {
+                    $(".alert-success").removeClass("d-flex");
                     // Handle errors if the AJAX request fails
                     console.error(error); // Log the error to the console
+                    // Display error message
+                    $(".alert-danger").addClass("d-flex");
+                    $(".alert-danger div").show().text("Could not complete task, NCR was modified by another user. Please refresh your page.");
                 }
             });
         }
 
         //download pdf
-
-
 
     </script>
 }

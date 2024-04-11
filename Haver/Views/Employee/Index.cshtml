@@ -3,9 +3,33 @@
 <div class=" standard-page-header">
     <h1>Employee list</h1>
     <hr class="standard-border-bottom" />
-    <div class="text-danger">@TempData["message"]</div>
-    <div class="text-success">@TempData["messageGreen"]</div>
 </div>
+
+@{
+    var errorAlert = TempData["ErrorAlert"] as string;
+    var successAlert = TempData["SuccessAlert"] as string;
+}
+
+@if (!string.IsNullOrEmpty(errorAlert)) // Check if the alert message is not empty
+{
+    <div class="alert alert-danger d-flex align-items-center standard-border-bottom alert-container conditional" role="alert">
+        <i class="bi bi-exclamation-triangle-fill" style="color: var(--red);"></i>
+        <div>
+            @errorAlert
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+else if (!string.IsNullOrEmpty(successAlert))
+{
+    <div class="alert alert-success d-flex align-items-center standard-border-bottom alert-container conditional" role="alert">
+        <i class="bi bi-check-circle-fill" style="color: var(--green);"></i>
+        <div>
+            @successAlert
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
 
 <div class="d-none d-lg-block">
     <table class="table table-borderless">
@@ -36,6 +60,7 @@
         <tbody>
             @foreach (var item in Model)
             {
+                string rowVersionBase64 = Convert.ToBase64String(item.RowVersion);
                 <tr>
                     <td>
                     @{
@@ -74,16 +99,10 @@
                         </div>
                     </td>
                     <td class="text-center">
-                        <a asp-action="Edit" asp-route-id="@item.ID" class="btn btn-primary"
+                        <a asp-action="Edit" asp-route-id="@item.ID" asp-route-RowVersion="@rowVersionBase64" class="btn btn-primary"
                            role="button" data-bs-toggle="tooltip" title="Edit @ViewData["ControllerFriendlyName"]">
                             <i class="bi bi-stickies"></i>Edit
                         </a>
-                        @if (item.NumberOfPushSubscriptions > 0)
-                        {
-                            @:| @{
-                                <a asp-controller="WebPush" asp-action="Send" asp-route-id="@item.ID">Send Notification</a>
-                            }
-                        }
                     </td>
                 </tr>
             }
@@ -102,6 +121,7 @@
     <div class="row">
         @foreach (var item in Model)
         {
+            string rowVersionBase64 = Convert.ToBase64String(item.RowVersion);
             <div class="card mb-3">
                 <div class="card-header">
                     @if (item.Active == true)
@@ -134,7 +154,7 @@
                             <p><strong>Roles:</strong> @Html.DisplayFor(modelItem => item.UserRoles)</p>
                         </div>
                         <div class="col">
-                            <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.ID">Edit</a>
+                            <a class="btn btn-primary" asp-action="Edit" asp-route-id="@item.ID" asp-route-RowVersion="@rowVersionBase64">Edit</a>
                         </div>
                     </div>
                 </div>

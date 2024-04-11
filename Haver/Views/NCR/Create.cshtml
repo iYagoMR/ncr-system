@@ -3,6 +3,16 @@
 @{
     ViewData["Title"] = "Create";
 }
+
+@{
+
+    //Scroll to section
+    var sectionEdited = TempData["SectionEdited"] as string;
+    var infoAlert = TempData["InfoAlertCreate"] as string;
+
+    var NCRphase = Model.Phase as string;
+}
+
 <partial name="_addProblemModal" />
 <partial name="_addPartModal" />
 <partial name="_addSupplierModal" />
@@ -11,6 +21,17 @@
     <partial name="_BackToList" />
     <h1>NCR Form</h1>
 </div>
+
+@if (!string.IsNullOrEmpty(infoAlert)) // Check if the alert message is not empty
+{
+    <div class="alert alert-primary d-flex align-items-center standard-border-bottom alert-container" role="alert">
+        <i class="bi bi-info-circle-fill" style="color: var(--blue);"></i>
+        <div>
+            @infoAlert
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
 
 <div class="accordion" id="accordionPanelsStayOpenExample">
     <div class="accordion-item">
@@ -28,6 +49,7 @@
                     @Html.AntiForgeryToken()
 
                     @Html.HiddenFor(model => model.Phase)
+                    <input type="hidden" asp-for="RowVersion" />
 
                     <div class="section-form" >
                         <div class="row">
@@ -68,7 +90,7 @@
                                 <div class="form-group">
                                     <label asp-for="QualityRepresentative.SupplierID" class="control-label"></label>
                                     <div class="input-group mb-3">
-                                        <select asp-for="QualityRepresentative.SupplierID" class="form-control" asp-items="ViewBag.SupplierID">
+                                        <select asp-for="QualityRepresentative.SupplierID" class="form-control" asp-items="ViewBag.SupplierID" data-val="disabled">
                                             <option value="">Select a Supplier</option>
                                         </select>
                                         <button class="btn-plus" type="button" id="nowAddSupplier" data-bs-toggle="modal" data-bs-target="#addSupplierModal" typeof="button">
@@ -295,8 +317,8 @@
                                 <div class="col-md-12">
                                     <div class="text-danger">@ViewData["Message"]</div>
                                     <div class="form-group">
-                                        <label for="Subject" class="control-label">Email Subject</label>
-                                        <input type="text" id="Subject" name="Subject" class="form-control" value="NCR @Model.NCRNum, @Model.Phase section completed"/>
+                                        <label for="Subject" class="control-label">Email Subject</label><span style="color: var(--text3);"> (NCR number will be added to the start of the subject)</span>
+                                        <input type="text" id="Subject" name="Subject" class="form-control" value="a new NCR was created"/>
                                     </div>
                                     <div class="form-group">
                                         <label for="emailContent" class="control-label">Message Content</label>
@@ -314,6 +336,7 @@ Regards
 
                         <div class="form-group">
                             <input type="submit" value="Submit" class="btn btn-primary" />
+                            <input type="hidden" value="QualityRepresentative" name="sectionEdited"/>
                             <input type="submit" name="draft" value="Save draft" class="btn btn-primary" />
                             <input asp-for="IsNCRDraft" class="form-control" hidden/>
                         </div>
@@ -335,6 +358,7 @@ Regards
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
                     @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="RowVersion" />
 
                     <div class="section-form">
                         <div class="row">
@@ -471,7 +495,7 @@ Regards
                         </div>
                     }
 
-                    @if (Model.Phase == "Engineering" || Model.Phase == null)
+                    @if (Model.Phase == "Engineering")
                     {
                         <div class="row section-form">
                             <div class="section-label">
@@ -582,8 +606,8 @@ Regards
                                 <div class="col-md-12">
                                     <div class="text-danger">@ViewData["Message"]</div>
                                     <div class="form-group">
-                                        <label for="Subject" class="control-label">Email Subject</label>
-                                        <input type="text" id="Subject" name="Subject" class="form-control" value="NCR @Model.NCRNum, @Model.Phase section completed" />
+                                        <label for="Subject" class="control-label">Email Subject</label><span>(NCR number will be added to the start of the subject)</span>
+                                        <input type="text" id="Subject" name="Subject" class="form-control" value="@Model.Phase section completed" />
                                     </div>
                                     <div class="form-group">
                                         <label for="emailContent" class="control-label">Message Content</label>
@@ -601,6 +625,7 @@ Regards
 
                         <div class="form-group">
                             <input type="submit" value="Submit" class="btn btn-primary" />
+                            <input type="hidden" value="Engineering" name="sectionEdited" />
                             <input type="submit" name="draft" value="Save draft" class="btn btn-primary" />
                             <input asp-for="IsNCRDraft" class="form-control" hidden />
                         </div>
@@ -621,6 +646,7 @@ Regards
                 <form asp-action="CreateOperations" method="post" enctype="multipart/form-data">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="RowVersion" />
 
                     <div class="section-form">
                         <div class="row">
@@ -744,7 +770,7 @@ Regards
                         </div>
                     }
 
-                    @if (Model.Phase == "Operations" || Model.Phase == null)
+                    @if (Model.Phase == "Operations")
                     {
                         <div class="row section-form">
                             <div class="section-label">
@@ -855,8 +881,8 @@ Regards
                                 <div class="col-md-12">
                                     <div class="text-danger">@ViewData["Message"]</div>
                                     <div class="form-group">
-                                        <label for="Subject" class="control-label">Email Subject</label>
-                                        <input type="text" id="Subject" name="Subject" class="form-control" value="NCR @Model.NCRNum, @Model.Phase section completed" />
+                                        <label for="Subject" class="control-label">Email Subject</label><span>(NCR number will be added to the start of the subject)</span>
+                                        <input type="text" id="Subject" name="Subject" class="form-control" value="@Model.Phase section completed" />
                                     </div>
                                     <div class="form-group">
                                         <label for="emailContent" class="control-label">Message Content</label>
@@ -874,6 +900,7 @@ Regards
 
                         <div class="form-group">
                             <input type="submit" value="Submit" class="btn btn-primary" />
+                            <input type="hidden" value="Operations" name="sectionEdited" />
                             <input type="submit" name="draft" value="Save draft" class="btn btn-primary" />
                             <input asp-for="IsNCRDraft" class="form-control" hidden />
                         </div>
@@ -894,6 +921,7 @@ Regards
                 <form asp-action="CreateProcurement" method="post" enctype="multipart/form-data">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="RowVersion" />
 
                     <div class="section-form">
                         <div class="row">
@@ -906,6 +934,11 @@ Regards
                                 <div class="form-group form-check">
                                     <label class="form-check-label">
                                         <input class="form-check-input" asp-for="Procurement.SuppReturnCompleted" data-val="disabled"/> @Html.DisplayNameFor(model => model.Procurement.SuppReturnCompleted)
+                                    </label>
+                                </div>
+                                <div class="form-group form-check">
+                                    <label class="form-check-label">
+                                        <input class="form-check-input" asp-for="Procurement.DisposeOnSite" data-val="disabled" /> @Html.DisplayNameFor(model => model.Procurement.DisposeOnSite)
                                     </label>
                                 </div>
                             </div>
@@ -928,6 +961,11 @@ Regards
                                     <label asp-for="Procurement.RMANo" class="control-label"></label>
                                     <input asp-for="Procurement.RMANo" class="form-control" oninput="this.value = Math.abs(this.value)" id="RMANoField" data-val="disabled" />
                                     <span asp-validation-for="Procurement.RMANo" class="text-danger"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label asp-for="Procurement.NCRValue" class="control-label"></label>
+                                    <input asp-for="Procurement.NCRValue" class="form-control" oninput="this.value = Math.abs(this.value)" />
+                                    <span asp-validation-for="Procurement.NCRValue" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -1013,7 +1051,7 @@ Regards
                         </div>
                     }
 
-                    @if (Model.Phase == "Procurement" || Model.Phase == null)
+                    @if (Model.Phase == "Procurement")
                     {
                         <div class="row section-form">
                             <div class="section-label">
@@ -1124,8 +1162,8 @@ Regards
                                 <div class="col-md-12">
                                     <div class="text-danger">@ViewData["Message"]</div>
                                     <div class="form-group">
-                                        <label for="Subject" class="control-label">Email Subject</label>
-                                        <input type="text" id="Subject" name="Subject" class="form-control" value="NCR @Model.NCRNum, @Model.Phase section completed" />
+                                        <label for="Subject" class="control-label">Email Subject</label><span>(NCR number will be added to the start of the subject)</span>
+                                        <input type="text" id="Subject" name="Subject" class="form-control" value="@Model.Phase section completed" />
                                     </div>
                                     <div class="form-group">
                                         <label for="emailContent" class="control-label">Message Content</label>
@@ -1143,6 +1181,7 @@ Regards
 
                         <div class="form-group">
                             <input type="submit" value="Submit" class="btn btn-primary" />
+                            <input type="hidden" value="Procurement" name="sectionEdited" />
                             <input type="submit" name="draft" value="Save draft" class="btn btn-primary" />
                             <input asp-for="IsNCRDraft" class="form-control" hidden />
                         </div>
@@ -1163,6 +1202,7 @@ Regards
                 <form asp-action="CreateReinspection" method="post" enctype="multipart/form-data">
                     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                     @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="RowVersion" />
 
                     <div class="section-form">
                         <div class="row">
@@ -1235,7 +1275,7 @@ Regards
                         </div>
                     }
 
-                    @if (Model.Phase == "Reinspection" || Model.Phase == null)
+                    @if (Model.Phase == "Reinspection")
                     {
                         <div class="row section-form">
                             <div class="section-label">
@@ -1346,8 +1386,8 @@ Regards
                                 <div class="col-md-12">
                                     <div class="text-danger">@ViewData["Message"]</div>
                                     <div class="form-group">
-                                        <label for="Subject" class="control-label">Email Subject</label>
-                                        <input type="text" id="Subject" name="Subject" class="form-control" value="NCR @Model.NCRNum, @Model.Phase section completed" />
+                                        <label for="Subject" class="control-label">Email Subject</label><span>(NCR number will be added to the start of the subject)</span>
+                                        <input type="text" id="Subject" name="Subject" class="form-control" value="@Model.Phase section completed" />
                                     </div>
                                     <div class="form-group">
                                         <label for="emailContent" class="control-label">Message Content</label>
@@ -1365,6 +1405,7 @@ Regards
 
                         <div class="form-group">
                             <input type="submit" value="Submit" class="btn btn-primary" />
+                            <input type="hidden" value="Reinspection" name="sectionEdited"/>
                             <input type="submit" name="draft" value="Save draft" class="btn btn-primary" />
                             <input asp-for="IsNCRDraft" class="form-control" hidden />
                         </div>
@@ -1498,7 +1539,6 @@ Regards
             refreshDDL('ProblemID', '/NCR/GetProblems/' + selectedOption, false, null, true, 'None', true);
         });
 
-
         //Third Lookup value adder
         $('#submitSupplierCreate').click(function (event) {
             event.preventDefault();
@@ -1561,39 +1601,69 @@ Regards
             }
         }
 
-
         // Helper method to unfold sections
         function toggleAccordion(sectionId, sectionButtonId, section) {
-            const formControls = document.querySelectorAll('.form-control, .form-check-input, .form-select')
-
             $(sectionId).addClass('show');
             $(sectionButtonId).removeClass('collapsed')
-
-            //Block all the fields that do not belong to the current section
-            for(let item of formControls){
-                let parentDiv = item.closest('.accordion-collapse');
-
-                if (parentDiv.id != section) {
-                    item.disabled = true;
-                }
-            }
         }
+
+        var sectionEdited = "@sectionEdited"; // Properly format Razor variable
+        var currentSection = "@NCRphase";
 
         // Unfold section according to NCR Phase
         $(document).ready(function () {
 
-            var currentSection = '@Model.Phase';
+            console.log(currentSection);
+            console.log(sectionEdited);
 
-            if (currentSection === "Quality Representative" || currentSection === "") {
+            if (currentSection == "Quality Representative" || currentSection == "") {
                 toggleAccordion('#QualityForm', '#Quality-Section', 'QualityForm');
-            } else if (currentSection === "Engineering") {
+            } else if (currentSection == "Engineering") {
                 toggleAccordion('#EngineerForm', '#Engineering-Section', 'EngineerForm');
-            } else if (currentSection === "Operations") {
+            } else if (currentSection == "Operations") {
                 toggleAccordion('#OperationsForm', '#Operations-Section', 'OperationsForm');
-            } else if (currentSection === "Procurement") {
+            } else if (currentSection == "Procurement") {
                 toggleAccordion('#ProcurementForm', '#Procurement-Section', 'ProcurementForm');
-            } else if (currentSection === "Reinspection") {
+            } else if (currentSection == "Reinspection") {
                 toggleAccordion('#ReinspectionForm', '#Reinspection-Section', 'ReinspectionForm');
+            }
+
+            const formControls = document.querySelectorAll('.accordion-collapse.collapse .form-control, .accordion-collapse.collapse .form-check-input, .accordion-collapse.collapse .form-select');
+
+            //Block all the fields that cannot be edited
+            for (let item of formControls) {
+                let parentDiv = item.closest('.accordion-collapse.show');
+                if (parentDiv == null) {
+                    item.disabled = true;
+                }
+            }
+        });
+
+        // Define ScrollIntoSection function globally
+        function ScrollIntoSection(targetElementID) {
+            var targetElement = document.getElementById(targetElementID);
+            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Scroll to section edited
+        $(document).ready(function () {
+
+            if (sectionEdited != null) {
+                if (sectionEdited == "QualityRepresentative") {
+                    ScrollIntoSection('panelsStayOpen-headingOne');
+                }
+                else if (sectionEdited == "Engineering") {
+                    ScrollIntoSection('panelsStayOpen-headingTwo');
+                }
+                else if (sectionEdited == "Operations") {
+                    ScrollIntoSection('panelsStayOpen-headingThree');
+                }
+                else if (sectionEdited == "Procurement") {
+                    ScrollIntoSection('panelsStayOpen-headingFour');
+                }
+                else if (sectionEdited == "Reinspection") {
+                    ScrollIntoSection('panelsStayOpen-headingFive');
+                }
             }
         });
 
@@ -1688,8 +1758,6 @@ Regards
                 });
             }
         });
-
-        
 
     </script>
 

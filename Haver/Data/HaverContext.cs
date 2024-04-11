@@ -1,11 +1,36 @@
 ﻿using Haver.DraftModels;
 using Haver.Models;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Asn1.Ocsp;
 
 namespace Haver.Data
 {
     public class HaverContext : DbContext
     {
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public string UserName
+        {
+            get; private set;
+        }
+
+        public HaverContext(DbContextOptions<HaverContext> options, IHttpContextAccessor httpContextAccessor)
+            : base(options)
+        {
+            _httpContextAccessor = httpContextAccessor;
+            if (_httpContextAccessor.HttpContext != null)
+            {
+                //We have a HttpContext, but there might not be anyone Authenticated
+                UserName = _httpContextAccessor.HttpContext?.User.Identity.Name;
+                UserName ??= "Unknown";
+            }
+            else
+            {
+                //No HttpContext so seeding data
+                UserName = "Seed Data";
+            }
+        }
+
         public HaverContext(DbContextOptions<HaverContext> options) : base(options)
         {
 
@@ -19,7 +44,6 @@ namespace Haver.Data
         public DbSet<DraftOperations> DraftOperationsS { get; set; }
         public DbSet<DraftProcurement> DraftProcurements { get; set; }
         public DbSet<DraftReinspection> DraftReinspections { get; set; }
-        public DbSet<User> Users { get; set; }
         public DbSet<NCR> NCRs { get; set; }
         public DbSet<NCRNumber> NCRNumbers { get; set; }
         public DbSet<Problem> Problems { get; set; }
@@ -30,29 +54,43 @@ namespace Haver.Data
         public DbSet<ProcessApplicable> ProcessesApplicable { get; set; }
         public DbSet<Procurement> Procurements { get; set; }
         public DbSet<Reinspection> Reinspections { get; set; }
-        public DbSet<QualityPhoto> QualityPhotos { get; set; }
+        public DbSet<Photo> QualityPhotos { get; set; }
         public DbSet<EmployeePhoto> EmployeePhotos { get; set; }
         public DbSet<EmployeeThumbnail> EmployeeThumbnails { get; set; }
         public DbSet<VideoLink> VideoLinks { get; set; }
         public DbSet<Employee> Employees { get; set; }
-        public DbSet<Subscription> Subscriptions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //Add a unique index to the Employee Email
             modelBuilder.Entity<Employee>()
-            .HasIndex(a => new { a.Email })
-            .IsUnique();
+                .HasIndex(a => new { a.Email })
+                .IsUnique();
+
+            //Add a unique index to problem
+            modelBuilder.Entity<Problem>()
+                .HasIndex(a => new { a.ProblemDescription })
+                .IsUnique();
 
             //Add a unique index to the Parts Number
             modelBuilder.Entity<Part>()
-            .HasIndex(a => new { a.PartNumber })
-            .IsUnique();
+                .HasIndex(a => new { a.PartNumber })
+                .IsUnique();
+
+            //Add a unique index to the NCRNumber
+            modelBuilder.Entity<NCRNumber>()
+                .HasIndex(a => new { a.Year, a.Counter }) 
+                .IsUnique();
+
+            //Add a unique index to the NCRNumber in NCR
+            modelBuilder.Entity<NCR>()
+                .HasIndex(a => new { a.NCRNum })
+                .IsUnique();
 
             //Add a unique index to the Supplier code
             modelBuilder.Entity<Supplier>()
-            .HasIndex(a => new { a.SupplierCode })
-            .IsUnique();
+                .HasIndex(a => new { a.SupplierCode })
+                .IsUnique();
 
             // Configure cascading delete for DraftEngineering related entities
             modelBuilder.Entity<DraftQualityRepresentative>()
@@ -122,8 +160,42 @@ namespace Haver.Data
 
         }
 
-        public DbSet<Haver.Models.Procurement> Procurement { get; set; }
+        public override int SaveChanges(bool acceptAllChangesOnSuccess)
+        {
+            OnBeforeSaving();
+            return base.SaveChanges(acceptAllChangesOnSuccess);
+        }
 
-        public DbSet<Haver.Models.Reinspection> Reinspection { get; set; }
+        public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            OnBeforeSaving();
+            return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+        }
+
+        private void OnBeforeSaving()
+        {
+            var entries = ChangeTracker.Entries();
+            foreach (var entry in entries)
+            {
+                if (entry.Entity is IAuditable trackable)
+                {
+                    var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time"));
+                    switch (entry.State)
+                    {
+                        case EntityState.Modified:
+                            trackable.UpdatedOn = now;
+                            trackable.UpdatedBy = UserName;
+                            break;
+
+                        case EntityState.Added:
+                            //trackable.CreatedOn = now;
+                            trackable.CreatedBy = UserName;
+                            trackable.UpdatedOn = now;
+                            trackable.UpdatedBy = UserName;
+                            break;
+                    }
+                }
+            }
+        }
     }
 }

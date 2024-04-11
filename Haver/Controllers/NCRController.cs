@@ -37,7 +37,16 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore.SqlServer.Query.Internal;
 using Microsoft.AspNetCore.Http;
 using Haver.CustomControllers;
-
+using Microsoft.EntityFrameworkCore.Storage;
+using Org.BouncyCastle.Crypto.Signers;
+using Org.BouncyCastle.Utilities.Encoders;
+using System.Data;
+using Microsoft.AspNetCore.Components.Routing;
+using System.Composition;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Formats;
+using Image = SixLabors.ImageSharp.Image;
 
 namespace Haver.Controllers
 {
@@ -271,7 +280,7 @@ namespace Haver.Controllers
         [Authorize(Roles = "Admin")]
         // GET: NCR/Archiving
         public async Task<IActionResult> Archiving(string SearchString, int? SupplierID, int? page, int? pageSizeID, string SelectedOption
-            ,string actionButton, string active, string sortDirection = "desc", string sortField = "CREATED ON", DateTime? StartDate = null, DateTime? EndDate = null)
+            , string actionButton, string active, string sortDirection = "desc", string sortField = "CREATED ON", DateTime? StartDate = null, DateTime? EndDate = null)
         {
             PopulateList();
 
@@ -690,6 +699,8 @@ namespace Haver.Controllers
                     .ToList();
                 var ncrTimeList = new List<NCRTimeListVM>();
 
+                var nowToronto = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time"));
+
                 //Retrieve a list containing the parts Linked to each Quality Representative section
                 foreach (var NCR in NCRs)
                 {
@@ -699,31 +710,23 @@ namespace Haver.Controllers
 
                     if (NCR.Phase == "Engineering")
                     {
-                        // Converting DateOnly to DateTime by providing Time Info
-                        DateTime testDateTime = (DateTime)(NCR.QualityRepresentative?.QualityRepDate.ToDateTime(TimeOnly.Parse(Convert.ToString(NCR.CreatedOn.TimeOfDay))));
-                        differenceLastFilled = DateTime.Now - testDateTime;
+                        differenceLastFilled = (TimeSpan)(nowToronto - NCR.QualityRepresentative?.CreatedOn);
                         ncrRecord.LastFilled = differenceLastFilled.Days;
                     }
                     else if (NCR.Phase == "Operations")
                     {
-                        
-                        // Converting DateOnly to DateTime by providing Time Info
-                        DateTime testDateTime = (DateTime)(NCR.Engineering?.EngineeringDate.ToDateTime(TimeOnly.Parse("11:59 PM")));
-                        differenceLastFilled = DateTime.Now - testDateTime;
+
+                        differenceLastFilled = (TimeSpan)(nowToronto - NCR.Engineering?.CreatedOn);
                         ncrRecord.LastFilled = differenceLastFilled.Days;
                     }
                     else if (NCR.Phase == "Procurement")
                     {
-                        // Converting DateOnly to DateTime by providing Time Info
-                        DateTime testDateTime = (DateTime)(NCR.Operations?.OperationsDate.ToDateTime(TimeOnly.Parse("11:59 PM")));
-                        differenceLastFilled = DateTime.Now - testDateTime;
+                        differenceLastFilled = (TimeSpan)(nowToronto - NCR.Operations?.CreatedOn);
                         ncrRecord.LastFilled = differenceLastFilled.Days;
                     }
                     else if (NCR.Phase == "Reinspection")
                     {
-                        // Converting DateOnly to DateTime by providing Time Info
-                        DateTime testDateTime = (DateTime)(NCR.Procurement?.ProcurementDate.ToDateTime(TimeOnly.Parse("11:59 PM")));
-                        differenceLastFilled = DateTime.Now - testDateTime;
+                        differenceLastFilled = (TimeSpan)(nowToronto - NCR.Procurement?.CreatedOn);
                         ncrRecord.LastFilled = differenceLastFilled.Days;
                     }
 
@@ -731,7 +734,9 @@ namespace Haver.Controllers
                     TimeSpan differenceCreated;
                     int sinceCreated = 0;
 
-                    differenceCreated = DateTime.Now - Convert.ToDateTime(NCR.CreatedOn);
+                    var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time"));
+
+                    differenceCreated = now - Convert.ToDateTime(NCR.CreatedOn);
                     sinceCreated = differenceCreated.Days;
 
                     ncrRecord.NCRNo = NCR.NCRNum;
@@ -884,7 +889,7 @@ namespace Haver.Controllers
 
                 return Ok(response);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return BadRequest();
             }
@@ -923,7 +928,7 @@ namespace Haver.Controllers
 
                 return Ok(partsDefectiveVM);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return BadRequest();
             }
@@ -973,7 +978,7 @@ namespace Haver.Controllers
 
                         //    date = date.AddMonths(1);
                         //}
-                        else 
+                        else
                         {
                             chartLabels.Add(date.ToString("yyyy-MM"));
                             date = date.AddMonths(1);
@@ -1065,7 +1070,7 @@ namespace Haver.Controllers
             return (periodChange, total, previousTotal);
         }
 
-        public List<QualityRepresentative> GetQualRepsByPart(string partNumber, List<DateOnly>timeSpan, bool previousTimeSpan)
+        public List<QualityRepresentative> GetQualRepsByPart(string partNumber, List<DateOnly> timeSpan, bool previousTimeSpan)
         {
             //Get part
             var partUsed = _context.Parts.FirstOrDefault(p => p.PartNumber == Convert.ToInt32(partNumber));
@@ -1124,34 +1129,37 @@ namespace Haver.Controllers
 
         public List<DateOnly> GetTimeSpan(string period)
         {
+
+            var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time"));
+
             //Initialize time variables
-            DateOnly startDate = DateOnly.FromDateTime(DateTime.Now);
-            DateOnly endDate = DateOnly.FromDateTime(DateTime.Now);
-            DateOnly previousDate = DateOnly.FromDateTime(DateTime.Now);
+            DateOnly startDate = DateOnly.FromDateTime(now);
+            DateOnly endDate = DateOnly.FromDateTime(now);
+            DateOnly previousDate = DateOnly.FromDateTime(now);
 
             //Define period chosen
             if (period == "Monthly")
             {
-                startDate = DateOnly.FromDateTime(DateTime.Now.AddMonths(-1));
-                previousDate = DateOnly.FromDateTime(DateTime.Now.AddMonths(-2));
+                startDate = DateOnly.FromDateTime(now.AddMonths(-1));
+                previousDate = DateOnly.FromDateTime(now.AddMonths(-2));
             }
             else if (period == "6 Months")
             {
-                startDate = DateOnly.FromDateTime(DateTime.Now.AddMonths(-6));
-                previousDate = DateOnly.FromDateTime(DateTime.Now.AddMonths(-12));
+                startDate = DateOnly.FromDateTime(now.AddMonths(-6));
+                previousDate = DateOnly.FromDateTime(now.AddMonths(-12));
             }
             else if (period == "Yearly")
             {
-                startDate = DateOnly.FromDateTime(DateTime.Now.AddMonths(-12));
-                previousDate = DateOnly.FromDateTime(DateTime.Now.AddMonths(-24));
+                startDate = DateOnly.FromDateTime(now.AddMonths(-12));
+                previousDate = DateOnly.FromDateTime(now.AddMonths(-24));
             }
             else if (period == "3 Years")
             {
-                startDate = DateOnly.FromDateTime(DateTime.Now.AddMonths(-36));
-                previousDate = DateOnly.FromDateTime(DateTime.Now.AddMonths(-72));
+                startDate = DateOnly.FromDateTime(now.AddMonths(-36));
+                previousDate = DateOnly.FromDateTime(now.AddMonths(-72));
             }
 
-            List<DateOnly> dates = new List<DateOnly> { startDate, endDate, previousDate};
+            List<DateOnly> dates = new List<DateOnly> { startDate, endDate, previousDate };
             return dates;
         }
 
@@ -1197,7 +1205,7 @@ namespace Haver.Controllers
 
         // GET: NCR/CreateQualityRepresentative
         [Authorize(Roles = "Admin,Quality Inspector")]
-        public IActionResult CreateQualityRepresentative(int? id)
+        public IActionResult CreateQualityRepresentative(int? id, Byte[] rowVersion)
         {
             string[] selectedOptions = Array.Empty<string>();
 
@@ -1207,8 +1215,22 @@ namespace Haver.Controllers
 
             if (id != null)
             {
-                
+
                 NCR quality = GetNCR((int)id);
+                if (quality == null)
+                {
+                    TempData["ErrorAlert"] = "Unable to complete task. Please try again, if error persist see your system administrator.";
+                    return RedirectToAction(nameof(Index));
+                }
+                //Check for concurrency error
+                if (rowVersion != null)
+                {
+                    if (!quality.RowVersion.SequenceEqual(rowVersion))
+                    {
+                        TempData["ErrorAlert"] = "This NCR was edited or modified by another user. Try again.";
+                        return RedirectToAction("Index");
+                    }
+                }
 
                 if (quality.IsNCRDraft)
                 {
@@ -1229,10 +1251,31 @@ namespace Haver.Controllers
                     quality.QualityRepresentative.QualityPhotos = quality.DraftQualityRepresentative.QualityPhotos;
                     quality.QualityRepresentative.VideoLinks = quality.DraftQualityRepresentative.VideoLinks;
                 }
-
-                if(quality.PrevNCRID == null)
+                else if(quality.PrevNCRID != null)
                 {
-                NewNCRNumber(quality, displayNCRNumber);
+                    NCR prevNCR = GetNCR((int)quality.PrevNCRID);
+
+                    quality.QualityRepresentative = new QualityRepresentative();
+
+                    quality.QualityRepresentative = new QualityRepresentative
+                    {
+                        PoNo = prevNCR.QualityRepresentative.PoNo,
+                        SalesOrd = prevNCR.QualityRepresentative.SalesOrd,
+                        QuantReceived = prevNCR.QualityRepresentative.QuantReceived,
+                        QuantDefective = prevNCR.QualityRepresentative.QuantDefective,
+                        DescDefect = prevNCR.QualityRepresentative.DescDefect,
+                        ProblemID = prevNCR.QualityRepresentative.ProblemID,
+                        PartID = prevNCR.QualityRepresentative.PartID,
+                        SupplierID = prevNCR.QualityRepresentative.SupplierID,
+                        ProcessApplicableID = prevNCR.QualityRepresentative.ProcessApplicableID,
+                    };
+
+                    TempData["InfoAlertCreate"] = $"For your convenience, some of the data from the previous NCR was passed to this one, you can change it if necessary.";
+                }
+
+                if (quality.PrevNCRID == null)
+                {
+                    NewNCRNumber(quality, displayNCRNumber);
 
                 }
                 PopulateList();
@@ -1246,8 +1289,6 @@ namespace Haver.Controllers
 
             NewNCRNumber(genNCR, displayNCRNumber);
 
-            //ViewData["data-val"] = "disabled";
-
             return View("Create", genNCR);
 
         }
@@ -1258,7 +1299,7 @@ namespace Haver.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,Quality Inspector")]
-        public async Task<IActionResult> CreateQualityRepresentative(NCR quality,NCR genNCR, int[] imagesToRemove, int[] linksToRemove, List<IFormFile> Pictures, string[] selectedOptions, string Subject, string emailContent, string[] Links, string draft)
+        public async Task<IActionResult> CreateQualityRepresentative(NCR quality, NCR genNCR, int[] imagesToRemove, int[] linksToRemove, List<IFormFile> Pictures, string[] selectedOptions, string Subject, string emailContent, string[] Links, string draft, string sectionEdited, Byte[] RowVersion)
         {
             //Temporarily bypass the required attributes in order to save a draft
             if (draft != null)
@@ -1272,12 +1313,37 @@ namespace Haver.Controllers
                 {
                     NCRNumber createNCRNumber = new NCRNumber();
 
+                    string emailSubject = $"NCR {genNCR.NCRNum} - {Subject}";
+                    TempData["SuccessAlert"] = $"A new NCR of number {genNCR.NCRNum} was started.";
+
+                    _context.Entry(genNCR).Property("RowVersion").OriginalValue = RowVersion;
+                    _context.Entry(quality).Property("RowVersion").OriginalValue = RowVersion;
+
+                    //Check for concurrency errors
+                    if (RowVersion != null)
+                    {
+                        var refreshedModel = GetNCR(genNCR.ID);
+                        if (refreshedModel == null)
+                        {
+                            throw new DbUpdateConcurrencyException("Concurrency exception occurred.");
+                        }
+                        else if (!refreshedModel.RowVersion.SequenceEqual(RowVersion))
+                        {
+                            throw new DbUpdateConcurrencyException("Concurrency exception occurred.");
+                        }
+                    }
+                    NewNCRNumber(genNCR, createNCRNumber);
+
                     PopulateUserEmailData(selectedOptions);
 
                     //Save draft for the first time
                     if (draft != null && quality.IsNCRDraft == false)
                     {
                         NCR ncrToUpdate = GetNCR(quality.ID);
+                        if(ncrToUpdate != null)
+                        {
+                            _context.Entry(ncrToUpdate).Property("RowVersion").OriginalValue = RowVersion;
+                        }
                         //Create draft model and pass input data to it
                         DraftQualityRepresentative draftQual = new DraftQualityRepresentative
                         {
@@ -1294,14 +1360,12 @@ namespace Haver.Controllers
                             PartID = genNCR.QualityRepresentative.PartID,
                             SupplierID = genNCR.QualityRepresentative.SupplierID,
                             ProcessApplicableID = genNCR.QualityRepresentative.ProcessApplicableID,
-                            QualityPhotos = genNCR.QualityRepresentative.QualityPhotos,
-                            VideoLinks = genNCR.QualityRepresentative.VideoLinks,
                         };
 
-                        if(ncrToUpdate != null && ncrToUpdate.PrevNCRID != null)
+                        if (ncrToUpdate != null && ncrToUpdate.PrevNCRID != null)
                         {
                             //Get ncr to update
-                            
+
                             ncrToUpdate.IsNCRDraft = true;
                             ncrToUpdate.DraftQualityRepresentative = draftQual;
 
@@ -1309,19 +1373,23 @@ namespace Haver.Controllers
                             await AddQualityPhotos(ncrToUpdate.DraftQualityRepresentative, Pictures);
                             await AddVideoLinks(ncrToUpdate.DraftQualityRepresentative, Links);
 
-                            await TryUpdateModelAsync<NCR>(ncrToUpdate, "", ncr => ncr.DraftQualityRepresentative);
+                            if (await TryUpdateModelAsync<NCR>(ncrToUpdate, "", ncr => ncr.DraftQualityRepresentative)) 
+                            { 
+                                _context.NCRs.Update(ncrToUpdate);
+                            };
                         }
                         else
                         {
+                            var nowTorontoOne = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time"));
                             //Set up NCR model for draft
                             NCR ncrModelDraft = new NCR
                             {
                                 IsNCRDraft = true,
-                                CreatedOnDO = DateOnly.FromDateTime(DateTime.Now),
-                                CreatedOn = DateTime.Now,
+                                CreatedOnDO = DateOnly.FromDateTime(nowTorontoOne),
+                                CreatedOn = nowTorontoOne,
                                 Status = "Active",
                                 Phase = "Quality Representative",
-                                NCRNum = "0000-000",
+                                NCRNum = null,
                                 DraftQualityRepresentative = draftQual
                             };
 
@@ -1331,6 +1399,8 @@ namespace Haver.Controllers
                             _context.NCRs.Add(ncrModelDraft);
                         }
 
+                        TempData["SuccessAlert"] = $"NCR saved as draft. To resume completing this NCR, select the 'fill' option from the three dots menu.";
+                        
                         await _context.SaveChangesAsync();
                         return RedirectToAction("Index");
                     }
@@ -1339,6 +1409,10 @@ namespace Haver.Controllers
                     {
                         //Get ncr to update
                         NCR ncrToUpdate = GetNCR(quality.ID);
+                        if (ncrToUpdate != null)
+                        {
+                            _context.Entry(ncrToUpdate).Property("RowVersion").OriginalValue = RowVersion;
+                        }
                         //Pass data to the draft properties
                         ncrToUpdate.DraftQualityRepresentative.PoNo = quality.QualityRepresentative.PoNo;
                         ncrToUpdate.DraftQualityRepresentative.SalesOrd = quality.QualityRepresentative.SalesOrd;
@@ -1378,8 +1452,12 @@ namespace Haver.Controllers
 
                             await AddQualityPhotos(ncrToUpdate.DraftQualityRepresentative, Pictures);
                             await AddVideoLinks(ncrToUpdate.DraftQualityRepresentative, Links);
+
+                            _context.NCRs.Update(ncrToUpdate);
                         }
 
+                        TempData["SuccessAlert"] = $"NCR saved as draft. To resume completing this NCR, select the 'fill' option from the three dots menu.";
+                        
                         await _context.SaveChangesAsync();
                         return RedirectToAction("Index");
                     }
@@ -1388,7 +1466,10 @@ namespace Haver.Controllers
                     {
                         //Get NCR to Update
                         NCR ncrToUpdate = GetNCR(quality.ID);
-
+                        if (ncrToUpdate != null)
+                        {
+                            _context.Entry(ncrToUpdate).Property("RowVersion").OriginalValue = RowVersion;
+                        }
                         //Create quality object inside ncrToUpdate
                         QualityRepresentative draftQual = new QualityRepresentative
                         {
@@ -1420,12 +1501,15 @@ namespace Haver.Controllers
                         {
                             ncrToUpdate.Phase = "Engineering";
                         }
-                        
-                        ncrToUpdate.CreatedOn = DateTime.Now;
-                        ncrToUpdate.CreatedOnDO = DateOnly.FromDateTime(DateTime.Now);
 
-                        NewNCRNumber(ncrToUpdate, createNCRNumber);
-                        _context.NCRNumbers.Add(createNCRNumber);
+                        if(ncrToUpdate.NCRNum == null)
+                        {
+                            var nowTorontoTwo = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time"));
+                            ncrToUpdate.CreatedOn = nowTorontoTwo;
+                            ncrToUpdate.CreatedOnDO = DateOnly.FromDateTime(nowTorontoTwo);
+                            ncrToUpdate.NCRNum = genNCR.NCRNum;
+                            _context.NCRNumbers.Add(createNCRNumber);
+                        }
 
                         //Update NCR
                         if (await TryUpdateModelAsync<NCR>(ncrToUpdate, "", ncr => ncr.QualityRepresentative))
@@ -1451,11 +1535,15 @@ namespace Haver.Controllers
 
                             await AddQualityPhotos(ncrToUpdate.QualityRepresentative, Pictures);
                             await AddVideoLinks(ncrToUpdate.QualityRepresentative, Links);
-                        }
 
+                            _context.NCRs.Update(ncrToUpdate);
+                        }
+                        
                         await _context.SaveChangesAsync();
 
-                        SendNotificationEmail(selectedOptions, Subject, emailContent);
+                        emailSubject = $"NCR {ncrToUpdate.NCRNum} - {Subject}";
+                        SendNotificationEmail(selectedOptions, emailSubject, emailContent);
+                        TempData["SuccessAlert"] = $"A new NCR of number {ncrToUpdate.NCRNum} was started.";
 
                         return RedirectToAction("Index");
                     }
@@ -1464,102 +1552,194 @@ namespace Haver.Controllers
                     if (quality.Phase == "Quality Representative")
                     {
                         NCR ncrModelFill = GetNCR(quality.ID);
-                        ncrModelFill.Phase = "Engineering";
+                        if (ncrModelFill != null)
+                        {
+                            _context.Entry(ncrModelFill).Property("RowVersion").OriginalValue = RowVersion;
+                        }
+
+                        if (quality.QualityRepresentative.ConfirmingEng)
+                        {
+                            ncrModelFill.Phase = "Operations";
+                        }
+                        else
+                        {
+                            ncrModelFill.Phase = "Engineering";
+                        }
+
                         ncrModelFill.QualityRepresentative = quality.QualityRepresentative;
 
                         await AddQualityPhotos(ncrModelFill.QualityRepresentative, Pictures);
                         await AddVideoLinks(ncrModelFill.QualityRepresentative, Links);
+
+                        _context.NCRs.Update(ncrModelFill);
                         await _context.SaveChangesAsync();
+
+                        emailSubject = $"NCR {ncrModelFill.NCRNum} - {Subject}";
+                        SendNotificationEmail(selectedOptions, emailSubject, emailContent);
+                        TempData["SuccessAlert"] = $"A new NCR of number {ncrModelFill.NCRNum} was started.";
 
                         return RedirectToAction("Index");
                     }
 
+                    var nowToronto = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time"));
                     //If engineering not required, skip it
                     NCR ncrModel = new NCR
                     {
                         PrevNCRID = genNCR.PrevNCRID,
                         Status = "Active",
                         Phase = "Engineering",
-                        CreatedOnDO = DateOnly.FromDateTime(DateTime.Now),
-                        CreatedOn = DateTime.Now,
                         NCRNum = genNCR.NCRNum,
+                        CreatedOnDO = DateOnly.FromDateTime(nowToronto),
+                        CreatedOn = nowToronto,
                         QualityRepresentative = genNCR.QualityRepresentative
                     };
                     NCR ncrModelNoEng = new NCR
                     {
                         PrevNCRID = genNCR.PrevNCRID,
                         Status = "Active",
-                        Phase = "Operations",
-                        CreatedOnDO = DateOnly.FromDateTime(DateTime.Now),
-                        CreatedOn = DateTime.Now,
                         NCRNum = genNCR.NCRNum,
+                        Phase = "Operations",
+                        CreatedOnDO = DateOnly.FromDateTime(nowToronto),
+                        CreatedOn = nowToronto,
                         QualityRepresentative = genNCR.QualityRepresentative
                     };
 
                     await AddQualityPhotos(genNCR.QualityRepresentative, Pictures);
                     await AddVideoLinks(genNCR.QualityRepresentative, Links);
-                    NewNCRNumber(genNCR, createNCRNumber);
-                    _context.NCRNumbers.Add(createNCRNumber);
 
                     //Decide if engineering should be included
                     if (genNCR.QualityRepresentative.ConfirmingEng == true)
-                    {
+                    {   
                         _context.NCRs.Add(ncrModelNoEng);
                     }
                     else
                     {
                         _context.NCRs.Add(ncrModel);
                     }
+                    _context.NCRNumbers.Add(createNCRNumber);
+                    
                     await _context.SaveChangesAsync();
 
-                    SendNotificationEmail(selectedOptions, Subject, emailContent);
-
+                    SendNotificationEmail(selectedOptions, emailSubject, emailContent);
+                    
                     return RedirectToAction("Index");
                 }
             }
+            catch (RetryLimitExceededException /* dex */)
+            {
+                ModelState.AddModelError("", "Unable to save changes after multiple attempts. Try to submit again, and if the problem persists, see your system administrator.");
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                NCR ncrError = GetNCR(genNCR.ID);
+                if (ncrError == null)
+                {
+                    TempData["ErrorAlert"] = "Unable to complete task. Please try again, if error persist see your system administrator.";
+                    return RedirectToAction(nameof(Index));
+                }
+                _context.Entry(ncrError).Reload();
+
+                if (!NCRExists(ncrError.ID))
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create doesn't exist anymore.";
+                }
+                else if (ncrError.IsNCRArchived)
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create was archived by another user.";
+                }
+                else if (ncrError.Status == "Voided")
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create was voided by another user.";
+                }
+                else
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create was modified by another user. Please try to submit again.";
+                }
+                return RedirectToAction(nameof(Index));
+            }
             catch (DbUpdateException)
             {
-                //if (dex.GetBaseException().Message.Contains("UNIQUE constraint failed: Customers.CustomerCode"))
-                //{
-                //    ModelState.AddModelError("CustomerCode", "Unable to save changes. Remember, you cannot have duplicate Customer Codes.");
-                //}
-                //else
-                //{
-                //    ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
-                //}
-                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+                ModelState.AddModelError("", "Unable to save changes. Try to submit again, and if the problem persists, see your system administrator.");
             }
-            
-            //If NCR is a draft
-            if (quality.IsNCRDraft)
+            catch (Exception)
             {
-                NCR ncrModel = GetNCR(quality.ID);
-
-                quality.QualityRepresentative.QualityPhotos = ncrModel.DraftQualityRepresentative.QualityPhotos;
-                quality.QualityRepresentative.VideoLinks = ncrModel.DraftQualityRepresentative.VideoLinks;
-
-                PopulateUserEmailData(selectedOptions);
-                PopulateList();
-                return View("Create", quality);
+                TempData["ErrorAlert"] = "Unable to complete task. Please try again, if error persist see your system administrator.";
+                return RedirectToAction(nameof(Index));
             }
-            genNCR.Phase = "Quality Representative";
+
+            //Check for concurrency when reloading the page
+            NCR ncrModelRepeat = GetNCR(quality.ID);
+            if (ncrModelRepeat == null)
+            {
+                TempData["ErrorAlert"] = "Unable to complete task. Please try again, if error persist see your system administrator.";
+                return RedirectToAction(nameof(Index));
+            }
+            _context.Entry(ncrModelRepeat).Reload();
+
+            if (ncrModelRepeat != null)
+            {
+                if (!ncrModelRepeat.RowVersion.SequenceEqual(RowVersion))
+                {
+                    if (!NCRExists(ncrModelRepeat.ID))
+                    {
+                        TempData["ErrorAlert"] = "The record you attempted to edit or create doesn't exist anymore.";
+                    }
+                    else if (ncrModelRepeat.IsNCRArchived)
+                    {
+                        TempData["ErrorAlert"] = "The record you attempted to edit or create was archived by another user.";
+                    }
+                    else if (ncrModelRepeat.Status == "Voided")
+                    {
+                        TempData["ErrorAlert"] = "The record you attempted to edit or create was voided by another user.";
+                    }
+                    else
+                    {
+                        TempData["ErrorAlert"] = "The record you attempted to edit or create was modified by another user. Please try to submit again.";
+                    }
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+
+            ncrModelRepeat.QualityRepresentative = quality.QualityRepresentative;
+            ncrModelRepeat.QualityRepresentative = genNCR.QualityRepresentative;
+            TempData["SectionEdited"] = sectionEdited;
 
             PopulateUserEmailData(selectedOptions);
             PopulateList();
+
+            //If NCR is a draft
+            if (ncrModelRepeat.IsNCRDraft)
+            {
+                ncrModelRepeat.QualityRepresentative.QualityPhotos = ncrModelRepeat.DraftQualityRepresentative.QualityPhotos;
+                ncrModelRepeat.QualityRepresentative.VideoLinks = ncrModelRepeat.DraftQualityRepresentative.VideoLinks;
+                return View("Create", ncrModelRepeat);
+            }
             return View("Create", genNCR);
         }
 
         // GET: NCR/CreateEngineering
         [Authorize(Roles = "Admin,Engineer")]
-        public IActionResult CreateEngineering(int id)
+        public IActionResult CreateEngineering(int id, Byte[] rowVersion)
         {
             string[] selectedOptions = Array.Empty<string>();
 
             PopulateUserEmailData(selectedOptions);
 
             NCR eng = GetNCR(id);
+            if (eng == null)
+            {
+                TempData["ErrorAlert"] = "Unable to complete task. Please try again, if error persist see your system administrator.";
+                return RedirectToAction(nameof(Index));
+            }
 
-            if(eng.IsNCRDraft == true)
+            //Check for concurrency error
+            if (!eng.RowVersion.SequenceEqual(rowVersion))
+            {
+                TempData["ErrorAlert"] = "This NCR was edited or modified by another user. Try again.";
+                return RedirectToAction("Index");
+            }
+
+            if (eng.IsNCRDraft == true)
             {
                 eng.Engineering = new Engineering();
                 eng.Engineering.IsCustNotificationNecessary = eng.DraftEngineering.IsCustNotificationNecessary;
@@ -1588,7 +1768,7 @@ namespace Haver.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,Engineer")]
-        public async Task<IActionResult> CreateEngineering(NCR eng, List<IFormFile> Pictures, NCRNumber createNCRNumber, string[] selectedOptions, string Subject, string emailContent, string[] Links, string draft, int[] imagesToRemove, int[] linksToRemove)
+        public async Task<IActionResult> CreateEngineering(NCR eng, List<IFormFile> Pictures, NCRNumber createNCRNumber, string[] selectedOptions, string Subject, string emailContent, string[] Links, string draft, int[] imagesToRemove, int[] linksToRemove, string sectionEdited, Byte[] RowVersion)
         {
             //Temporarily bypass the required attributes in order to save a draft
             if (draft != null)
@@ -1602,6 +1782,29 @@ namespace Haver.Controllers
                 {
                     PopulateUserEmailData(selectedOptions);
                     NCR ncrModel = GetNCR(eng.ID);
+
+                    string emailSubject = $"NCR {ncrModel.NCRNum} - {Subject}";
+                    TempData["SuccessAlert"] = $"NCR {ncrModel.NCRNum}. 'Engineering' section was successfully filled.";
+
+                    if(ncrModel != null)
+                    {
+                        _context.Entry(ncrModel).Property("RowVersion").OriginalValue = RowVersion;
+                    }
+                    _context.Entry(eng).Property("RowVersion").OriginalValue = RowVersion;
+
+                    //Check for concurrency errors
+                    if (RowVersion != null)
+                    {
+                        var refreshedModel = GetNCR(eng.ID);
+                        if (refreshedModel == null)
+                        {
+                            throw new DbUpdateConcurrencyException("Concurrency exception occurred.");
+                        }
+                        else if (!refreshedModel.RowVersion.SequenceEqual(RowVersion))
+                        {
+                            throw new DbUpdateConcurrencyException("Concurrency exception occurred.");
+                        }
+                    }
 
                     //Save draft for the first time
                     if (draft != null && eng.IsNCRDraft == false)
@@ -1620,8 +1823,6 @@ namespace Haver.Controllers
                             EngineerSign = eng.Engineering.EngineerSign,
                             EngineeringDate = eng.Engineering.EngineeringDate,
                             EngReviewID = eng.Engineering.EngReviewID,
-                            QualityPhotos = eng.Engineering.QualityPhotos,
-                            VideoLinks = eng.Engineering.VideoLinks
                         };
 
                         //Set up NCR model for draft
@@ -1632,7 +1833,10 @@ namespace Haver.Controllers
                         await AddQualityPhotos(ncrModel.DraftEngineering, Pictures);
                         await AddVideoLinks(ncrModel.DraftEngineering, Links);
 
+                        _context.NCRs.Update(ncrModel);
                         await _context.SaveChangesAsync();
+
+                        TempData["SuccessAlert"] = $"NCR saved as draft. To resume completing this NCR, select the 'fill' option from the three dots menu.";
                         return RedirectToAction("Index");
                     }
                     //Save draft for the second time and beyond
@@ -1650,8 +1854,6 @@ namespace Haver.Controllers
                         ncrModel.DraftEngineering.EngineerSign = eng.Engineering.EngineerSign;
                         ncrModel.DraftEngineering.EngineeringDate = eng.Engineering.EngineeringDate;
                         ncrModel.DraftEngineering.EngReviewID = eng.Engineering.EngReviewID;
-                        ncrModel.DraftEngineering.QualityPhotos = eng.Engineering.QualityPhotos;
-                        ncrModel.DraftEngineering.VideoLinks = eng.Engineering.VideoLinks;
 
                         //Update the draft model
                         if (await TryUpdateModelAsync<NCR>(ncrModel, "", ncr => ncr.DraftEngineering))
@@ -1677,9 +1879,13 @@ namespace Haver.Controllers
 
                             await AddQualityPhotos(ncrModel.DraftEngineering, Pictures);
                             await AddVideoLinks(ncrModel.DraftEngineering, Links);
+
+                            _context.NCRs.Update(ncrModel);
                         }
 
                         await _context.SaveChangesAsync();
+
+                        TempData["SuccessAlert"] = $"NCR saved as draft. To resume completing this NCR, select the 'fill' option from the three dots menu.";
                         return RedirectToAction("Index");
                     }
                     //Finally submit draft
@@ -1733,11 +1939,13 @@ namespace Haver.Controllers
 
                             await AddQualityPhotos(ncrModel.Engineering, Pictures);
                             await AddVideoLinks(ncrModel.Engineering, Links);
+
+                            _context.NCRs.Update(ncrModel);
                         }
 
                         await _context.SaveChangesAsync();
 
-                        SendNotificationEmail(selectedOptions, Subject, emailContent);
+                        SendNotificationEmail(selectedOptions, emailSubject, emailContent);
 
                         return RedirectToAction("Index");
                     }
@@ -1747,54 +1955,114 @@ namespace Haver.Controllers
 
                     await AddQualityPhotos(ncrModel.Engineering, Pictures);
                     await AddVideoLinks(ncrModel.Engineering, Links);
+
+                    _context.NCRs.Update(ncrModel);
                     await _context.SaveChangesAsync();
 
-                    SendNotificationEmail(selectedOptions, Subject, emailContent);
+                    SendNotificationEmail(selectedOptions, emailSubject, emailContent);
 
                     return RedirectToAction("Index");
                 }
             }
-            catch (DbUpdateException)
+            catch (RetryLimitExceededException /* dex */)
             {
-                //if (dex.GetBaseException().Message.Contains("UNIQUE constraint failed: Customers.CustomerCode"))
-                //{
-                //    ModelState.AddModelError("CustomerCode", "Unable to save changes. Remember, you cannot have duplicate Customer Codes.");
-                //}
-                //else
-                //{
-                //    ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
-                //}
-                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+                ModelState.AddModelError("", "Unable to save changes after multiple attempts. Try again, and if the problem persists, see your system administrator.");
             }
-            eng.Phase = "Engineering";
+            catch (DbUpdateConcurrencyException)
+            {
+                NCR ncrError = GetNCR(eng.ID);
+                _context.Entry(ncrError).Reload();
+
+                if (!NCRExists(ncrError.ID))
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create doesn't exist anymore.";
+                }
+                else if (ncrError.IsNCRArchived)
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create was archived by another user.";
+                }
+                else if (ncrError.Status == "Voided")
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create was voided by another user.";
+                }
+                else
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create was modified by another user. Please try to submit again.";
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception)
+            {
+                TempData["ErrorAlert"] = "Unable to complete task. Please try again, if error persist see your system administrator.";
+                return RedirectToAction(nameof(Index));
+            }
+            
+            //Check for concurrency when reloading the page
+            NCR ncrModelRepeat = GetNCR(eng.ID);
+            if (ncrModelRepeat == null)
+            {
+                TempData["ErrorAlert"] = "Unable to complete task. Please try again, if error persist see your system administrator.";
+                return RedirectToAction(nameof(Index));
+            }
+            _context.Entry(ncrModelRepeat).Reload();
+
+            if (!ncrModelRepeat.RowVersion.SequenceEqual(RowVersion))
+            {
+                if (!NCRExists(ncrModelRepeat.ID))
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create doesn't exist anymore.";
+                }
+                else if (ncrModelRepeat.IsNCRArchived)
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create was archived by another user.";
+                }
+                else if (ncrModelRepeat.Status == "Voided")
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create was voided by another user.";
+                }
+                else
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create was modified by another user. Please try to submit again.";
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            
+            ncrModelRepeat.Engineering = eng.Engineering;
+            TempData["SectionEdited"] = sectionEdited;
 
             //If NCR is a draft
-            if (eng.IsNCRDraft)
+            if (ncrModelRepeat.IsNCRDraft)
             {
-                NCR ncrModel = GetNCR(eng.ID);
-
-                eng.Engineering.QualityPhotos = ncrModel.DraftEngineering.QualityPhotos;
-                eng.Engineering.VideoLinks = ncrModel.DraftEngineering.VideoLinks;
-
-                PopulateUserEmailData(selectedOptions);
-                PopulateList();
-                return View("Create", eng);
+                ncrModelRepeat.Engineering.QualityPhotos = ncrModelRepeat.DraftEngineering.QualityPhotos;
+                ncrModelRepeat.Engineering.VideoLinks = ncrModelRepeat.DraftEngineering.VideoLinks;
             }
 
             PopulateUserEmailData(selectedOptions);
             PopulateList();
-            return View("Create", eng);
+            return View("Create", ncrModelRepeat);
         }
 
         // GET: NCR/CreateOperations
         [Authorize(Roles = "Admin,Operations Manager")]
-        public IActionResult CreateOperations(int id)
+        public IActionResult CreateOperations(int id, Byte[] rowVersion)
         {
             string[] selectedOptions = Array.Empty<string>();
 
             PopulateUserEmailData(selectedOptions);
 
             NCR oper = GetNCR(id);
+            if (oper == null)
+            {
+                TempData["ErrorAlert"] = "Unable to complete task. Please try again, if error persist see your system administrator.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            //Check for concurrency error
+            if (!oper.RowVersion.SequenceEqual(rowVersion))
+            {
+                TempData["ErrorAlert"] = "This NCR was edited or modified by another user. Try again.";
+                return RedirectToAction("Index");
+            }
 
             if (oper.IsNCRDraft == true)
             {
@@ -1823,7 +2091,7 @@ namespace Haver.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,Operations Manager")]
-        public async Task<IActionResult> CreateOperations(NCR oper, List<IFormFile> Pictures, string[] selectedOptions, string Subject, string emailContent, string[] Links, string draft, int[] imagesToRemove, int[] linksToRemove)
+        public async Task<IActionResult> CreateOperations(NCR oper, List<IFormFile> Pictures, string[] selectedOptions, string Subject, string emailContent, string[] Links, string draft, int[] imagesToRemove, int[] linksToRemove, string sectionEdited, Byte[] RowVersion)
         {
             //Temporarily bypass the required attributes in order to save a draft
             if (draft != null)
@@ -1835,9 +2103,32 @@ namespace Haver.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    PopulateUserEmailData(selectedOptions);
 
+                    PopulateUserEmailData(selectedOptions);
                     NCR ncrModel = GetNCR(oper.ID);
+
+                    string emailSubject = $"NCR {ncrModel.NCRNum} - {Subject}";
+                    TempData["SuccessAlert"] = $"NCR {ncrModel.NCRNum}. 'Operations' section was successfully filled.";
+
+                    if (ncrModel != null)
+                    {
+                        _context.Entry(ncrModel).Property("RowVersion").OriginalValue = RowVersion;
+                    }
+                    _context.Entry(oper).Property("RowVersion").OriginalValue = RowVersion;
+
+                    //Check for concurrency errors
+                    if (RowVersion != null)
+                    {
+                        var refreshedModel = GetNCR(oper.ID);
+                        if (refreshedModel == null)
+                        {
+                            throw new DbUpdateConcurrencyException("Concurrency exception occurred.");
+                        }
+                        else if (!refreshedModel.RowVersion.SequenceEqual(RowVersion))
+                        {
+                            throw new DbUpdateConcurrencyException("Concurrency exception occurred.");
+                        }
+                    }
 
                     //Save draft for the first time
                     if (draft != null && oper.IsNCRDraft == false)
@@ -1854,8 +2145,6 @@ namespace Haver.Controllers
                             OpManagerSign = oper.Operations.OpManagerSign,
                             Message = oper.Operations.Message,
                             PrelDecisionID = oper.Operations.PrelDecisionID,
-                            QualityPhotos = oper.Operations.QualityPhotos,
-                            VideoLinks = oper.Operations.VideoLinks
                         };
 
                         //Set up NCR model for draft
@@ -1866,7 +2155,10 @@ namespace Haver.Controllers
                         await AddQualityPhotos(ncrModel.DraftOperations, Pictures);
                         await AddVideoLinks(ncrModel.DraftOperations, Links);
 
+                        _context.NCRs.Update(ncrModel);
                         await _context.SaveChangesAsync();
+
+                        TempData["SuccessAlert"] = $"NCR saved as draft. To resume completing this NCR, select the 'fill' option from the three dots menu.";
                         return RedirectToAction("Index");
                     }
                     //Save draft for the second time and beyond
@@ -1882,8 +2174,6 @@ namespace Haver.Controllers
                         ncrModel.DraftOperations.OpManagerSign = oper.Operations.OpManagerSign;
                         ncrModel.DraftOperations.Message = oper.Operations.Message;
                         ncrModel.DraftOperations.PrelDecisionID = oper.Operations.PrelDecisionID;
-                        ncrModel.DraftOperations.QualityPhotos = oper.Operations.QualityPhotos;
-                        ncrModel.DraftOperations.VideoLinks = oper.Operations.VideoLinks;
 
                         //Update the draft model
                         if (await TryUpdateModelAsync<NCR>(ncrModel, "", ncr => ncr.DraftOperations))
@@ -1909,9 +2199,14 @@ namespace Haver.Controllers
 
                             await AddQualityPhotos(ncrModel.DraftOperations, Pictures);
                             await AddVideoLinks(ncrModel.DraftOperations, Links);
+
+                            _context.NCRs.Update(ncrModel);
                         }
 
                         await _context.SaveChangesAsync();
+
+                        TempData["SuccessAlert"] = $"NCR saved as draft. To resume completing this NCR, select the 'fill' option from the three dots menu.";
+
                         return RedirectToAction("Index");
                     }
                     //Finally submit draft
@@ -1962,11 +2257,12 @@ namespace Haver.Controllers
 
                             await AddQualityPhotos(ncrModel.Operations, Pictures);
                             await AddVideoLinks(ncrModel.Operations, Links);
+                            _context.NCRs.Update(ncrModel);
                         }
 
                         await _context.SaveChangesAsync();
 
-                        SendNotificationEmail(selectedOptions, Subject, emailContent);
+                        SendNotificationEmail(selectedOptions, emailSubject, emailContent);
 
                         return RedirectToAction("Index");
                     }
@@ -1976,60 +2272,131 @@ namespace Haver.Controllers
 
                     await AddQualityPhotos(ncrModel.Operations, Pictures);
                     await AddVideoLinks(ncrModel.Operations, Links);
+                    _context.NCRs.Update(ncrModel);
                     await _context.SaveChangesAsync();
 
-                    SendNotificationEmail(selectedOptions, Subject, emailContent);
+                    SendNotificationEmail(selectedOptions, emailSubject, emailContent);
 
                     return RedirectToAction("Index");
                 }
             }
+            catch (RetryLimitExceededException /* dex */)
+            {
+                ModelState.AddModelError("", "Unable to save changes after multiple attempts. Try again, and if the problem persists, see your system administrator.");
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                NCR ncrError = GetNCR(oper.ID);
+                if (ncrError == null)
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create was modified by another user. Please try to submit again.";
+                    return RedirectToAction(nameof(Index));
+                }
+                _context.Entry(ncrError).Reload();
+
+                if (!NCRExists(ncrError.ID))
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create doesn't exist anymore.";
+                }
+                else if (ncrError.IsNCRArchived)
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create was archived by another user.";
+                }
+                else if (ncrError.Status == "Voided")
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create was voided by another user.";
+                }
+                else
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create was modified by another user. Please try to submit again.";
+                }
+                return RedirectToAction(nameof(Index));
+            }
             catch (DbUpdateException)
             {
-                //if (dex.GetBaseException().Message.Contains("UNIQUE constraint failed: Customers.CustomerCode"))
-                //{
-                //    ModelState.AddModelError("CustomerCode", "Unable to save changes. Remember, you cannot have duplicate Customer Codes.");
-                //}
-                //else
-                //{
-                //    ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
-                //}
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
-            //If NCR is a draft
-            if (oper.IsNCRDraft)
+            catch (Exception)
             {
-                NCR ncrModel = GetNCR(oper.ID);
-
-                oper.Operations.QualityPhotos = ncrModel.DraftOperations.QualityPhotos;
-                oper.Operations.VideoLinks = ncrModel.DraftOperations.VideoLinks;
-
-                PopulateUserEmailData(selectedOptions);
-                PopulateList();
-                return View("Create", oper);
+                TempData["ErrorAlert"] = "Unable to complete task. Please try again, if error persist see your system administrator.";
+                return RedirectToAction(nameof(Index));
             }
-            oper.Phase = "Operations";
+
+            //Check for concurrency when reloading the page
+            NCR ncrModelRepeat = GetNCR(oper.ID);
+            if (ncrModelRepeat == null)
+            {
+                TempData["ErrorAlert"] = "Unable to complete task. Please try again, if error persist see your system administrator.";
+                return RedirectToAction(nameof(Index));
+            }
+            _context.Entry(ncrModelRepeat).Reload();
+
+            if (!ncrModelRepeat.RowVersion.SequenceEqual(RowVersion))
+            {
+                if (!NCRExists(ncrModelRepeat.ID))
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create doesn't exist anymore.";
+                }
+                else if (ncrModelRepeat.IsNCRArchived)
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create was archived by another user.";
+                }
+                else if (ncrModelRepeat.Status == "Voided")
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create was voided by another user.";
+                }
+                else
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create was modified by another user. Please try to submit again.";
+                }
+                return RedirectToAction(nameof(Index));
+            }
+
+            ncrModelRepeat.Operations = oper.Operations;
+            TempData["SectionEdited"] = sectionEdited;
+
+            //If NCR is a draft
+            if (ncrModelRepeat.IsNCRDraft)
+            {
+                ncrModelRepeat.Operations.QualityPhotos = ncrModelRepeat.DraftOperations.QualityPhotos;
+                ncrModelRepeat.Operations.VideoLinks = ncrModelRepeat.DraftOperations.VideoLinks;
+            }
 
             PopulateUserEmailData(selectedOptions);
             PopulateList();
-
-            return View("Create", oper);
+            return View("Create", ncrModelRepeat);
         }
 
         // GET: NCR/CreateProcurement
         [Authorize(Roles = "Admin,Procurement")]
-        public IActionResult CreateProcurement(int id)
+        public IActionResult CreateProcurement(int id, Byte[] rowVersion)
         {
             string[] selectedOptions = Array.Empty<string>();
 
             PopulateUserEmailData(selectedOptions);
 
             NCR proc = GetNCR(id);
+            if (proc == null)
+            {
+                TempData["ErrorAlert"] = "Unable to complete task. Please try again, if error persist see your system administrator.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            //Check for concurrency error
+            if (!proc.RowVersion.SequenceEqual(rowVersion))
+            {
+                TempData["ErrorAlert"] = "This NCR was edited or modified by another user. Try again.";
+                return RedirectToAction("Index");
+            }
 
             if (proc.IsNCRDraft == true)
             {
                 proc.Procurement = new Procurement();
                 proc.Procurement.SuppItemsBack = proc.DraftProcurement.SuppItemsBack;
                 proc.Procurement.RMANo = proc.DraftProcurement.RMANo;
+                proc.Procurement.NCRValue = proc.DraftProcurement.NCRValue;
+                proc.Procurement.DisposeOnSite = proc.DraftProcurement.DisposeOnSite;
+                proc.Procurement.ExpecDateOfReturn = (DateTime)proc.DraftProcurement.ExpecDateOfReturn;
                 proc.Procurement.CarrierInfo = proc.DraftProcurement.CarrierInfo;
                 proc.Procurement.SuppReturnCompleted = proc.DraftProcurement.SuppReturnCompleted;
                 proc.Procurement.IsCreditExpec = proc.DraftProcurement.IsCreditExpec;
@@ -2051,7 +2418,7 @@ namespace Haver.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,Procurement")]
-        public async Task<IActionResult> CreateProcurement(NCR proc, List<IFormFile> Pictures, string[] selectedOptions, string Subject, string emailContent, string[] Links, string draft, int[] imagesToRemove, int[] linksToRemove)
+        public async Task<IActionResult> CreateProcurement(NCR proc, List<IFormFile> Pictures, string[] selectedOptions, string Subject, string emailContent, string[] Links, string draft, int[] imagesToRemove, int[] linksToRemove, string sectionEdited, Byte[] RowVersion)
         {
             //Temporarily bypass the required attributes in order to save a draft
             if (draft != null)
@@ -2059,12 +2426,35 @@ namespace Haver.Controllers
                 ModelState.Clear();
             }
 
-            try 
+            try
             {
                 if (ModelState.IsValid)
                 {
                     PopulateUserEmailData(selectedOptions);
                     NCR ncrModel = GetNCR(proc.ID);
+
+                    string emailSubject = $"NCR {ncrModel.NCRNum} - {Subject}";
+                    TempData["SuccessAlert"] = $"NCR {ncrModel.NCRNum}. 'Procurement' section was successfully filled.";
+
+                    if (ncrModel != null)
+                    {
+                        _context.Entry(ncrModel).Property("RowVersion").OriginalValue = RowVersion;
+                    }
+                    _context.Entry(proc).Property("RowVersion").OriginalValue = RowVersion;
+
+                    //Check for concurrency errors
+                    if (RowVersion != null)
+                    {
+                        var refreshedModel = GetNCR(proc.ID);
+                        if (refreshedModel == null)
+                        {
+                            throw new DbUpdateConcurrencyException("Concurrency exception occurred.");
+                        }
+                        else if (!refreshedModel.RowVersion.SequenceEqual(RowVersion))
+                        {
+                            throw new DbUpdateConcurrencyException("Concurrency exception occurred.");
+                        }
+                    }
 
                     //Save draft for the first time
                     if (draft != null && proc.IsNCRDraft == false)
@@ -2074,6 +2464,8 @@ namespace Haver.Controllers
                         {
                             SuppItemsBack = proc.Procurement.SuppItemsBack,
                             RMANo = proc.Procurement.RMANo,
+                            NCRValue = proc.Procurement.NCRValue,
+                            DisposeOnSite = proc.Procurement.DisposeOnSite,
                             CarrierInfo = proc.Procurement.CarrierInfo,
                             ExpecDateOfReturn = proc.Procurement.ExpecDateOfReturn,
                             SuppReturnCompleted = proc.Procurement.SuppReturnCompleted,
@@ -2081,8 +2473,6 @@ namespace Haver.Controllers
                             ChargeSupplier = proc.Procurement.ChargeSupplier,
                             ProcurementDate = proc.Procurement.ProcurementDate,
                             ProcurementSign = proc.Procurement.ProcurementSign,
-                            QualityPhotos = proc.Procurement.QualityPhotos,
-                            VideoLinks = proc.Procurement.VideoLinks,
 
                         };
 
@@ -2094,7 +2484,10 @@ namespace Haver.Controllers
                         await AddQualityPhotos(ncrModel.DraftProcurement, Pictures);
                         await AddVideoLinks(ncrModel.DraftProcurement, Links);
 
+                        _context.NCRs.Update(ncrModel);
                         await _context.SaveChangesAsync();
+
+                        TempData["SuccessAlert"] = $"NCR saved as draft. To resume completing this NCR, select the 'fill' option from the three dots menu.";
                         return RedirectToAction("Index");
                     }
                     //Save draft for the second time and beyond
@@ -2103,6 +2496,8 @@ namespace Haver.Controllers
                         //Pass data to the draft properties
                         ncrModel.DraftProcurement.SuppItemsBack = proc.Procurement.SuppItemsBack;
                         ncrModel.DraftProcurement.RMANo = proc.Procurement.RMANo;
+                        ncrModel.DraftProcurement.NCRValue = proc.Procurement.NCRValue;
+                        ncrModel.DraftProcurement.DisposeOnSite = proc.Procurement.DisposeOnSite;
                         ncrModel.DraftProcurement.CarrierInfo = proc.Procurement.CarrierInfo;
                         ncrModel.DraftProcurement.ExpecDateOfReturn = proc.Procurement.ExpecDateOfReturn;
                         ncrModel.DraftProcurement.SuppReturnCompleted = proc.Procurement.SuppReturnCompleted;
@@ -2110,8 +2505,6 @@ namespace Haver.Controllers
                         ncrModel.DraftProcurement.ChargeSupplier = proc.Procurement.ChargeSupplier;
                         ncrModel.DraftProcurement.ProcurementDate = proc.Procurement.ProcurementDate;
                         ncrModel.DraftProcurement.ProcurementSign = proc.Procurement.ProcurementSign;
-                        ncrModel.DraftProcurement.QualityPhotos = proc.Procurement.QualityPhotos;
-                        ncrModel.DraftProcurement.VideoLinks = proc.Procurement.VideoLinks;
 
                         //Update the draft model
                         if (await TryUpdateModelAsync<NCR>(ncrModel, "", ncr => ncr.DraftProcurement))
@@ -2137,9 +2530,12 @@ namespace Haver.Controllers
 
                             await AddQualityPhotos(ncrModel.DraftProcurement, Pictures);
                             await AddVideoLinks(ncrModel.DraftProcurement, Links);
+                            _context.NCRs.Update(ncrModel);
                         }
 
                         await _context.SaveChangesAsync();
+
+                        TempData["SuccessAlert"] = $"NCR saved as draft. To resume completing this NCR, select the 'fill' option from the three dots menu.";
                         return RedirectToAction("Index");
                     }
                     //Finally submit draft
@@ -2150,6 +2546,8 @@ namespace Haver.Controllers
                         {
                             SuppItemsBack = proc.Procurement.SuppItemsBack,
                             RMANo = proc.Procurement.RMANo,
+                            NCRValue = proc.Procurement.NCRValue,
+                            DisposeOnSite = proc.Procurement.DisposeOnSite,
                             CarrierInfo = proc.Procurement.CarrierInfo,
                             ExpecDateOfReturn = proc.Procurement.ExpecDateOfReturn,
                             SuppReturnCompleted = proc.Procurement.SuppReturnCompleted,
@@ -2190,11 +2588,12 @@ namespace Haver.Controllers
 
                             await AddQualityPhotos(ncrModel.Operations, Pictures);
                             await AddVideoLinks(ncrModel.Operations, Links);
+                            _context.NCRs.Update(ncrModel);
                         }
 
                         await _context.SaveChangesAsync();
 
-                        SendNotificationEmail(selectedOptions, Subject, emailContent);
+                        SendNotificationEmail(selectedOptions, emailSubject, emailContent);
 
                         return RedirectToAction("Index");
                     }
@@ -2204,46 +2603,122 @@ namespace Haver.Controllers
 
                     await AddQualityPhotos(ncrModel.Procurement, Pictures);
                     await AddVideoLinks(ncrModel.Procurement, Links);
+
+                    _context.NCRs.Update(ncrModel);
                     await _context.SaveChangesAsync();
 
-                    SendNotificationEmail(selectedOptions, Subject, emailContent);
+                    SendNotificationEmail(selectedOptions, emailSubject, emailContent);
                     return RedirectToAction("Index");
                 }
             }
-            catch
+            catch (RetryLimitExceededException /* dex */)
+            {
+                ModelState.AddModelError("", "Unable to save changes after multiple attempts. Try again, and if the problem persists, see your system administrator.");
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                NCR ncrError = GetNCR(proc.ID);
+                if (ncrError == null)
+                {
+                    TempData["ErrorAlert"] = "Unable to complete task. Please try again, if error persist see your system administrator.";
+                    return RedirectToAction(nameof(Index));
+                }
+                _context.Entry(ncrError).Reload();
+
+                if (!NCRExists(ncrError.ID))
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create doesn't exist anymore.";
+                }
+                else if (ncrError.IsNCRArchived)
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create was archived by another user.";
+                }
+                else if (ncrError.Status == "Voided")
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create was voided by another user.";
+                }
+                else
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create was modified by another user. Please try to submit again.";
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateException)
             {
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
+            catch (Exception)
+            {
+                TempData["ErrorAlert"] = "Unable to complete task. Please try again, if error persist see your system administrator.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            //Check for concurrency when reloading the page
+            NCR ncrModelRepeat = GetNCR(proc.ID);
+            if (ncrModelRepeat == null)
+            {
+                TempData["ErrorAlert"] = "Unable to complete task. Please try again, if error persist see your system administrator.";
+                return RedirectToAction(nameof(Index));
+            }
+            _context.Entry(ncrModelRepeat).Reload();
+
+            if (!ncrModelRepeat.RowVersion.SequenceEqual(RowVersion))
+            {
+                if (!NCRExists(ncrModelRepeat.ID))
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create doesn't exist anymore.";
+                }
+                else if (ncrModelRepeat.IsNCRArchived)
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create was archived by another user.";
+                }
+                else if (ncrModelRepeat.Status == "Voided")
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create was voided by another user.";
+                }
+                else
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create was modified by another user. Please try to submit again.";
+                }
+                return RedirectToAction(nameof(Index));
+            }
+
+            ncrModelRepeat.Procurement = proc.Procurement;
+            TempData["SectionEdited"] = sectionEdited;
 
             //If NCR is a draft
-            if (proc.IsNCRDraft)
+            if (ncrModelRepeat.IsNCRDraft)
             {
-                NCR ncrModel = GetNCR(proc.ID);
-
-                proc.Procurement.QualityPhotos = ncrModel.DraftProcurement.QualityPhotos;
-                proc.Procurement.VideoLinks = ncrModel.DraftProcurement.VideoLinks;
-
-                PopulateUserEmailData(selectedOptions);
-                PopulateList();
-                return View("Create", proc);
+                ncrModelRepeat.Procurement.QualityPhotos = ncrModelRepeat.DraftProcurement.QualityPhotos;
+                ncrModelRepeat.Procurement.VideoLinks = ncrModelRepeat.DraftProcurement.VideoLinks;
             }
-            proc.Phase = "Procurement";
 
             PopulateUserEmailData(selectedOptions);
             PopulateList();
-
-            return View("Create", proc);
+            return View("Create", ncrModelRepeat);
         }
 
         // GET: NCR/CreateReinspection
         [Authorize(Roles = "Admin,Quality Inspector")]
-        public IActionResult CreateReinspection(int id)
+        public IActionResult CreateReinspection(int id, Byte[] rowVersion)
         {
             string[] selectedOptions = Array.Empty<string>();
 
             PopulateUserEmailData(selectedOptions);
 
             NCR reinspec = GetNCR(id);
+            if (reinspec == null)
+            {
+                TempData["ErrorAlert"] = "Unable to complete task. Please try again, if error persist see your system administrator.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            //Check for concurrency error
+            if (!reinspec.RowVersion.SequenceEqual(rowVersion))
+            {
+                TempData["ErrorAlert"] = "This NCR was edited or modified by another user. Try again.";
+                return RedirectToAction("Index");
+            }
 
             if (reinspec.IsNCRDraft == true)
             {
@@ -2267,7 +2742,7 @@ namespace Haver.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,Quality Inspector")]
-        public async Task<IActionResult> CreateReinspection(NCR reinspec, List<IFormFile> Pictures, string[] selectedOptions, string Subject, string emailContent, string[] Links, string draft, int[] imagesToRemove, int[] linksToRemove)
+        public async Task<IActionResult> CreateReinspection(NCR reinspec, List<IFormFile> Pictures, string[] selectedOptions, string Subject, string emailContent, string[] Links, string draft, int[] imagesToRemove, int[] linksToRemove, Byte[] RowVersion, string sectionEdited)
         {
             //Temporarily bypass the required attributes in order to save a draft
             if (draft != null)
@@ -2275,13 +2750,38 @@ namespace Haver.Controllers
                 ModelState.Clear();
             }
 
-            try 
+            try
             {
                 if (ModelState.IsValid)
                 {
                     PopulateUserEmailData(selectedOptions);
 
                     NCR ncrModel = GetNCR(reinspec.ID);
+                    NCRNumber createNCRNumber = new NCRNumber();
+
+                    string emailSubject = $"NCR {ncrModel.NCRNum} - {Subject}";
+                    TempData["SuccessAlert"] = $"NCR {ncrModel.NCRNum}. Reinspection accepted and NCR closed.";
+
+                    _context.Entry(reinspec).Property("RowVersion").OriginalValue = RowVersion;
+                    if (ncrModel != null)
+                    {
+                        _context.Entry(ncrModel).Property("RowVersion").OriginalValue = RowVersion;
+                    }
+
+                    //Check for concurrency errors
+                    if (RowVersion != null)
+                    {
+                        var refreshedModel = GetNCR(reinspec.ID);
+                        if(refreshedModel == null)
+                        {
+                            throw new DbUpdateConcurrencyException("Concurrency exception occurred.");
+                        }
+                        else if (!refreshedModel.RowVersion.SequenceEqual(RowVersion))
+                        {
+                            throw new DbUpdateConcurrencyException("Concurrency exception occurred.");
+                        }
+                    }
+                    NewNCRNumber(reinspec, createNCRNumber);
 
                     //Save draft for the first time
                     if (draft != null && reinspec.IsNCRDraft == false)
@@ -2293,8 +2793,6 @@ namespace Haver.Controllers
                             NewNCRNum = reinspec.Reinspection.NewNCRNum,
                             ReinspectionDate = reinspec.Reinspection.ReinspectionDate,
                             ReinspecInspectorSign = reinspec.Reinspection.ReinspecInspectorSign,
-                            QualityPhotos = reinspec.Reinspection.QualityPhotos,
-                            VideoLinks = reinspec.Reinspection.VideoLinks,
                         };
 
                         //Set up NCR model for draft
@@ -2305,7 +2803,9 @@ namespace Haver.Controllers
                         await AddQualityPhotos(ncrModel.DraftReinspection, Pictures);
                         await AddVideoLinks(ncrModel.DraftReinspection, Links);
 
+                        _context.NCRs.Update(ncrModel);
                         await _context.SaveChangesAsync();
+                        TempData["SuccessAlert"] = $"NCR saved as draft. To resume completing this NCR, select the 'fill' option from the three dots menu.";
                         return RedirectToAction("Index");
                     }
                     //Save draft for the second time and beyond
@@ -2316,8 +2816,6 @@ namespace Haver.Controllers
                         ncrModel.DraftReinspection.NewNCRNum = reinspec.Reinspection.NewNCRNum;
                         ncrModel.DraftReinspection.ReinspectionDate = reinspec.Reinspection.ReinspectionDate;
                         ncrModel.DraftReinspection.ReinspecInspectorSign = reinspec.Reinspection.ReinspecInspectorSign;
-                        ncrModel.DraftReinspection.QualityPhotos = reinspec.Reinspection.QualityPhotos;
-                        ncrModel.DraftReinspection.VideoLinks = reinspec.Reinspection.VideoLinks;
 
                         //Update the draft model
                         if (await TryUpdateModelAsync<NCR>(ncrModel, "", ncr => ncr.DraftProcurement))
@@ -2343,9 +2841,12 @@ namespace Haver.Controllers
 
                             await AddQualityPhotos(ncrModel.DraftReinspection, Pictures);
                             await AddVideoLinks(ncrModel.DraftReinspection, Links);
+
+                            _context.NCRs.Update(ncrModel);
                         }
 
                         await _context.SaveChangesAsync();
+                        TempData["SuccessAlert"] = $"NCR saved as draft. To resume completing this NCR, select the 'fill' option from the three dots menu.";
                         return RedirectToAction("Index");
                     }
                     //Finally submit draft
@@ -2404,38 +2905,49 @@ namespace Haver.Controllers
 
                             await AddQualityPhotos(ncrModel.Reinspection, Pictures);
                             await AddVideoLinks(ncrModel.Reinspection, Links);
-                        }
 
-                        await _context.SaveChangesAsync();
-                        SendNotificationEmail(selectedOptions, Subject, emailContent);
+                        }
 
                         //In case reinspection failed repeat NCR process
                         if (reinspec.Reinspection.ReinspecAccepted == false && ncrModel.PrevNCRID == null)
                         {
-
+                            var nowToronto = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time"));
                             NCR repeatNCR = new NCR
                             {
                                 PrevNCRID = ncrModel.ID,
                                 Status = "Active",
+                                NCRNum = reinspec.NCRNum,
                                 Phase = "Quality Representative",
-                                CreatedOnDO = DateOnly.FromDateTime(DateTime.Now),
-                                CreatedOn = DateTime.Now
+                                CreatedOnDO = DateOnly.FromDateTime(nowToronto),
+                                CreatedOn = nowToronto
                             };
 
-                            NCRNumber createNCRNumber = new NCRNumber();
-                            NewNCRNumber(repeatNCR, createNCRNumber);
                             _context.NCRNumbers.Add(createNCRNumber);
                             _context.NCRs.Add(repeatNCR);
-                            await _context.SaveChangesAsync();
 
                             if (await TryUpdateModelAsync<NCR>(ncrModel, ""))
                             {
                                 ncrModel.IsNCRDraft = false;
                                 ncrModel.NewNCRID = repeatNCR.ID;
-                                await _context.SaveChangesAsync();
+                                _context.NCRs.Update(ncrModel);
                             }
 
-                            return RedirectToAction("CreateQualityRepresentative", new { id = repeatNCR.ID });
+                            await _context.SaveChangesAsync();
+
+                            SendNotificationEmail(selectedOptions, emailSubject, emailContent);
+                            TempData["WarningAlert"] = $"NCR {ncrModel.NCRNum}. Reinspection rejected. A new NCR, numbered {repeatNCR.NCRNum}, was created and linked to the previous one.";
+                            TempData["InfoAlertCreate"] = $"For your convenience, some of the data from the previous NCR was passed to this one, you can change it if necessary.";
+
+                            return RedirectToAction("CreateQualityRepresentative", new { id = repeatNCR.ID});
+                        }
+
+                        _context.NCRs.Update(ncrModel);
+                        await _context.SaveChangesAsync();
+
+                        SendNotificationEmail(selectedOptions, emailSubject, emailContent);
+                        if (reinspec.Reinspection.ReinspecAccepted == false && ncrModel.PrevNCRID != null)
+                        {
+                            TempData["WarningAlert"] = $"NCR {ncrModel.NCRNum}. Reinspection rejected for a second time. The NCR was closed.";
                         }
 
                         return RedirectToAction("Index");
@@ -2463,67 +2975,144 @@ namespace Haver.Controllers
 
                     await AddQualityPhotos(ncrModel.Reinspection, Pictures);
                     await AddVideoLinks(ncrModel.Reinspection, Links);
-                    await _context.SaveChangesAsync();
-
-                    SendNotificationEmail(selectedOptions, Subject, emailContent);
 
                     //In case reinpection failed repeat NCR process
                     if (reinspec.Reinspection.ReinspecAccepted == false && ncrModel.PrevNCRID == null)
                     {
+                        var nowToronto = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time"));
                         NCR repeatNCR = new NCR
                         {
                             PrevNCRID = ncrModel.ID,
                             Status = "Active",
+                            NCRNum = reinspec.NCRNum,
                             Phase = "Quality Representative",
-                            CreatedOnDO = DateOnly.FromDateTime(DateTime.Now),
-                            CreatedOn = DateTime.Now
+                            CreatedOnDO = DateOnly.FromDateTime(nowToronto),
+                            CreatedOn = nowToronto
                         };
 
-                        NCRNumber createNCRNumber = new NCRNumber();
-                        NewNCRNumber(repeatNCR, createNCRNumber);
-                        _context.NCRNumbers.Add(createNCRNumber);
                         _context.NCRs.Add(repeatNCR);
-                        await _context.SaveChangesAsync();
+                        _context.NCRNumbers.Add(createNCRNumber);
 
                         if (await TryUpdateModelAsync<NCR>(ncrModel, ""))
                         {
                             ncrModel.NewNCRID = repeatNCR.ID;
-
-                            await _context.SaveChangesAsync();
+                            _context.NCRs.Update(ncrModel);
                         }
 
-                        return RedirectToAction("CreateQualityRepresentative", new { id = repeatNCR.ID });
+                        //Test this
+                        await _context.SaveChangesAsync();
+
+                        SendNotificationEmail(selectedOptions, emailSubject, emailContent);
+                        TempData["WarningAlert"] = $"NCR {ncrModel.NCRNum}. Reinspection rejected. A new NCR, numbered {repeatNCR.NCRNum}, was created and linked to the previous one.";
+                        TempData["InfoAlertCreate"] = $"For your convenience, some of the data from the previous NCR was passed to this one, you can change it if necessary.";
+
+                        _context.Entry(ncrModel).Reload();
+                        return RedirectToAction("CreateQualityRepresentative", new { id = repeatNCR.ID});
+                    }
+
+                    //Test this
+                    _context.NCRs.Update(ncrModel);
+                    await _context.SaveChangesAsync();
+
+                    SendNotificationEmail(selectedOptions, emailSubject, emailContent);
+                    if (reinspec.Reinspection.ReinspecAccepted == false && ncrModel.PrevNCRID != null)
+                    {
+                        TempData["WarningAlert"] = $"NCR {ncrModel.NCRNum}. Reinspection rejected for a second time. The NCR was closed.";
                     }
 
                     return RedirectToAction("Index");
                 }
             }
-            catch
+            catch (RetryLimitExceededException /* dex */)
             {
+                ModelState.AddModelError("", "Unable to save changes after multiple attempts. Try again, and if the problem persists, see your system administrator.");
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                NCR ncrError = GetNCR(reinspec.ID);
+                if (ncrError == null)
+                {
+                    TempData["ErrorAlert"] = "Unable to complete task. Please try again, if error persist see your system administrator.";
+                    return RedirectToAction(nameof(Index));
+                }
+                _context.Entry(ncrError).Reload();
+
+                if (!NCRExists(ncrError.ID))
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create doesn't exist anymore.";
+                }
+                else if (ncrError.IsNCRArchived)
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create was archived by another user.";
+                }
+                else if (ncrError.Status == "Voided")
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create was voided by another user.";
+                }
+                else
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create was modified by another user. Please try to submit again.";
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            catch (DbUpdateException)
+            {
+
                 ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
             }
-            //If NCR is a draft
-            if (reinspec.IsNCRDraft)
+            catch (Exception)
             {
-                NCR ncrModel = GetNCR(reinspec.ID);
-
-                reinspec.Reinspection.QualityPhotos = ncrModel.DraftReinspection.QualityPhotos;
-                reinspec.Reinspection.VideoLinks = ncrModel.DraftReinspection.VideoLinks;
-
-                PopulateUserEmailData(selectedOptions);
-                PopulateList();
-                return View("Create", reinspec);
+                TempData["ErrorAlert"] = "Unable to complete task. Please try again, if error persist see your system administrator.";
+                return RedirectToAction(nameof(Index));
             }
-            reinspec.Phase = "Reinspection";
+
+            //Check for concurrency error
+            NCR ncrModelRepeat = GetNCR(reinspec.ID);
+            if (ncrModelRepeat == null)
+            {
+                TempData["ErrorAlert"] = "Unable to complete task. Please try again, if error persist see your system administrator.";
+                return RedirectToAction(nameof(Index));
+            }
+            _context.Entry(ncrModelRepeat).Reload();
+
+            if (!ncrModelRepeat.RowVersion.SequenceEqual(RowVersion))
+            {
+                if (!NCRExists(ncrModelRepeat.ID))
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create doesn't exist anymore.";
+                }
+                else if (ncrModelRepeat.IsNCRArchived)
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create was archived by another user.";
+                }
+                else if (ncrModelRepeat.Status == "Voided")
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create was voided by another user.";
+                }
+                else
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create was modified by another user. Please try to submit again.";
+                }
+                return RedirectToAction(nameof(Index));
+            }
+
+            ncrModelRepeat.Reinspection = reinspec.Reinspection;
+            TempData["SectionEdited"] = sectionEdited;
+
+            //If NCR is a draft
+            if (ncrModelRepeat.IsNCRDraft)
+            {
+                ncrModelRepeat.Reinspection.QualityPhotos = ncrModelRepeat.DraftReinspection.QualityPhotos;
+                ncrModelRepeat.Reinspection.VideoLinks = ncrModelRepeat.DraftReinspection.VideoLinks;
+            }
 
             PopulateUserEmailData(selectedOptions);
             PopulateList();
-
-            return View("Create", reinspec);
+            return View("Create", ncrModelRepeat);
         }
 
         // GET: Customers/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? id, Byte[] rowVersion)
         {
             int[] imagesToRemove = Array.Empty<int>();
             int[] linksToRemove = Array.Empty<int>();
@@ -2560,9 +3149,18 @@ namespace Haver.Controllers
                     .Include(r => r.Reinspection.VideoLinks)
                 .FirstOrDefaultAsync(p => p.ID == id);
 
+
             if (ncr == null)
             {
-                return NotFound();
+                TempData["ErrorAlert"] = "Unable to complete task. Please try again, if error persist see your system administrator.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            //Check for concurrency error
+            if (!ncr.RowVersion.SequenceEqual(rowVersion))
+            {
+                TempData["ErrorAlert"] = "This NCR was edited or modified by another user. Try again.";
+                return RedirectToAction("Index");
             }
 
             PopulateList();
@@ -2570,15 +3168,14 @@ namespace Haver.Controllers
             return View(ncr);
         }
 
-        // POST: Customers/Edit/5
+        // POST: NCR/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, List<IFormFile> Pictures, string[] selectedOptions, int[] imagesToRemove, int[] linksToRemove, string Subject, string emailContent, string[] Links,string sectionEdited)
+        public async Task<IActionResult> Edit(int id, Byte[] RowVersion, List<IFormFile> Pictures, string[] selectedOptions, int[] imagesToRemove, int[] linksToRemove, string Subject, string emailContent, string[] Links, string sectionEdited)
         {
             PopulateUserEmailData(selectedOptions);
-            SendNotificationEmail(selectedOptions, Subject, emailContent);
 
             //Go get the customer to update
             var ncrToUpdate = await _context.NCRs
@@ -2605,20 +3202,53 @@ namespace Haver.Controllers
                     .Include(r => r.Reinspection.VideoLinks)
                 .FirstOrDefaultAsync(p => p.ID == id);
 
-            //Check that we got the customer or exit with a not found error
+            //Check that we got the NCR or exit with a not found error
             if (ncrToUpdate == null)
+            {
+                TempData["ErrorAlert"] = "Unable to complete task. Please try again, if error persist see your system administrator.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            //Check for concurrency error
+            if (!ncrToUpdate.RowVersion.SequenceEqual(RowVersion))
+            {
+                TempData["ErrorAlert"] = "This NCR was edited or modified by another user. Try again.";
+                return RedirectToAction("Index");
+            }
+
+            //Check if the section being edited is null
+            else if (sectionEdited == "QualityRepresentative" && !QualRepExists(ncrToUpdate.QualityRepresentative.ID))
+            {
+                return NotFound();
+            }
+            else if (sectionEdited == "Engineering" && !EngineeringExists(ncrToUpdate.Engineering.ID))
+            {
+                return NotFound();
+            }
+            else if (sectionEdited == "Operations" && !OperationsExists(ncrToUpdate.Operations.ID))
+            {
+                return NotFound();
+            }
+            else if (sectionEdited == "Procurement" && !ProcurementExists(ncrToUpdate.Procurement.ID))
+            {
+                return NotFound();
+            }
+            else if (sectionEdited == "Reinspection" && !ReinspectionExists(ncrToUpdate.Reinspection.ID))
             {
                 return NotFound();
             }
 
+            //Put the original RowVersion value in the OriginalValues collection for the entity
+            _context.Entry(ncrToUpdate).Property("RowVersion").OriginalValue = RowVersion;
+
             //Try updating it with the values posted
-            if (await TryUpdateModelAsync<NCR>(ncrToUpdate, "", ncr => ncr.QualityRepresentative, ncr => ncr.Engineering, ncr => ncr.Operations, ncr => ncr.Procurement, ncr => ncr.Reinspection))
+            if (await TryUpdateModelAsync<NCR>(ncrToUpdate, "", ncr => ncr.RowVersion, ncr => ncr.QualityRepresentative, ncr => ncr.Engineering, ncr => ncr.Operations, ncr => ncr.Procurement, ncr => ncr.Reinspection))
             {
                 try
                 {
                     if (imagesToRemove != null)
                     {
-                        foreach(var image in imagesToRemove)
+                        foreach (var image in imagesToRemove)
                         {
                             // Find the image in the QualityRepresentative collection by ID
                             var imageToRemove = await _context.QualityPhotos.FindAsync(image);
@@ -2661,38 +3291,97 @@ namespace Haver.Controllers
                             // Handle if sectionEdited doesn't match any case
                             break;
                     }
+                    string emailSubject = $"NCR {ncrToUpdate.NCRNum} - {Subject}";
+
+                    _context.Update(ncrToUpdate);
                     await _context.SaveChangesAsync();
 
+                    SendNotificationEmail(selectedOptions, emailSubject, emailContent);
+
                     //Send on to details with the section edited open
-                    ViewData["myData"] = "Engineering";
-                    return RedirectToAction("Details", new { id = ncrToUpdate.ID});
+                    TempData["SectionEdited"] = sectionEdited;
+                    return RedirectToAction("Details", new { id = ncrToUpdate.ID });
+                }
+                catch (RetryLimitExceededException /* dex */)
+                {
+                    ModelState.AddModelError("", "Unable to save changes after multiple attempts. Try again, and if the problem persists, see your system administrator.");
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!NCRExists(ncrToUpdate.ID))
+                    NCR ncrError = GetNCR(ncrToUpdate.ID);
+                    if (ncrError == null)
                     {
-                        return NotFound();
+                        TempData["ErrorAlert"] = "Unable to complete task. Please try again, if error persist see your system administrator.";
+                        return RedirectToAction(nameof(Index));
+                    }
+                    _context.Entry(ncrError).Reload();
+
+                    if (!NCRExists(ncrError.ID))
+                    {
+                        TempData["ErrorAlert"] = "The record you attempted to edit doesn't exist anymore.";
+                    }
+                    else if(ncrError.IsNCRArchived)
+                    {
+                        TempData["ErrorAlert"] = "The record you attempted to edit was archived by another user.";
+                    }
+                    else if (ncrError.Status == "Voided")
+                    {
+                        TempData["ErrorAlert"] = "The record you attempted to edit was voided by another user.";
                     }
                     else
                     {
-                        throw;
+                        TempData["ErrorAlert"] = "The record you attempted to edit was modified by another user. Please try to submit again.";
                     }
+                    return RedirectToAction(nameof(Index));
                 }
-                catch (DbUpdateException dex)
+                catch (DbUpdateException)
                 {
-                    if (dex.GetBaseException().Message.Contains("UNIQUE constraint failed: Customers.CustomerCode"))
-                    {
-                        ModelState.AddModelError("CustomerCode", "Unable to save changes. Remember, you cannot have duplicate Customer Codes.");
-                    }
-                    else
-                    {
-                        ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
-                    }
+                    ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
                 }
+                catch (Exception)
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create was modified by another user. Please try to submit again.";
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+
+            //Check for concurrency error
+            NCR ncrModelRepeat = GetNCR(id);
+            if (ncrModelRepeat == null)
+            {
+                TempData["ErrorAlert"] = "Unable to complete task. Please try again, if error persist see your system administrator.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            _context.Entry(ncrModelRepeat).Reload();
+
+            if (!ncrModelRepeat.RowVersion.SequenceEqual(RowVersion))
+            {
+                if (!NCRExists(ncrModelRepeat.ID))
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create doesn't exist anymore.";
+                }
+                else if (ncrModelRepeat.IsNCRArchived)
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create was archived by another user.";
+                }
+                else if (ncrModelRepeat.Status == "Voided")
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create was voided by another user.";
+                }
+                else
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit or create was modified by another user. Please try to submit again.";
+                }
+                return RedirectToAction(nameof(Index));
+            }
+
+            if (sectionEdited != null)
+            {
+                TempData["SectionEdited"] = sectionEdited;
             }
             return View(ncrToUpdate);
         }
-
 
         private SelectList SupplierList(int? selectedId)
         {
@@ -2766,8 +3455,10 @@ namespace Haver.Controllers
                 .OrderByDescending(n => n.ID)
                 .FirstOrDefaultAsync();
 
+            var nowToronto = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time"));
+
             //Create new NCR number
-            createNCRNumber.Year = DateTime.Now.Date.Year;
+            createNCRNumber.Year = nowToronto.Year;
 
             if (lastNCRNum == null)
             {
@@ -2775,7 +3466,7 @@ namespace Haver.Controllers
             }
             else if (lastNCRNum != null)
             {
-                if (lastNCRNum.Year != DateTime.Now.Date.Year)
+                if (lastNCRNum.Year != nowToronto.Year)
                 {
                     ncr.NCRNum = createNCRNumber.GenerateNCRNumber(true, lastNCRNum.Counter);
                 }
@@ -2822,11 +3513,6 @@ namespace Haver.Controllers
                         string errMsg = ex.GetBaseException().Message;
                         ViewData["Message"] = "Error: Could not send email message to the selected customers.";
                     }
-
-                }
-                else
-                {
-                    ViewData["Message"] = "Sorry but you can only send an email to yourself in this demo and you were not selected.";
                 }
             }
         }
@@ -2865,7 +3551,7 @@ namespace Haver.Controllers
                             DisplayText = $"{c.Email} - {rolesAsString}"
                         });
                     }
-                    else if(c.Active == true)
+                    else if (c.Active == true)
                     {
                         available.Add(new ListOptionVM
                         {
@@ -2874,7 +3560,6 @@ namespace Haver.Controllers
                         });
                     }
                 }
-
             }
 
             ViewData["selOpts"] = new MultiSelectList(selected.OrderBy(s => s.DisplayText), "ID", "DisplayText");
@@ -2888,35 +3573,113 @@ namespace Haver.Controllers
                 .Where(n => NCRsID.Contains(n.ID))
                 .ToListAsync();
 
+            if (NCRsToArchive == null)
+            {
+                TempData["ErrorAlert"] = "The record or records you attempted to archive were modified by another user. Try again and if the problem persists see your system administrator.";
+                return RedirectToAction("Index");
+            }
+
+            int successCount = 0;
+            int failedCount = 0;
+
             foreach (var ncr in NCRsToArchive)
             {
-                if (await TryUpdateModelAsync<NCR>(ncr, ""))
+                try
                 {
-                    ncr.IsNCRArchived = true;
+                    if (await TryUpdateModelAsync<NCR>(ncr, ""))
+                    {
+                        ncr.IsNCRArchived = true;
 
+                        _context.NCRs.Update(ncr);
+                    }
                     await _context.SaveChangesAsync();
+
+                    successCount++;
                 }
+                catch (Exception)
+                {
+                    failedCount++;
+                }
+            }
+
+            TempData["ArchivingInfoAlert"] = $"{successCount} NCRs were succesfully archived and {failedCount} failed to be archived, out of {failedCount + successCount} total.";
+            if(failedCount > 1)
+            {
+                TempData["ArchivingWarningAlert"] = $"Failed archivation attempts can be caused by a variety of different factors, try again if problems persist, see your system administrator";
             }
 
             return RedirectToAction("Archiving");
         }
 
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> ArchiveNCR(int id)
+        public async Task<IActionResult> ArchiveNCR(int id, string rowVersion)
         {
             NCR ncrToArchive = _context.NCRs.FirstOrDefault(n => n.ID == id);
 
-            if (await TryUpdateModelAsync<NCR>(ncrToArchive, ""))
-            { 
-                ncrToArchive.IsNCRArchived = true;
-
-                await _context.SaveChangesAsync();
+            if (ncrToArchive == null)
+            {
+                return NotFound();
             }
 
-            return RedirectToAction("Index");
+            Byte[] rowVersionByteArray = Convert.FromBase64String(rowVersion);
+            _context.Entry(ncrToArchive).Property("RowVersion").OriginalValue = rowVersionByteArray;
+
+            try
+            {
+                if (await TryUpdateModelAsync<NCR>(ncrToArchive, ""))
+                {
+                    ncrToArchive.IsNCRArchived = true;
+
+                    _context.NCRs.Update(ncrToArchive);
+
+                }
+                await _context.SaveChangesAsync();
+                TempData["SuccessAlert"] = "NCR was successfully archived. Refresh the page to see changes. The archived NCRs can be seen by checking the 'Show inactive NCRs' checkbox.";
+            }
+            catch (RetryLimitExceededException /* dex */)
+            {
+                TempData["ErrorAlert"] = "Unable to save changes after multiple attempts. Try again, and if the problem persists, see your system administrator.";
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                _context.Entry(ncrToArchive).Reload();
+
+                if (!NCRExists(ncrToArchive.ID))
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit doesn't exist anymore.";
+                }
+                else if (ncrToArchive.IsNCRArchived)
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit was archived by another user.";
+                }
+                else if (ncrToArchive.Status == "Voided")
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit was voided by another user.";
+                }
+                else
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit was modified by another user. Try again and if the problem persists see your system administrator.";
+                }
+            }
+            catch (DbUpdateException)
+            {
+                TempData["ErrorAlert"] = "Unable to save changes. Try again, and if the problem persists see your system administrator.";
+            }
+            catch (Exception)
+            {
+                TempData["ErrorAlert"] = "Unable to complete task. Try again, and if the problem persists see your system administrator.";
+            }
+
+            var response = new
+            {
+                successAlert = TempData["SuccessAlert"] as string,
+                errorAlert = TempData["ErrorAlert"] as string,
+            };
+
+            return Json(response);
         }
 
-        public async Task<IActionResult> CancelDraft(int id)
+        public async Task<IActionResult> CancelDraft(int id, Byte[] RowVersion)
         {
             var ncrDraft = _context.NCRs
                 .Include(n => n.DraftQualityRepresentative)
@@ -2936,6 +3699,14 @@ namespace Haver.Controllers
                     .Include(n => n.DraftReinspection.VideoLinks)
                 .FirstOrDefault(n => n.ID == id);
 
+            if (ncrDraft == null)
+            {
+                TempData["ErrorAlert"] = "The record you attempted to edit was modified by another user. Try again and if the problem persists see your system administrator.";
+                return RedirectToAction("Index");
+            }
+
+            _context.Entry(ncrDraft).Property("RowVersion").OriginalValue = RowVersion;
+
             try
             {
                 if(ncrDraft.IsNCRDraft == true && ncrDraft != null)
@@ -2943,6 +3714,7 @@ namespace Haver.Controllers
                     //If phase is Quality Representative, delete the NCR
                     if (ncrDraft.Phase == "Quality Representative")
                     {
+                        ncrDraft.IsNCRDraft = false;
 
                         if (await TryUpdateModelAsync<NCR>(ncrDraft, "", ncr => ncr.DraftQualityRepresentative))
                         {
@@ -2959,15 +3731,18 @@ namespace Haver.Controllers
                                 _context.VideoLinks.Remove(videoToRemove);
                             }
                         }
+
                         _context.DraftQualityRepresentatives.Remove(ncrDraft.DraftQualityRepresentative);
                         _context.NCRs.Remove(ncrDraft);
+
+                        await _context.SaveChangesAsync();
+                        TempData["SuccessAlert"] = "Draft was successfully canceled.";
+                        return RedirectToAction("Index");
                     }
                     //If phase is Engineering delete the Engineering draft
                     else if (ncrDraft.Phase == "Engineering")
                     {
-
                         ncrDraft.IsNCRDraft = false;
-
 
                         _context.DraftEngineerings.Remove(ncrDraft.DraftEngineering);
                     }
@@ -2993,55 +3768,154 @@ namespace Haver.Controllers
                         _context.DraftReinspections.Remove(ncrDraft.DraftReinspection);
                     }
 
+                    _context.NCRs.Update(ncrDraft);
                     await _context.SaveChangesAsync();
-                    return RedirectToAction("Index");
+                    TempData["SuccessAlert"] = "Draft was successfully canceled.";
 
+                }
+                else
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit was modified by another user. Try again and if the problem persists see your system administrator.";
+                }
+            }
+            catch (RetryLimitExceededException /* dex */)
+            {
+                TempData["ErrorAlert"] = "Unable to save changes after multiple attempts. Try again, and if the problem persists, see your system administrator.";
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                _context.Entry(ncrDraft).Reload();
+
+                if (!NCRExists(ncrDraft.ID))
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit doesn't exist anymore.";
+                }
+                else if (ncrDraft.IsNCRArchived)
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit was archived by another user.";
+                }
+                else if (ncrDraft.Status == "Voided")
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit was voided by another user.";
+                }
+                else
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit was modified by another user. Try again and if the problem persists see your system administrator.";
                 }
             }
             catch (DbUpdateException)
             {
-                //if (dex.GetBaseException().Message.Contains("FOREIGN KEY constraint failed"))
-                //{
-                //    ModelState.AddModelError("", "Unable to Delete Customer. Remember, you cannot delete a Customer that has a function in the system.");
-                //}
-                //else
-                //{
-                //    ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
-                //}
-                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+                TempData["ErrorAlert"] = "Unable to save changes. Try again, and if the problem persists see your system administrator.";
+            }
+            catch (Exception)
+            {
+                TempData["ErrorAlert"] = "Unable to complete task. Try again, and if the problem persists see your system administrator.";
             }
 
             return RedirectToAction("Index");
         }
 
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> VoidNCR(int id, string voidingReason)
+        public async Task<IActionResult> VoidNCR(int id, string voidingReason, string rowVersion, string cancel)
         {
             var ncrToVoid = _context.NCRs.FirstOrDefault(ncr => ncr.ID == id);
 
-            if (ncrToVoid.Status == "Voided")
+            if (ncrToVoid == null)
             {
-                if (await TryUpdateModelAsync<NCR>(ncrToVoid, ""))
+                if(cancel == null)
                 {
-                    ncrToVoid.VoidingReason = null;
-                    ncrToVoid.Status = "Active";
+                    return NotFound();
+                }
 
+                TempData["ErrorAlert"] = "The record you attempted to edit was modified by another user. Try again and if the problem persists see your system administrator.";
+                return RedirectToAction("Index");
+            }
+
+            Byte[] rowVersionByteArray = Convert.FromBase64String(rowVersion);
+            _context.Entry(ncrToVoid).Property("RowVersion").OriginalValue = rowVersionByteArray;
+
+            try
+            {
+                if (ncrToVoid.Status == "Voided")
+                {
+                    if (await TryUpdateModelAsync<NCR>(ncrToVoid, ""))
+                    {
+                        ncrToVoid.VoidingReason = null;
+                        ncrToVoid.Status = "Active";
+
+                        _context.NCRs.Update(ncrToVoid);
+
+                    }
                     await _context.SaveChangesAsync();
 
-                    return RedirectToAction("Index");
+                    TempData["SuccessAlert"] = "NCR Void was successfuly canceled.";
+
+                    if (cancel != null)
+                    {
+                        return RedirectToAction("Index");
+                    }
+                }
+
+                if (await TryUpdateModelAsync<NCR>(ncrToVoid, ""))
+                {
+                    ncrToVoid.VoidingReason = voidingReason;
+                    ncrToVoid.Status = "Voided";
+
+                    _context.NCRs.Update(ncrToVoid);
+
+                }
+                await _context.SaveChangesAsync();
+
+                TempData["SuccessAlert"] = "NCR was successfuly voided. Refresh the page to see changes. The voided NCRs can be seen by checking the 'Show inactive NCRs' checkbox.";
+
+            }
+            catch (RetryLimitExceededException /* dex */)
+            {
+                TempData["ErrorAlert"] = "Unable to save changes after multiple attempts. Try again, and if the problem persists, see your system administrator.";
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                _context.Entry(ncrToVoid).Reload();
+
+                if (!NCRExists(ncrToVoid.ID))
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit doesn't exist anymore.";
+                }
+                else if (ncrToVoid.IsNCRArchived)
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit was archived by another user.";
+                }
+                else if (ncrToVoid.Status == "Voided")
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit was voided by another user.";
+                }
+                else
+                {
+                    TempData["ErrorAlert"] = "The record you attempted to edit was modified by another user. Try again and if the problem persists see your system administrator.";
                 }
             }
-
-
-            if (await TryUpdateModelAsync<NCR>(ncrToVoid, ""))
+            catch (DbUpdateException)
             {
-                ncrToVoid.VoidingReason = voidingReason;
-                ncrToVoid.Status = "Voided";
+                TempData["ErrorAlert"] = "Unable to save changes. Try again, and if the problem persists see your system administrator.";
+            }
+            catch (Exception)
+            {
+                TempData["ErrorAlert"] = "Unable to complete task. Try again, and if the problem persists see your system administrator.";
 
-                await _context.SaveChangesAsync();
             }
 
-            return Ok(ncrToVoid);
+            if (cancel != null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var response = new
+            {
+                successAlert = TempData["SuccessAlert"] as string,
+                errorAlert = TempData["ErrorAlert"] as string,
+            };
+
+            return Json(response);
         }
 
         public static Task AddVideoLinks<T>(T module, string[] links) where T : class
@@ -3067,16 +3941,61 @@ namespace Haver.Controllers
             return Task.CompletedTask;
         }
 
-        //Method to add Photos
+        ////Method to add Photos
+        //public static async Task AddQualityPhotos<T>(T module, List<IFormFile> photos) where T : class
+        //{
+        //    var qualityPhotosProperty = module.GetType().GetProperty("QualityPhotos");
+        //    if (qualityPhotosProperty != null && qualityPhotosProperty.PropertyType == typeof(List<Photo>))
+        //    {
+        //        var qualityPhotos = qualityPhotosProperty.GetValue(module) as List<Photo>;
+        //        if (qualityPhotos == null)
+        //        {
+        //            qualityPhotos = new List<Photo>();
+        //        }
+
+        //        foreach (var photo in photos)
+        //        {
+        //            string mimeType = photo.ContentType;
+        //            long fileLength = photo.Length;
+
+        //            if (!(string.IsNullOrEmpty(mimeType) || fileLength == 0))
+        //            {
+        //                if (mimeType.Contains("image"))
+        //                {
+        //                    using (var memoryStream = new MemoryStream())
+        //                    {
+        //                        await photo.CopyToAsync(memoryStream);
+        //                        var photoArray = memoryStream.ToArray();
+
+        //                        // Create a new QualityPhoto instance for each image
+        //                        var qualityPhoto = new Photo
+        //                        {
+        //                            Content = photoArray,
+        //                            MimeType = mimeType
+        //                        };
+
+        //                        // Add the photo to the QualityPhotos list
+        //                        qualityPhotos.Add(qualityPhoto);
+        //                    }
+        //                }
+        //            }
+        //        }
+
+        //        // Set the updated QualityPhotos list back to the module
+        //        qualityPhotosProperty.SetValue(module, qualityPhotos);
+        //    }
+        //}
+
+        // Method to add Photos
         public static async Task AddQualityPhotos<T>(T module, List<IFormFile> photos) where T : class
         {
             var qualityPhotosProperty = module.GetType().GetProperty("QualityPhotos");
-            if (qualityPhotosProperty != null && qualityPhotosProperty.PropertyType == typeof(List<QualityPhoto>))
+            if (qualityPhotosProperty != null && qualityPhotosProperty.PropertyType == typeof(List<Photo>))
             {
-                var qualityPhotos = qualityPhotosProperty.GetValue(module) as List<QualityPhoto>;
+                var qualityPhotos = qualityPhotosProperty.GetValue(module) as List<Photo>;
                 if (qualityPhotos == null)
                 {
-                    qualityPhotos = new List<QualityPhoto>();
+                    qualityPhotos = new List<Photo>();
                 }
 
                 foreach (var photo in photos)
@@ -3091,31 +4010,45 @@ namespace Haver.Controllers
                             using (var memoryStream = new MemoryStream())
                             {
                                 await photo.CopyToAsync(memoryStream);
-                                var photoArray = memoryStream.ToArray();
+                                memoryStream.Position = 0;
 
-                                // Create a new QualityPhoto instance for each image
-                                var qualityPhoto = new QualityPhoto
+                                using (var image = Image.Load(memoryStream))
                                 {
-                                    Content = photoArray,
-                                    MimeType = mimeType
-                                };
+                                    // Resize and compress the image
+                                    var options = new SixLabors.ImageSharp.Formats.Jpeg.JpegEncoder()
+                                    {
+                                        Quality = 70 // Adjust quality as per your requirement
+                                    };
+                                    //image.Mutate(x => x.Resize(1000, 1000)); // Resize image to maximum dimensions
 
-                                // Add the photo to the QualityPhotos list
-                                qualityPhotos.Add(qualityPhoto);
+                                    // Convert the image to byte array
+                                    using (var outputStream = new MemoryStream())
+                                    {
+                                        image.Save(outputStream, options);
+                                        var photoArray = outputStream.ToArray();
+
+                                        // Create a new QualityPhoto instance for each image
+                                        var qualityPhoto = new Photo
+                                        {
+                                            Content = photoArray,
+                                            MimeType = mimeType
+                                        };
+
+                                        // Add the photo to the QualityPhotos list
+                                        qualityPhotos.Add(qualityPhoto);
+                                    }
+                                }
                             }
                         }
                     }
                 }
-
                 // Set the updated QualityPhotos list back to the module
                 qualityPhotosProperty.SetValue(module, qualityPhotos);
             }
         }
-
-        // Helper method to retrieve the next NCR
+                // Helper method to retrieve the next NCR
         private NCR GetNCR(int id)
         {
-
             NCR ncrModel = _context.NCRs
                 .Include(n => n.QualityRepresentative)
                     .Include(qr => qr.QualityRepresentative.QualityPhotos)
@@ -3194,13 +4127,32 @@ namespace Haver.Controllers
 
             return File(pdfData, "application/pdf", "NCRDetails.pdf");
 
-            //Process.Start("explorer.exe", "NCR.pdf");
-            //Redirect("Index");
         }
 
         private bool NCRExists(int id)
         {
             return _context.NCRs.Any(e => e.ID == id);
         }
+        private bool QualRepExists(int id)
+        {
+            return _context.QualityRepresentatives.Any(e => e.ID == id);
+        }
+        private bool EngineeringExists(int id)
+        {
+            return _context.Engineerings.Any(e => e.ID == id);
+        }
+        private bool OperationsExists(int id)
+        {
+            return _context.OperationsS.Any(e => e.ID == id);
+        }
+        private bool ProcurementExists(int id)
+        {
+            return _context.Procurements.Any(e => e.ID == id);
+        }
+        private bool ReinspectionExists(int id)
+        {
+            return _context.Reinspections.Any(e => e.ID == id);
+        }
+
     }
 }
