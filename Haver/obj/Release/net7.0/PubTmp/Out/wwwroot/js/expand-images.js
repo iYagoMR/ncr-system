@@ -1,3 +1,4 @@
+
 // Get the images
 var images = document.querySelectorAll(".img-fluid");
 
@@ -26,6 +27,10 @@ images.forEach(function (image) {
         });
     }
 });
+
+
+
+
 
 /* Add click event listener*/
 //img.addEventListener("click", function () {

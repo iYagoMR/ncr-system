@@ -56,5 +56,6 @@ namespace Haver.Models
 
         public EmployeePhoto EmployeePhoto { get; set; }
         public EmployeeThumbnail EmployeeThumbnail { get; set; }
+        public ICollection<Notification> Notifications { get; set; } = new HashSet<Notification>();
     }
 }

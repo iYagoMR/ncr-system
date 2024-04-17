@@ -40,7 +40,7 @@ namespace Haver.Models
         [Display(Name = "Date")]
         public DateOnly ProcurementDate { get; set; } = DateOnly.FromDateTime(DateTime.Now);
 
-        [Required(ErrorMessage = "Procurement is required.")]
+        [Required(ErrorMessage = "Procurement sign is required.")]
         [Display(Name = "Procurement")]
         public string ProcurementSign { get; set; }
 

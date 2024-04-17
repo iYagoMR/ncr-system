@@ -3,20 +3,52 @@
   "WorkspaceRootPath": "D:\\My Work\\backup5 - Copy (5)\\haver7-iago\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|d:\\my work\\backup5 - copy (5)\\haver7-iago\\haver\\data\\haverinitializer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|solutionrelative:haver\\data\\haverinitializer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|d:\\my work\\backup5 - copy (5)\\haver7-iago\\haver\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|solutionrelative:haver\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|d:\\my work\\backup5 - copy (5)\\haver7-iago\\haver\\controllers\\ncrcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|solutionrelative:haver\\controllers\\ncrcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|d:\\my work\\backup5 - copy (5)\\haver7-iago\\haver\\utilities\\notificationgenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|solutionrelative:haver\\utilities\\notificationgenerator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|d:\\my work\\backup5 - copy (5)\\haver7-iago\\haver\\data\\haverinitializer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|solutionrelative:haver\\data\\haverinitializer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|d:\\my work\\backup5 - copy (5)\\haver7-iago\\haver\\views\\ncr\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|solutionrelative:haver\\views\\ncr\\create.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|d:\\my work\\backup5 - copy (5)\\haver7-iago\\haver\\controllers\\ncrcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|solutionrelative:haver\\controllers\\ncrcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|d:\\my work\\backup5 - copy (5)\\haver7-iago\\haver\\viewmodels\\myemailsender.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|solutionrelative:haver\\viewmodels\\myemailsender.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|d:\\my work\\backup5 - copy (5)\\haver7-iago\\haver\\data\\applicationdbinitializer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|solutionrelative:haver\\data\\applicationdbinitializer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|d:\\my work\\backup5 - copy (5)\\haver7-iago\\haver\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|solutionrelative:haver\\views\\home\\index.cshtml||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|d:\\my work\\backup5 - copy (5)\\haver7-iago\\haver\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|solutionrelative:haver\\wwwroot\\css\\site.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|d:\\my work\\backup5 - copy (5)\\haver7-iago\\haver\\utilities\\calculatencrtimecounters.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|solutionrelative:haver\\utilities\\calculatencrtimecounters.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|d:\\my work\\backup5 - copy (5)\\haver7-iago\\haver\\utilities\\autoarchive.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|solutionrelative:haver\\utilities\\autoarchive.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|d:\\my work\\backup5 - copy (5)\\haver7-iago\\haver\\utilities\\perform24hjobs.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E67E39BE-474A-4F78-883C-9CBE49E1FB09}|Haver\\Haver.csproj|solutionrelative:haver\\utilities\\perform24hjobs.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -25,9 +57,23 @@
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedWidth": 200,
-          "SelectedChildIndex": 12,
+          "DockedWidth": 175,
+          "SelectedChildIndex": 0,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "HaverInitializer.cs",
+              "DocumentMoniker": "D:\\My Work\\backup5 - Copy (5)\\haver7-iago\\Haver\\Data\\HaverInitializer.cs",
+              "RelativeDocumentMoniker": "Haver\\Data\\HaverInitializer.cs",
+              "ToolTip": "D:\\My Work\\backup5 - Copy (5)\\haver7-iago\\Haver\\Data\\HaverInitializer.cs",
+              "RelativeToolTip": "Haver\\Data\\HaverInitializer.cs",
+              "ViewState": "AQIAAEUAAAAAAAAAAAAAAE8AAAAqAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-15T12:14:36.141Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:3:0:{fabf9319-47eb-497e-b8f6-d9f73fba5f55}"
@@ -70,52 +116,149 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 5,
+              "Title": "MyEmailSender.cs",
+              "DocumentMoniker": "D:\\My Work\\backup5 - Copy (5)\\haver7-iago\\Haver\\ViewModels\\MyEmailSender.cs",
+              "RelativeDocumentMoniker": "Haver\\ViewModels\\MyEmailSender.cs",
+              "ToolTip": "D:\\My Work\\backup5 - Copy (5)\\haver7-iago\\Haver\\ViewModels\\MyEmailSender.cs",
+              "RelativeToolTip": "Haver\\ViewModels\\MyEmailSender.cs",
+              "ViewState": "AQIAAA0AAAAAAAAAAAAgwCgAAAAQAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-16T16:50:16.787Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "NCRController.cs",
               "DocumentMoniker": "D:\\My Work\\backup5 - Copy (5)\\haver7-iago\\Haver\\Controllers\\NCRController.cs",
               "RelativeDocumentMoniker": "Haver\\Controllers\\NCRController.cs",
               "ToolTip": "D:\\My Work\\backup5 - Copy (5)\\haver7-iago\\Haver\\Controllers\\NCRController.cs",
               "RelativeToolTip": "Haver\\Controllers\\NCRController.cs",
-              "ViewState": "AQIAAHYDAAAAAAAAAAAawKIDAAAMAAAA",
+              "ViewState": "AQIAAD8JAAAAAAAAAAAewFQJAAAUAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-10T05:24:25.71Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Create.cshtml",
-              "DocumentMoniker": "D:\\My Work\\backup5 - Copy (5)\\haver7-iago\\Haver\\Views\\NCR\\Create.cshtml",
-              "RelativeDocumentMoniker": "Haver\\Views\\NCR\\Create.cshtml",
-              "ToolTip": "D:\\My Work\\backup5 - Copy (5)\\haver7-iago\\Haver\\Views\\NCR\\Create.cshtml",
-              "RelativeToolTip": "Haver\\Views\\NCR\\Create.cshtml",
-              "ViewState": "AQIAAIIFAAAAAAAAAAAAAJYFAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2024-04-10T01:12:08.802Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "HaverInitializer.cs",
-              "DocumentMoniker": "D:\\My Work\\backup5 - Copy (5)\\haver7-iago\\Haver\\Data\\HaverInitializer.cs",
-              "RelativeDocumentMoniker": "Haver\\Data\\HaverInitializer.cs",
-              "ToolTip": "D:\\My Work\\backup5 - Copy (5)\\haver7-iago\\Haver\\Data\\HaverInitializer.cs",
-              "RelativeToolTip": "Haver\\Data\\HaverInitializer.cs",
-              "ViewState": "AQIAAOkBAAAAAAAAAAAlwP4BAAAUAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-09T23:43:18.872Z",
+              "WhenOpened": "2024-04-15T12:14:47.997Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
+              "Title": "Create.cshtml",
+              "DocumentMoniker": "D:\\My Work\\backup5 - Copy (5)\\haver7-iago\\Haver\\Views\\NCR\\Create.cshtml",
+              "RelativeDocumentMoniker": "Haver\\Views\\NCR\\Create.cshtml",
+              "ToolTip": "D:\\My Work\\backup5 - Copy (5)\\haver7-iago\\Haver\\Views\\NCR\\Create.cshtml",
+              "RelativeToolTip": "Haver\\Views\\NCR\\Create.cshtml",
+              "ViewState": "AQIAALMEAAAAAAAAAAAAAL4EAAAdAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-04-16T01:14:51.155Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
               "Title": "CalculateNCRTimeCounters.cs",
               "DocumentMoniker": "D:\\My Work\\backup5 - Copy (5)\\haver7-iago\\Haver\\Utilities\\CalculateNCRTimeCounters.cs",
               "RelativeDocumentMoniker": "Haver\\Utilities\\CalculateNCRTimeCounters.cs",
               "ToolTip": "D:\\My Work\\backup5 - Copy (5)\\haver7-iago\\Haver\\Utilities\\CalculateNCRTimeCounters.cs",
               "RelativeToolTip": "Haver\\Utilities\\CalculateNCRTimeCounters.cs",
-              "ViewState": "AQIAAAoAAAAAAAAAAAAgwBMAAAAAAAAA",
+              "ViewState": "AQIAAAgBAAAAAAAAAAAmwCEBAAAoAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-09T23:25:31.788Z"
+              "WhenOpened": "2024-04-16T05:14:46.85Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Index.cshtml",
+              "DocumentMoniker": "D:\\My Work\\backup5 - Copy (5)\\haver7-iago\\Haver\\Views\\Home\\Index.cshtml",
+              "RelativeDocumentMoniker": "Haver\\Views\\Home\\Index.cshtml",
+              "ToolTip": "D:\\My Work\\backup5 - Copy (5)\\haver7-iago\\Haver\\Views\\Home\\Index.cshtml",
+              "RelativeToolTip": "Haver\\Views\\Home\\Index.cshtml",
+              "ViewState": "AQIAAEYAAAAAAAAAAAAAAFQAAAAzAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-04-16T04:49:44.397Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "site.css",
+              "DocumentMoniker": "D:\\My Work\\backup5 - Copy (5)\\haver7-iago\\Haver\\wwwroot\\css\\site.css",
+              "RelativeDocumentMoniker": "Haver\\wwwroot\\css\\site.css",
+              "ToolTip": "D:\\My Work\\backup5 - Copy (5)\\haver7-iago\\Haver\\wwwroot\\css\\site.css",
+              "RelativeToolTip": "Haver\\wwwroot\\css\\site.css",
+              "ViewState": "AQIAAEYAAAAAAAAAAAAQwGsAAAASAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2024-04-16T04:19:05.878Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "AutoArchive.cs",
+              "DocumentMoniker": "D:\\My Work\\backup5 - Copy (5)\\haver7-iago\\Haver\\Utilities\\AutoArchive.cs",
+              "RelativeDocumentMoniker": "Haver\\Utilities\\AutoArchive.cs",
+              "ToolTip": "D:\\My Work\\backup5 - Copy (5)\\haver7-iago\\Haver\\Utilities\\AutoArchive.cs",
+              "RelativeToolTip": "Haver\\Utilities\\AutoArchive.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABUAAAAJAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-15T23:03:00.649Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "Perform24hJobs.cs",
+              "DocumentMoniker": "D:\\My Work\\backup5 - Copy (5)\\haver7-iago\\Haver\\Utilities\\Perform24hJobs.cs",
+              "RelativeDocumentMoniker": "Haver\\Utilities\\Perform24hJobs.cs",
+              "ToolTip": "D:\\My Work\\backup5 - Copy (5)\\haver7-iago\\Haver\\Utilities\\Perform24hJobs.cs",
+              "RelativeToolTip": "Haver\\Utilities\\Perform24hJobs.cs",
+              "ViewState": "AQIAACEAAAAAAAAAAAAowBsAAAAIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-15T12:07:10.17Z"
+            }
+          ]
+        },
+        {
+          "DockedWidth": 245,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "D:\\My Work\\backup5 - Copy (5)\\haver7-iago\\Haver\\appsettings.json",
+              "RelativeDocumentMoniker": "Haver\\appsettings.json",
+              "ToolTip": "D:\\My Work\\backup5 - Copy (5)\\haver7-iago\\Haver\\appsettings.json",
+              "RelativeToolTip": "Haver\\appsettings.json",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABMAAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-04-17T02:14:23.771Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "ApplicationDBInitializer.cs",
+              "DocumentMoniker": "D:\\My Work\\backup5 - Copy (5)\\haver7-iago\\Haver\\Data\\ApplicationDBInitializer.cs",
+              "RelativeDocumentMoniker": "Haver\\Data\\ApplicationDBInitializer.cs",
+              "ToolTip": "D:\\My Work\\backup5 - Copy (5)\\haver7-iago\\Haver\\Data\\ApplicationDBInitializer.cs",
+              "RelativeToolTip": "Haver\\Data\\ApplicationDBInitializer.cs",
+              "ViewState": "AQIAAEYAAAAAAAAAAAAgwFYAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-16T17:23:25.736Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "NotificationGenerator.cs",
+              "DocumentMoniker": "D:\\My Work\\backup5 - Copy (5)\\haver7-iago\\Haver\\Utilities\\NotificationGenerator.cs",
+              "RelativeDocumentMoniker": "Haver\\Utilities\\NotificationGenerator.cs",
+              "ToolTip": "D:\\My Work\\backup5 - Copy (5)\\haver7-iago\\Haver\\Utilities\\NotificationGenerator.cs",
+              "RelativeToolTip": "Haver\\Utilities\\NotificationGenerator.cs",
+              "ViewState": "AQIAAPoAAAAAAAAAAAAcwAYBAAAeAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-16T17:18:02.644Z",
+              "EditorCaption": ""
             }
           ]
         }

@@ -1,203 +1,316 @@
-﻿using Haver.Models;
+﻿using Haver.Data;
+using Haver.Models;
+using Microsoft.AspNetCore.Identity;
 using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace Haver.Utilities
 {
     public class CalculateNCRTimeCounters
     {
+        private readonly HaverContext _context;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public CalculateNCRTimeCounters()
+        private List<NCR> activeNCRs;
+        public CalculateNCRTimeCounters(HaverContext context, UserManager<IdentityUser> userManager)
         {
+            _context = context;
+            _userManager = userManager;
+
+            activeNCRs = _context.NCRs.Where(ncr => ncr.Status == "Active")
+                          .Include(ncr => ncr.QualityRepresentative)
+                          .Include(ncr => ncr.Engineering)
+                          .Include(ncr => ncr.Operations)
+                          .Include(ncr => ncr.Procurement)
+                          .Where(ncr => !ncr.IsNCRDraft)
+                          .ToList();
         }
 
-        public (int qual24, int qual48, int qual5, int qualTotal) QualCounters(List<NCR> QualNCRs)
+        public (List<NCR> qual24, List<NCR> qual48, List<NCR> qual5, List<NCR> qualTotal, List<NCR>lgActive) QualCounters()
         {
-            int qualTotal = 0;
-            int qual24 = 0;
-            int qual48 = 0;
-            int qual5 = 0;
+            var QualNCRs = activeNCRs.Where(ncr => ncr.Phase == "Quality Representative").ToList();
+
+            List<NCR> qualTotal = new List<NCR>();
+            List<NCR> qual24 = new List<NCR>();
+            List<NCR> qual48 = new List<NCR>();
+            List<NCR> qual5 = new List<NCR>();
+            List<NCR> lgActive = new List<NCR>();
             var nowToronto = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time"));
+
+            var configurationVariables = _context.ConfigurationVariables.FirstOrDefault(config => config.ID == 1);
+            if (configurationVariables == null)
+            {
+                throw new Exception("Configurations variables cannot be null.");
+            }
 
             foreach (var ncr in QualNCRs)
             {
+                try 
+                {
+                    TimeSpan differenceLastFilled = (TimeSpan)(nowToronto - ncr.CreatedOn);
+                    int LastFilled = differenceLastFilled.Days;
+                    qualTotal.Add(ncr);
 
-                TimeSpan differenceLastFilled = (TimeSpan)(nowToronto - ncr.CreatedOn);
-                int LastFilled = differenceLastFilled.Days;
-                qualTotal++;
-
-                //Count the amount of days at each category
-                if (LastFilled == 1)
-                {
-                    qual24++;
+                    //Count the amount of days at each category
+                    if (LastFilled == 1)
+                    {
+                        qual24.Add(ncr);
+                    }
+                    else if (LastFilled == 2)
+                    {
+                        qual48.Add(ncr);
+                    }
+                    else if (LastFilled > 2)
+                    {
+                        qual5.Add(ncr);
+                    }
+                    else if (LastFilled >= configurationVariables.OverdueNCRsNotificationDays)
+                    {
+                        lgActive.Add(ncr);
+                    }
                 }
-                else if (LastFilled == 2)
+                catch (Exception)
                 {
-                    qual48++;
-                }
-                else if (LastFilled > 2)
-                {
-                    qual5++;
+                    Console.WriteLine("Failed to count NCR");
                 }
             }
 
-            return (qual24, qual48, qual5, qualTotal);
+            return (qual24, qual48, qual5, qualTotal, lgActive);
         }
-        public (int eng24, int eng48, int eng5, int engTotal) EngCounters(List<NCR> EngNCRs)
+        public (List<NCR> eng24, List<NCR> eng48, List<NCR> eng5, List<NCR> engTotal, List<NCR> lgActive) EngCounters()
         {
-            int engTotal = 0;
-            int eng24 = 0;
-            int eng48 = 0;
-            int eng5 = 0;
+            var EngNCRs = activeNCRs.Where(ncr => ncr.Phase == "Engineering").ToList();
+
+            List<NCR> engTotal = new List<NCR>();
+            List<NCR> eng24 = new List<NCR>();
+            List<NCR> eng48 = new List<NCR>();
+            List<NCR> eng5 = new List<NCR>();
+            List<NCR> lgActive = new List<NCR>();
             var nowToronto = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time"));
 
             foreach (var ncr in EngNCRs)
             {
-                int LastFilled = 0;
+                try 
+                {
+                    int LastFilled = 0;
+                    var configurationVariables = _context.ConfigurationVariables.FirstOrDefault(config => config.ID == 1);
+                    if (configurationVariables == null)
+                    {
+                        throw new Exception("Configurations variables cannot be null.");
+                    }
 
-                // Converting DateOnly to DateTime by providing Time Info
-                if (ncr.QualityRepresentative != null)
-                {
-                    TimeSpan differenceLastFilled = (TimeSpan)(nowToronto - ncr.QualityRepresentative.CreatedOn);
-                    LastFilled = differenceLastFilled.Days;
-                    engTotal++;
-                }
+                    // Converting DateOnly to DateTime by providing Time Info
+                    if (ncr.QualityRepresentative != null)
+                    {
+                        TimeSpan differenceLastFilled = (TimeSpan)(nowToronto - ncr.QualityRepresentative.CreatedOn);
+                        LastFilled = differenceLastFilled.Days;
+                        engTotal.Add(ncr);
+                    }
 
-                //Count the amount of days at each category
-                if (LastFilled == 1)
-                {
-                    eng24++;
+                    //Count the amount of days at each category
+                    if (LastFilled == 1)
+                    {
+                        eng24.Add(ncr);
+                    }
+                    else if (LastFilled == 2)
+                    {
+                        eng48.Add(ncr);
+                    }
+                    else if (LastFilled > 2)
+                    {
+                        eng5.Add(ncr);
+                    }
+                    else if (LastFilled >= configurationVariables.OverdueNCRsNotificationDays)
+                    {
+                        lgActive.Add(ncr);
+                    }
                 }
-                else if (LastFilled == 2)
+                catch (Exception)
                 {
-                    eng48++;
-                }
-                else if (LastFilled > 2)
-                {
-                    eng5++;
+                    Console.WriteLine("Failed to count NCR");
                 }
             }
 
-            return (eng24, eng48, eng5, engTotal);
+            return (eng24, eng48, eng5, engTotal, lgActive);
         }
 
-        public (int oper24, int oper48, int oper5, int operTotal) OperCounters(List<NCR> OperNCRs)
+        public (List<NCR> oper24, List<NCR> oper48, List<NCR> oper5, List<NCR> operTotal, List<NCR> lgActive) OperCounters()
         {
-            int operTotal = 0;
-            int oper24 = 0;
-            int oper48 = 0;
-            int oper5 = 0;
+            var OperNCRs = activeNCRs.Where(ncr => ncr.Phase == "Operations").ToList();
+
+            List<NCR> operTotal = new List<NCR>();
+            List<NCR> oper24 = new List<NCR>();
+            List<NCR> oper48 = new List<NCR>();
+            List<NCR> oper5 = new List<NCR>();
+            List<NCR> lgActive = new List<NCR>();
             var nowToronto = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time"));
 
             foreach (var ncr in OperNCRs)
             {
-                int LastFilled = 0;
+                try
+                {
+                    int LastFilled = 0;
+                    var configurationVariables = _context.ConfigurationVariables.FirstOrDefault(config => config.ID == 1);
+                    if (configurationVariables == null)
+                    {
+                        throw new Exception("Configurations variables cannot be null.");
+                    }
 
-                // Converting DateOnly to DateTime by providing Time Info
-                if (ncr.Engineering != null && ncr.QualityRepresentative.ConfirmingEng != false)
-                {
-                    TimeSpan differenceLastFilled = (TimeSpan)(nowToronto - ncr.Engineering.CreatedOn);
-                    LastFilled = differenceLastFilled.Days;
-                    operTotal++;
-                }
-                else if (ncr.QualityRepresentative != null)
-                {
-                    TimeSpan differenceLastFilled = (TimeSpan)(nowToronto - ncr.QualityRepresentative.CreatedOn);
-                    LastFilled = differenceLastFilled.Days;
-                    operTotal++;
-                }
+                    // Converting DateOnly to DateTime by providing Time Info
+                    if (ncr.Engineering != null && ncr.QualityRepresentative.ConfirmingEng != false)
+                    {
+                        TimeSpan differenceLastFilled = (TimeSpan)(nowToronto - ncr.Engineering.CreatedOn);
+                        LastFilled = differenceLastFilled.Days;
+                        operTotal.Add(ncr);
+                    }
+                    else if (ncr.QualityRepresentative != null)
+                    {
+                        TimeSpan differenceLastFilled = (TimeSpan)(nowToronto - ncr.QualityRepresentative.CreatedOn);
+                        LastFilled = differenceLastFilled.Days;
+                        operTotal.Add(ncr);
+                    }
 
-                //Count the amount of days at each category
-                if (LastFilled == 1)
-                {
-                    oper24++;
+                    //Count the amount of days at each category
+                    if (LastFilled == 1)
+                    {
+                        oper24.Add(ncr);
+                    }
+                    else if (LastFilled == 2)
+                    {
+                        oper48.Add(ncr);
+                    }
+                    else if (LastFilled > 2)
+                    {
+                        oper5.Add(ncr);
+                    }
+                    else if (LastFilled >= configurationVariables.OverdueNCRsNotificationDays)
+                    {
+                        lgActive.Add(ncr);
+                    }
                 }
-                else if (LastFilled == 2)
+                catch (Exception)
                 {
-                    oper48++;
-                }
-                else if (LastFilled > 2)
-                {
-                    oper5++;
+                    Console.WriteLine("Failed to count NCR");
                 }
             }
 
-            return (oper24, oper48, oper5, operTotal);
+            return (oper24, oper48, oper5, operTotal, lgActive);
         }
 
-        public (int proc24, int proc48, int proc5, int procTotal) ProcCounters(List<NCR> ProcNCRs)
+        public (List<NCR> proc24, List<NCR> proc48, List<NCR> proc5, List<NCR> procTotal, List<NCR> lgActive) ProcCounters()
         {
-            int procTotal = 0;
-            int proc24 = 0;
-            int proc48 = 0;
-            int proc5 = 0;
+            var ProcNCRs = activeNCRs.Where(ncr => ncr.Phase == "Procurement").ToList();
+
+            List<NCR> procTotal = new List<NCR>();
+            List<NCR> proc24 = new List<NCR>();
+            List<NCR> proc48 = new List<NCR>();
+            List<NCR> proc5 = new List<NCR>();
+            List<NCR> lgActive = new List<NCR>();
             var nowToronto = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time"));
 
             foreach (var ncr in ProcNCRs)
             {
-                int LastFilled = 0;
+                try
+                {
+                    int LastFilled = 0;
+                    var configurationVariables = _context.ConfigurationVariables.FirstOrDefault(config => config.ID == 1);
+                    if (configurationVariables == null)
+                    {
+                        throw new Exception("Configurations variables cannot be null.");
+                    }
 
-                // Converting DateOnly to DateTime by providing Time Info
-                if (ncr.Operations != null)
-                {
-                    TimeSpan differenceLastFilled = (TimeSpan)(nowToronto - ncr.Operations.CreatedOn);
-                    LastFilled = differenceLastFilled.Days;
-                    procTotal++;
-                }
+                    // Converting DateOnly to DateTime by providing Time Info
+                    if (ncr.Operations != null)
+                    {
+                        TimeSpan differenceLastFilled = (TimeSpan)(nowToronto - ncr.Operations.CreatedOn);
+                        LastFilled = differenceLastFilled.Days;
+                        procTotal.Add(ncr);
+                    }
 
-                //Count the amount of days at each category
-                if (LastFilled == 1)
-                {
-                    proc24++;
+                    //Count the amount of days at each category
+                    if (LastFilled == 1)
+                    {
+                        proc24.Add(ncr);
+                    }
+                    else if (LastFilled == 2)
+                    {
+                        proc48.Add(ncr);
+                    }
+                    else if (LastFilled > 2)
+                    {
+                        proc5.Add(ncr);
+                    }
+                    else if (LastFilled >= configurationVariables.OverdueNCRsNotificationDays)
+                    {
+                        lgActive.Add(ncr);
+                    }
                 }
-                else if (LastFilled == 2)
+                catch (Exception)
                 {
-                    proc48++;
-                }
-                else if (LastFilled > 2)
-                {
-                    proc5++;
+                    Console.WriteLine("Failed to count NCR");
                 }
             }
 
-            return (proc24, proc48, proc5, procTotal);
+            return (proc24, proc48, proc5, procTotal, lgActive);
         }
 
-        public (int reinsp24, int reinsp48, int reinsp5, int reinspTotal) ReinspCounters(List<NCR> ReinspNCRs)
+        public (List<NCR> reinsp24, List<NCR> reinsp48, List<NCR> reinsp5, List<NCR> reinspTotal, List<NCR> lgActive) ReinspCounters()
         {
-            int reinspTotal = 0;
-            int reinsp24 = 0;
-            int reinsp48 = 0;
-            int reinsp5 = 0;
+            var ReinspNCRs = activeNCRs.Where(ncr => ncr.Phase == "Reinspection").ToList();
+
+            List<NCR> reinspTotal = new List<NCR>();
+            List<NCR> reinsp24 = new List<NCR>();
+            List<NCR> reinsp48 = new List<NCR>();
+            List<NCR> reinsp5 = new List<NCR>();
+            List<NCR> lgActive = new List<NCR>();
             var nowToronto = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time"));
 
             foreach (var ncr in ReinspNCRs)
             {
-                int LastFilled = 0;
+                try
+                {
+                    int LastFilled = 0;
+                    var configurationVariables = _context.ConfigurationVariables.FirstOrDefault(config => config.ID == 1);
+                    if (configurationVariables == null)
+                    {
+                        throw new Exception("Configurations variables cannot be null.");
+                    }
 
-                // Converting DateOnly to DateTime by providing Time Info
-                if (ncr.Procurement != null)
-                {
-                    TimeSpan differenceLastFilled = (TimeSpan)(nowToronto - ncr.Procurement.CreatedOn);
-                    LastFilled = differenceLastFilled.Days;
-                    reinspTotal++;
-                }
+                    // Converting DateOnly to DateTime by providing Time Info
+                    if (ncr.Procurement != null)
+                    {
+                        TimeSpan differenceLastFilled = (TimeSpan)(nowToronto - ncr.Procurement.CreatedOn);
+                        LastFilled = differenceLastFilled.Days;
+                        reinspTotal.Add(ncr);
+                    }
 
-                //Count the amount of days at each category
-                if (LastFilled == 1)
-                {
-                    reinsp24++;
+                    //Count the amount of days at each category
+                    if (LastFilled == 1)
+                    {
+                        reinsp24.Add(ncr);
+                    }
+                    else if (LastFilled == 2)
+                    {
+                        reinsp48.Add(ncr);
+                    }
+                    else if (LastFilled > 2)
+                    {
+                        reinsp5.Add(ncr);
+                    }
+                    else if (LastFilled >= configurationVariables.OverdueNCRsNotificationDays)
+                    {
+                        lgActive.Add(ncr);
+                    }
                 }
-                else if (LastFilled == 2)
+                catch (Exception)
                 {
-                    reinsp48++;
-                }
-                else if (LastFilled > 2)
-                {
-                    reinsp5++;
+                    Console.WriteLine("Failed to count NCR");
                 }
             }
 
-            return (reinsp24, reinsp48, reinsp5, reinspTotal);
+            return (reinsp24, reinsp48, reinsp5, reinspTotal, lgActive);
         }
     }
 }

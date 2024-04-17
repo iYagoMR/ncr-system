@@ -136,13 +136,34 @@
                         {
                             <p class="control-label">Images</p>
                             <div class="form-group details-images">
-                                @foreach (var image in Model.QualityRepresentative.QualityPhotos)
+                                @for (int i = 0; i < Model.QualityRepresentative.QualityPhotos.Count; i++)
                                 {
+                                    var image = Model.QualityRepresentative.QualityPhotos[i];
                                     string imageBase64 = Convert.ToBase64String(image.Content);
                                     string imageSrc = string.Format("data:" + image.MimeType + ";base64,{0}", imageBase64);
                                     <div class="card editor" style="width: 14rem;">
+                                        <!-- Button trigger modal -->
+                                        <button type="button" class="btn btn-primary expand-img" data-bs-toggle="modal" data-bs-target="#imgModal-@i">
+                                            <i class="bi bi-arrows-angle-expand"></i>
+                                        </button>
                                         <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="img-fluid rounded" />
-
+                                    </div>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="imgModal-@i" tabindex="-1" aria-labelledby="imgModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="imgModalLabel">Image</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="img-fluid rounded" />
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 }
                             </div>
@@ -276,13 +297,35 @@
                         {
                             <p class="control-label">Images</p>
                             <div class="form-group details-images">
-                                @foreach (var image in Model.Engineering.QualityPhotos)
+                                @for (int i = 0; i < Model.Engineering.QualityPhotos.Count; i++)
                                 {
+                                    var image = Model.Engineering.QualityPhotos[i];
                                     string imageBase64 = Convert.ToBase64String(image.Content);
                                     string imageSrc = string.Format("data:" + image.MimeType + ";base64,{0}", imageBase64);
-                                    <div class="card editor" style="width: 14rem;">
-                                        <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="img-fluid rounded" />
 
+                                    <div class="card editor" style="width: 14rem;">
+                                        <!-- Button trigger modal -->
+                                        <button type="button" class="btn btn-primary expand-img" data-bs-toggle="modal" data-bs-target="#imgModalEng-@i">
+                                            <i class="bi bi-arrows-angle-expand"></i>
+                                        </button>
+                                        <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="img-fluid rounded" />
+                                    </div>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="imgModalEng-@i" tabindex="-1" aria-labelledby="imgModalEngLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="imgModalEngLabel">Image</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="img-fluid rounded" />
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 }
                             </div>
@@ -402,13 +445,34 @@
                         {
                             <p class="control-label">Images</p>
                             <div class="form-group details-images">
-                                @foreach (var image in Model.Operations.QualityPhotos)
+                                @for (int i = 0; i < Model.Operations.QualityPhotos.Count; i++)
                                 {
+                                    var image = Model.Operations.QualityPhotos[i];
                                     string imageBase64 = Convert.ToBase64String(image.Content);
                                     string imageSrc = string.Format("data:" + image.MimeType + ";base64,{0}", imageBase64);
                                     <div class="card editor" style="width: 14rem;">
+                                        <!-- Button trigger modal -->
+                                        <button type="button" class="btn btn-primary expand-img" data-bs-toggle="modal" data-bs-target="#imgOperModal-@i">
+                                            <i class="bi bi-arrows-angle-expand"></i>
+                                        </button>
                                         <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="img-fluid rounded" />
-
+                                    </div>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="imgOperModal-@i" tabindex="-1" aria-labelledby="imgOperModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="imgOperModalLabel">Image</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="img-fluid rounded" />
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 }
                             </div>
@@ -537,13 +601,34 @@
                         {
                             <p class="control-label">Images</p>
                             <div class="form-group details-images">
-                                @foreach (var image in Model.Procurement.QualityPhotos)
+                                @for (int i = 0; i < Model.Procurement.QualityPhotos.Count; i++)
                                 {
+                                    var image = Model.Procurement.QualityPhotos[i];
                                     string imageBase64 = Convert.ToBase64String(image.Content);
                                     string imageSrc = string.Format("data:" + image.MimeType + ";base64,{0}", imageBase64);
                                     <div class="card editor" style="width: 14rem;">
+                                        <!-- Button trigger modal -->
+                                        <button type="button" class="btn btn-primary expand-img" data-bs-toggle="modal" data-bs-target="#imgProcModal-@i">
+                                            <i class="bi bi-arrows-angle-expand"></i>
+                                        </button>
                                         <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="img-fluid rounded" />
-
+                                    </div>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="imgProcModal-@i" tabindex="-1" aria-labelledby="imgProcModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="imgProcModalLabel">Image</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="img-fluid rounded" />
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 }
                             </div>
@@ -614,12 +699,34 @@
                         {
                             <p class="control-label">Images</p>
                             <div class="form-group details-images">
-                                @foreach (var image in Model.Reinspection.QualityPhotos)
+                                @for (int i = 0; i < Model.Reinspection.QualityPhotos.Count; i++)
                                 {
+                                    var image = Model.Reinspection.QualityPhotos[i];
                                     string imageBase64 = Convert.ToBase64String(image.Content);
                                     string imageSrc = string.Format("data:" + image.MimeType + ";base64,{0}", imageBase64);
                                     <div class="card editor" style="width: 14rem;">
+                                        <!-- Button trigger modal -->
+                                        <button type="button" class="btn btn-primary expand-img" data-bs-toggle="modal" data-bs-target="#imgReinspModal-@i">
+                                            <i class="bi bi-arrows-angle-expand"></i>
+                                        </button>
                                         <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="img-fluid rounded" />
+                                    </div>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="imgReinspModal-@i" tabindex="-1" aria-labelledby="imgReinspModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="imgReinspModalLabel">Image</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="img-fluid rounded" />
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 }
                             </div>
@@ -644,6 +751,10 @@
         </div>
     </div>
 </div>
+
+
+
+
 @section Scripts {
     <script>
         // Define ScrollIntoSection function globally

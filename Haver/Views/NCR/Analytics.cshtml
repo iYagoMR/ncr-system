@@ -341,9 +341,9 @@
 
                 <div class="navigator" id="navigator-SuppliersList">
                     <ul class="pagination">
-                        <li class="btn btn-primary previous" onclick="changePage('previous')">Previous</li>
+                        <li class="btn btn-primary previous" onclick="changePageSupp('previous')">Previous</li>
                         <li class="btn btn-primary page-counter-suppliers">1 of 3</li>
-                        <li class="btn btn-primary next" onclick="changePage('next')">Next</li>
+                        <li class="btn btn-primary next" onclick="changePageSupp('next')">Next</li>
                     </ul>
                 </div>
 
@@ -363,7 +363,7 @@
         //Parts defective by supplier
         //initialize variables
         var suppliersListPageNumber = 1;
-        var suppliesListTotalPages = 0;
+        var suppliersListTotalPages = 0;
 
         loadSuppliersList();
 
@@ -387,18 +387,34 @@
             loadPage(1);
 
             // Event handler for pagination links
-            window.changePage = function (btn) {
+            window.changePageSupp = function (btn) {
+                console.log("changepage");
                 if (btn == "previous" && suppliersListPageNumber != 1) {
                     var prevPage = suppliersListPageNumber - 1;
                     suppliersListPageNumber--;
                     loadPage(prevPage);
                 }
-                if (btn == "next" && suppliersListPageNumber < suppliesListTotalPages) {
+                if (btn == "next" && suppliersListPageNumber < suppliersListTotalPages) {
                     var nextPage = suppliersListPageNumber + 1;
                     suppliersListPageNumber++;
                     loadPage(nextPage);
+
                 }
             };
+
+            // // Event handler for pagination links
+            // window.changePageNCRT = function (btn) {
+            //     if (btn == "previous" && NCRTimeListPageNumber != 1) {
+            //         var prevPage = NCRTimeListPageNumber - 1;
+            //         NCRTimeListPageNumber--;
+            //         loadPage(prevPage);
+            //     }
+            //     if (btn == "next" && NCRTimeListPageNumber < NCRTimeListTotalPages) {
+            //         var nextPage = NCRTimeListPageNumber + 1;
+            //         NCRTimeListPageNumber++;
+            //         loadPage(nextPage);
+            //     }
+            // };
 
             function loadPage(pageNum) {
                 $.ajax({
@@ -416,7 +432,7 @@
                     success: function (response) {
 
                         //Assign number of pages to the the universal variable
-                        partsListTotalPages = response.numbOfPages;
+                        suppliersListTotalPages = response.numbOfPages;
 
                         // Clear existing table rows
                         $('.ncr-list-row.suppliers-list').empty();
@@ -448,12 +464,12 @@
 
                         //Disable previous btn if in page one
                         $('#navigator-SuppliersList .previous').css('background-color', '#19416d');
-                        if (partsListPageNumber <= 1) {
+                        if (suppliersListPageNumber <= 1) {
                             $('#navigator-SuppliersList .previous').css('background-color', 'grey');
                         }
                         //Disable next btn if in last page
                         $('#navigator-SuppliersList .next').css('background-color', '#19416d');
-                        if (partsListPageNumber == partsListTotalPages) {
+                        if (suppliersListPageNumber == suppliersListTotalPages) {
                             $('#navigator-SuppliersList .next').css('background-color', 'grey');
                         }
                         if (response.pagedData.length < 1) {
@@ -517,6 +533,7 @@
                     $('#supChangeBadge i').css('display', 'block');
                     $('#supEnoughData').css('display', 'flex');
                     $('#supNotEnoughData').css('display', 'none');
+                    $('#supChangeBadge i').css('transform', 'rotate(0rad)');
 
                     if (periodChange == null) {
                         $('#supPeriodChange').text('---');
@@ -535,6 +552,8 @@
                     }
                     else if (isChangePositive == true) {
                         $('#supStatus').text('There was a PoP increase');
+                        $('#ChangeBadge').css('background-color', '#AF3939');
+                        $('#ChangeBadge i').css('color', 'red');
                     }
                     if (periodChange == null) {
                         $('#supStatus').text('Not enough data to compare');
@@ -878,6 +897,7 @@
                     $('#ChangeBadge i').css('display', 'block');
                     $('#EnoughData').css('display', 'flex');
                     $('#NotEnoughData').css('display', 'none');
+                    $('#ChangeBadge i').css('transform', 'rotate(0rad)');
 
                     if (periodChange == null) {
                         $('#periodChange').text('---');
@@ -896,6 +916,8 @@
                     }
                     else if (isChangePositive == true) {
                         $('#Status').text('There was a PoP increase');
+                        $('#ChangeBadge').css('background-color', '#AF3939');
+                        $('#ChangeBadge i').css('color', 'red');
                     }
                     if (periodChange == null) {
                         $('#Status').text('Not enough data to compare');

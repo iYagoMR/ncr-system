@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "95AvCwzWkmIdu8LgOl9kErWXsxNQ6cpTbDyq7L3mTwRceygPZryQGA+s2wbEOEHZ2cxzNOSusd0E0C95Di5gBQ==",
+  "dgSpecHash": "cdo23FjQWu+2gU4ObkPmZLZtIESd8+SO01LcjGokyhBIh1gv/gz/ycjIcz9VuhnqMJH/tN/defKRzyAQrvfQTQ==",
   "success": true,
   "projectFilePath": "D:\\My Work\\backup5 - Copy (5)\\haver7-iago\\Haver\\Haver.csproj",
   "expectedPackageFiles": [
@@ -113,6 +113,7 @@
     "C:\\Users\\iagor\\.nuget\\packages\\microsoft.extensions.fileproviders.embedded\\7.0.17\\microsoft.extensions.fileproviders.embedded.7.0.17.nupkg.sha512",
     "C:\\Users\\iagor\\.nuget\\packages\\microsoft.extensions.fileproviders.physical\\3.1.0\\microsoft.extensions.fileproviders.physical.3.1.0.nupkg.sha512",
     "C:\\Users\\iagor\\.nuget\\packages\\microsoft.extensions.filesystemglobbing\\3.1.0\\microsoft.extensions.filesystemglobbing.3.1.0.nupkg.sha512",
+    "C:\\Users\\iagor\\.nuget\\packages\\microsoft.extensions.hosting.abstractions\\6.0.0\\microsoft.extensions.hosting.abstractions.6.0.0.nupkg.sha512",
     "C:\\Users\\iagor\\.nuget\\packages\\microsoft.extensions.identity.core\\7.0.17\\microsoft.extensions.identity.core.7.0.17.nupkg.sha512",
     "C:\\Users\\iagor\\.nuget\\packages\\microsoft.extensions.identity.stores\\7.0.17\\microsoft.extensions.identity.stores.7.0.17.nupkg.sha512",
     "C:\\Users\\iagor\\.nuget\\packages\\microsoft.extensions.logging\\7.0.0\\microsoft.extensions.logging.7.0.0.nupkg.sha512",
@@ -153,6 +154,9 @@
     "C:\\Users\\iagor\\.nuget\\packages\\nuget.projectmodel\\6.6.1\\nuget.projectmodel.6.6.1.nupkg.sha512",
     "C:\\Users\\iagor\\.nuget\\packages\\nuget.protocol\\6.6.1\\nuget.protocol.6.6.1.nupkg.sha512",
     "C:\\Users\\iagor\\.nuget\\packages\\nuget.versioning\\6.6.1\\nuget.versioning.6.6.1.nupkg.sha512",
+    "C:\\Users\\iagor\\.nuget\\packages\\quartz\\3.8.1\\quartz.3.8.1.nupkg.sha512",
+    "C:\\Users\\iagor\\.nuget\\packages\\quartz.extensions.dependencyinjection\\3.8.1\\quartz.extensions.dependencyinjection.3.8.1.nupkg.sha512",
+    "C:\\Users\\iagor\\.nuget\\packages\\quartz.extensions.hosting\\3.8.1\\quartz.extensions.hosting.3.8.1.nupkg.sha512",
     "C:\\Users\\iagor\\.nuget\\packages\\questpdf\\2023.12.6\\questpdf.2023.12.6.nupkg.sha512",
     "C:\\Users\\iagor\\.nuget\\packages\\runtime.debian.8-x64.runtime.native.system.security.cryptography.openssl\\4.3.2\\runtime.debian.8-x64.runtime.native.system.security.cryptography.openssl.4.3.2.nupkg.sha512",
     "C:\\Users\\iagor\\.nuget\\packages\\runtime.fedora.23-x64.runtime.native.system.security.cryptography.openssl\\4.3.2\\runtime.fedora.23-x64.runtime.native.system.security.cryptography.openssl.4.3.2.nupkg.sha512",

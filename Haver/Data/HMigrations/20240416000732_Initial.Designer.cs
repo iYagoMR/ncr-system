@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Haver.Data.HMigrations
 {
     [DbContext(typeof(HaverContext))]
-    [Migration("20240410034812_Initial")]
+    [Migration("20240416000732_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -263,6 +263,9 @@ namespace Haver.Data.HMigrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("BLOB");
 
+                    b.Property<string>("SectionUpdated")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
@@ -390,6 +393,9 @@ namespace Haver.Data.HMigrations
                     b.Property<string>("RevisionedBy")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("SectionUpdated")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
@@ -441,6 +447,9 @@ namespace Haver.Data.HMigrations
                     b.Property<int?>("EngineeringID")
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("ExpecDateReturnReminded")
+                        .HasColumnType("INTEGER");
+
                     b.Property<bool>("IsNCRArchived")
                         .HasColumnType("INTEGER");
 
@@ -475,6 +484,9 @@ namespace Haver.Data.HMigrations
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("BLOB");
+
+                    b.Property<string>("SectionUpdated")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Status")
                         .HasColumnType("TEXT");
@@ -537,6 +549,37 @@ namespace Haver.Data.HMigrations
                     b.ToTable("NCRNumbers");
                 });
 
+            modelBuilder.Entity("Haver.Models.Notification", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreateOn")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("EmployeeID")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Type")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("wasSeen")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("EmployeeID");
+
+                    b.ToTable("Notifications");
+                });
+
             modelBuilder.Entity("Haver.Models.Operations", b =>
                 {
                     b.Property<int>("ID")
@@ -580,6 +623,9 @@ namespace Haver.Data.HMigrations
 
                     b.Property<int>("PrelDecisionID")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("SectionUpdated")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("UpdatedBy")
                         .HasMaxLength(256)
@@ -777,6 +823,9 @@ namespace Haver.Data.HMigrations
                     b.Property<int?>("RMANo")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("SectionUpdated")
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("SuppItemsBack")
                         .HasColumnType("INTEGER");
 
@@ -850,6 +899,9 @@ namespace Haver.Data.HMigrations
                         .HasMaxLength(255)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("SectionUpdated")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("SupplierID")
                         .HasColumnType("INTEGER");
 
@@ -898,6 +950,9 @@ namespace Haver.Data.HMigrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateOnly>("ReinspectionDate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SectionUpdated")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("UpdatedBy")
@@ -998,6 +1053,29 @@ namespace Haver.Data.HMigrations
                     b.ToTable("VideoLinks");
                 });
 
+            modelBuilder.Entity("Haver.Utilities.ConfigurationVariable", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("ArchiveNCRsYears")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("DateToRunArchiveJob")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("DateToRunNotificationJob")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("OverdueNCRsNotificationDays")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("ConfigurationVariables");
+                });
+
             modelBuilder.Entity("Haver.Models.EmployeePhoto", b =>
                 {
                     b.HasOne("Haver.Models.Employee", "Employee")
@@ -1092,6 +1170,17 @@ namespace Haver.Data.HMigrations
                     b.Navigation("QualityRepresentative");
 
                     b.Navigation("Reinspection");
+                });
+
+            modelBuilder.Entity("Haver.Models.Notification", b =>
+                {
+                    b.HasOne("Haver.Models.Employee", "Employee")
+                        .WithMany("Notifications")
+                        .HasForeignKey("EmployeeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Employee");
                 });
 
             modelBuilder.Entity("Haver.Models.Operations", b =>
@@ -1314,6 +1403,8 @@ namespace Haver.Data.HMigrations
                     b.Navigation("EmployeePhoto");
 
                     b.Navigation("EmployeeThumbnail");
+
+                    b.Navigation("Notifications");
                 });
 
             modelBuilder.Entity("Haver.Models.EngReview", b =>

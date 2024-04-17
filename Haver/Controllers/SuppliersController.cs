@@ -11,6 +11,7 @@ using Haver.CustomControllers;
 using System.Numerics;
 using Microsoft.AspNetCore.Authorization;
 using OfficeOpenXml;
+using Org.BouncyCastle.Utilities.Encoders;
 
 
 namespace Haver.Controllers
@@ -55,9 +56,16 @@ namespace Haver.Controllers
                     return Redirect(ViewData["returnURL"].ToString());
                 }
             }
-            catch (DbUpdateException)
+            catch (DbUpdateException dex)
             {
-                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+                if (dex.GetBaseException().Message.Contains("UNIQUE constraint failed"))
+                {
+                    ModelState.AddModelError("", "Unable to save changes. Supplier code alredy exists.");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+                }
             }
 
             return View(Supplier);

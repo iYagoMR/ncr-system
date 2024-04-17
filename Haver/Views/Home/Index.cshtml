@@ -4,6 +4,10 @@
     ViewData["Title"] = "Dashboard";
 }
 
+<div class="alert alert-warning standard-border-bottom" role="alert">
+    Please be informed that our email notification service is currently operating under limitations due to a daily sending cap. To ensure uninterrupted functionality, transitioning to the use of a company email domain is necessary.
+</div>
+
 <div>
     <h1>Dashboard</h1>
 
@@ -11,7 +15,6 @@
         <hr />
     </nav>
 </div>
-
 
 <div class="row dashboard-cards">
     <div class="col-md-6 stats-cards-dashboard detailed-cards">
@@ -21,17 +24,17 @@
                     <div class="card-body">
                         <h5 class="card-title">NCRs in <b>Quality Rep.</b></h5>
                         <div class="time-counters">
-                            <a asp-controller="NCR" asp-action="Index" asp-route-filter1="Quality Representative">
+                            <a asp-controller="NCR" asp-action="Index" asp-route-SelectedOption="Quality Representative">
                                 <p class="card-text">@ViewBag.QualTotal</p><span>Total</span>
                             </a>
-                            <a href="#">
+                            <a asp-controller="NCR" asp-action="Index" asp-route-ncrsByActiveTime="24h" asp-route-SelectedOption="Quality Representative">
                                 <p class="card-text">@ViewBag.Qual24</p><span>24h</span>
                             </a>
-                            <a href="#">
+                            <a asp-controller="NCR" asp-action="Index" asp-route-ncrsByActiveTime="48h" asp-route-SelectedOption="Quality Representative">
                                 <p class="card-text">@ViewBag.Qual48</p><span>48h</span>
                             </a>
-                            <a href="#">
-                                <p class="card-text">@ViewBag.Qual5</p><span>+5d</span>
+                            <a asp-controller="NCR" asp-action="Index" asp-route-ncrsByActiveTime="+3d" asp-route-SelectedOption="Quality Representative">
+                                <p class="card-text">@ViewBag.Qual5</p><span>+3d</span>
                             </a>
                         </div>
                     </div>
@@ -40,17 +43,17 @@
                     <div class="card-body">
                         <h5 class="card-title">NCRs in <b>Engineering</b></h5>
                         <div class="time-counters">
-                            <a asp-controller="NCR" asp-action="Index" asp-route-filter1="Engineering">
+                            <a asp-controller="NCR" asp-action="Index" asp-route-SelectedOption="Engineering">
                                 <p class="card-text">@ViewBag.EngTotal</p><span>Total</span>
                             </a>
-                            <a href="#">
+                            <a asp-controller="NCR" asp-action="Index" asp-route-ncrsByActiveTime="24h" asp-route-SelectedOption="Engineering">
                                 <p class="card-text">@ViewBag.Eng24</p><span>24h</span>
                             </a>
-                            <a href="#">
+                            <a asp-controller="NCR" asp-action="Index" asp-route-ncrsByActiveTime="48h" asp-route-SelectedOption="Engineering">
                                 <p class="card-text">@ViewBag.Eng48</p><span>48h</span>
                             </a>
-                            <a href="#">
-                                <p class="card-text">@ViewBag.Eng5</p><span>+5d</span>
+                            <a asp-controller="NCR" asp-action="Index" asp-route-ncrsByActiveTime="+3d" asp-route-SelectedOption="Engineering">
+                                <p class="card-text">@ViewBag.Eng5</p><span>+3d</span>
                             </a>
                         </div>
                     </div>
@@ -59,17 +62,17 @@
                     <div class="card-body">
                         <h5 class="card-title">NCRs in <b>Operations</b></h5>
                         <div class="time-counters">
-                            <a asp-controller="NCR" asp-action="Index" asp-route-filter1="Operations">
+                            <a asp-controller="NCR" asp-action="Index" asp-route-SelectedOption="Operations">
                                 <p class="card-text">@ViewBag.OperTotal</p><span>Total</span>
                             </a>
-                            <a href="#">
+                            <a asp-controller="NCR" asp-action="Index" asp-route-ncrsByActiveTime="24h" asp-route-SelectedOption="Operations">
                                 <p class="card-text">@ViewBag.Oper24</p><span>24h</span>
                             </a>
-                            <a href="#">
+                            <a asp-controller="NCR" asp-action="Index" asp-route-ncrsByActiveTime="48h" asp-route-SelectedOption="Operations">
                                 <p class="card-text">@ViewBag.Oper48</p><span>48h</span>
                             </a>
-                            <a href="#">
-                                <p class="card-text">@ViewBag.Oper5</p><span>+5d</span>
+                            <a asp-controller="NCR" asp-action="Index" asp-route-ncrsByActiveTime="+3d" asp-route-SelectedOption="Operations">
+                                <p class="card-text">@ViewBag.Oper5</p><span>+3d</span>
                             </a>
                         </div>
                     </div>
@@ -80,17 +83,17 @@
                     <div class="card-body">
                         <h5 class="card-title">NCRs in <b>Procurement</b></h5>
                         <div class="time-counters">
-                            <a asp-controller="NCR" asp-action="Index" asp-route-filter1="Procurement">
+                            <a asp-controller="NCR" asp-action="Index" asp-route-SelectedOption="Procurement">
                                 <p class="card-text">@ViewBag.ProcTotal</p><span>Total</span>
                             </a>
-                            <a href="#">
+                            <a asp-controller="NCR" asp-action="Index" asp-route-ncrsByActiveTime="24h" asp-route-SelectedOption="Procurement">
                                 <p class="card-text">@ViewBag.Proc24</p><span>24h</span>
                             </a>
-                            <a href="#">
+                            <a asp-controller="NCR" asp-action="Index" asp-route-ncrsByActiveTime="48h" asp-route-SelectedOption="Procurement">
                                 <p class="card-text">@ViewBag.Proc48</p><span>48h</span>
                             </a>
-                            <a href="#">
-                                <p class="card-text">@ViewBag.Proc5</p><span>+5d</span>
+                            <a asp-controller="NCR" asp-action="Index" asp-route-ncrsByActiveTime="+3d" asp-route-SelectedOption="Procurement">
+                                <p class="card-text">@ViewBag.Proc5</p><span>+3d</span>
                             </a>
                         </div>
                     </div>
@@ -99,17 +102,17 @@
                     <div class="card-body">
                         <h5 class="card-title">NCRs in <b>Reinspection</b></h5>
                         <div class="time-counters">
-                            <a asp-controller="NCR" asp-action="Index" asp-route-filter1="Reinspection">
+                            <a asp-controller="NCR" asp-action="Index" asp-route-SelectedOption="Reinspection">
                                 <p class="card-text">@ViewBag.ReinspTotal</p><span>Total</span>
                             </a>
-                            <a href="#">
+                            <a asp-controller="NCR" asp-action="Index" asp-route-ncrsByActiveTime="24h" asp-route-SelectedOption="Reinspection">
                                 <p class="card-text">@ViewBag.Reinsp24</p><span>24h</span>
                             </a>
-                            <a href="#">
+                            <a asp-controller="NCR" asp-action="Index" asp-route-ncrsByActiveTime="48h" asp-route-SelectedOption="Reinspection">
                                 <p class="card-text">@ViewBag.Reinsp48</p><span>48h</span>
                             </a>
-                            <a href="#">
-                                <p class="card-text">@ViewBag.Reinsp5</p><span>+5d</span>
+                            <a asp-controller="NCR" asp-action="Index" asp-route-ncrsByActiveTime="+3d" asp-route-SelectedOption="Reinspection">
+                                <p class="card-text">@ViewBag.Reinsp5</p><span>+3d</span>
                             </a>
                         </div>
                     </div>
@@ -121,14 +124,14 @@
                             <a asp-controller="NCR" asp-action="Index">
                                 <p class="card-text">@ViewBag.ActiveTotal</p><span>Total</span>
                             </a>
-                            <a href="#">
+                            <a asp-controller="NCR" asp-action="Index" asp-route-ncrsByActiveTime="24h">
                                 <p class="card-text">@ViewBag.Active24</p><span>24h</span>
                             </a>
-                            <a href="#">
+                            <a asp-controller="NCR" asp-action="Index" asp-route-ncrsByActiveTime="48h">
                                 <p class="card-text">@ViewBag.Active48</p><span>48h</span>
                             </a>
-                            <a href="#">
-                                <p class="card-text">@ViewBag.Active5</p><span>+5d</span>
+                            <a asp-controller="NCR" asp-action="Index" asp-route-ncrsByActiveTime="+3d">
+                                <p class="card-text">@ViewBag.Active5</p><span>+3d</span>
                             </a>
                         </div>
                     </div>
@@ -204,7 +207,7 @@
                 @foreach (var item in Model)
                 {
                     <tr class="grey-rows">
-                        <td>
+                        <td class="ncr-num-td">
                             @if (item.NCRNum == null)
                             {
                                 <div>0000-000</div>
@@ -228,13 +231,13 @@
                                 <span style="color: var(--red);">@Html.DisplayFor(modelItem => item.Status)</span>
                             }
                         </td>
-                        <td>
+                        <td class="ncr-row-phase">
                             @Html.DisplayFor(modelItem => item.Phase)
                         </td>
-                        <td>
+                        <td class="pono-row">
                             @Html.DisplayFor(modelItem => item.QualityRepresentative.PoNo)
                         </td>
-                        <td>
+                        <td class="supplier-name-row">
                             @Html.DisplayFor(modelItem => item.QualityRepresentative.Supplier.SupplierName)
                         </td>
                         <td>

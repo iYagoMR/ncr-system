@@ -12,6 +12,22 @@ namespace Haver.Data.HMigrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "ConfigurationVariables",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    ArchiveNCRsYears = table.Column<int>(type: "INTEGER", nullable: false),
+                    OverdueNCRsNotificationDays = table.Column<int>(type: "INTEGER", nullable: false),
+                    DateToRunNotificationJob = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    DateToRunArchiveJob = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ConfigurationVariables", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "DraftEngineerings",
                 columns: table => new
                 {
@@ -134,7 +150,8 @@ namespace Haver.Data.HMigrations
                     CreatedBy = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "TEXT", nullable: true),
                     UpdatedBy = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    UpdatedOn = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    UpdatedOn = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    SectionUpdated = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -241,7 +258,8 @@ namespace Haver.Data.HMigrations
                     CreatedBy = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "TEXT", nullable: true),
                     UpdatedBy = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    UpdatedOn = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    UpdatedOn = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    SectionUpdated = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -261,7 +279,8 @@ namespace Haver.Data.HMigrations
                     CreatedBy = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "TEXT", nullable: true),
                     UpdatedBy = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    UpdatedOn = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    UpdatedOn = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    SectionUpdated = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -325,6 +344,30 @@ namespace Haver.Data.HMigrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Notifications",
+                columns: table => new
+                {
+                    ID = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Title = table.Column<string>(type: "TEXT", nullable: true),
+                    Message = table.Column<string>(type: "TEXT", nullable: true),
+                    Type = table.Column<string>(type: "TEXT", nullable: true),
+                    CreateOn = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    wasSeen = table.Column<bool>(type: "INTEGER", nullable: false),
+                    EmployeeID = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Notifications", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Notifications_Employees_EmployeeID",
+                        column: x => x.EmployeeID,
+                        principalTable: "Employees",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Engineerings",
                 columns: table => new
                 {
@@ -344,7 +387,8 @@ namespace Haver.Data.HMigrations
                     CreatedBy = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "TEXT", nullable: true),
                     UpdatedBy = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    UpdatedOn = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    UpdatedOn = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    SectionUpdated = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -375,7 +419,8 @@ namespace Haver.Data.HMigrations
                     CreatedBy = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "TEXT", nullable: true),
                     UpdatedBy = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    UpdatedOn = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    UpdatedOn = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    SectionUpdated = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -410,7 +455,8 @@ namespace Haver.Data.HMigrations
                     CreatedBy = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "TEXT", nullable: true),
                     UpdatedBy = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    UpdatedOn = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    UpdatedOn = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    SectionUpdated = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -449,6 +495,7 @@ namespace Haver.Data.HMigrations
                         .Annotation("Sqlite:Autoincrement", true),
                     NCRNum = table.Column<string>(type: "TEXT", nullable: true),
                     IsNCRArchived = table.Column<bool>(type: "INTEGER", nullable: false),
+                    ExpecDateReturnReminded = table.Column<bool>(type: "INTEGER", nullable: false),
                     IsNCRDraft = table.Column<bool>(type: "INTEGER", nullable: false),
                     VoidingReason = table.Column<string>(type: "TEXT", nullable: true),
                     Status = table.Column<string>(type: "TEXT", nullable: true),
@@ -470,7 +517,8 @@ namespace Haver.Data.HMigrations
                     CreatedBy = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "TEXT", nullable: true),
                     UpdatedBy = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
-                    UpdatedOn = table.Column<DateTime>(type: "TEXT", nullable: true)
+                    UpdatedOn = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    SectionUpdated = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -770,6 +818,11 @@ namespace Haver.Data.HMigrations
                 column: "ReinspectionID");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Notifications_EmployeeID",
+                table: "Notifications",
+                column: "EmployeeID");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OperationsS_PrelDecisionID",
                 table: "OperationsS",
                 column: "PrelDecisionID");
@@ -919,6 +972,9 @@ namespace Haver.Data.HMigrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "ConfigurationVariables");
+
+            migrationBuilder.DropTable(
                 name: "EmployeePhotos");
 
             migrationBuilder.DropTable(
@@ -929,6 +985,9 @@ namespace Haver.Data.HMigrations
 
             migrationBuilder.DropTable(
                 name: "NCRs");
+
+            migrationBuilder.DropTable(
+                name: "Notifications");
 
             migrationBuilder.DropTable(
                 name: "QualityPhotos");

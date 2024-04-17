@@ -1,5 +1,7 @@
 ﻿using Haver.DraftModels;
 using Haver.Models;
+using Haver.Utilities;
+using iTextSharp.text;
 using Microsoft.EntityFrameworkCore;
 using Org.BouncyCastle.Asn1.Ocsp;
 
@@ -59,9 +61,19 @@ namespace Haver.Data
         public DbSet<EmployeeThumbnail> EmployeeThumbnails { get; set; }
         public DbSet<VideoLink> VideoLinks { get; set; }
         public DbSet<Employee> Employees { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
+
+        public DbSet<ConfigurationVariable> ConfigurationVariables { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //One to one relationship between employee and notification
+            modelBuilder.Entity<Employee>()
+                .HasMany(a => a.Notifications)
+                .WithOne(b => b.Employee)
+                .HasForeignKey(b => b.EmployeeID);
+
+
             //Add a unique index to the Employee Email
             modelBuilder.Entity<Employee>()
                 .HasIndex(a => new { a.Email })
@@ -91,6 +103,12 @@ namespace Haver.Data
             modelBuilder.Entity<Supplier>()
                 .HasIndex(a => new { a.SupplierCode })
                 .IsUnique();
+
+            // Configure cascade delete Employee to notifications
+            modelBuilder.Entity<Employee>()
+                .HasMany(p => p.Notifications)
+                .WithOne(c => c.Employee)
+                .OnDelete(DeleteBehavior.Cascade);
 
             // Configure cascading delete for DraftEngineering related entities
             modelBuilder.Entity<DraftQualityRepresentative>()
@@ -188,7 +206,10 @@ namespace Haver.Data
                             break;
 
                         case EntityState.Added:
-                            //trackable.CreatedOn = now;
+                            if(UserName != "Seed Data")
+                            {
+                                trackable.CreatedOn = now;
+                            }
                             trackable.CreatedBy = UserName;
                             trackable.UpdatedOn = now;
                             trackable.UpdatedBy = UserName;
@@ -197,5 +218,6 @@ namespace Haver.Data
                 }
             }
         }
+
     }
 }

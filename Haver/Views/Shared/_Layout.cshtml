@@ -42,24 +42,52 @@
                     }
 
                 </ul>
-                <div class="dropdown layout-mobile-nav">
-                    <button class="dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-list"></i>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                        @if (User.IsInRole("Admin") || User.IsInRole("Quality Inspector") || User.IsInRole("Engineer") || User.IsInRole("Operations Manager") || User.IsInRole("Procurement"))
-                        {
-                            <li><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a></li>
-                            <li><a class="nav-link" asp-area="" asp-controller="NCR" asp-action="Index">NCR</a></li>
-                        }
-                        @if(User.IsInRole("Admin"))
-                        {
-                            <li><a class="nav-link" asp-area="" asp-controller="Employee" asp-action="Index">Employees</a></li>
-                            <li><a class="nav-link" asp-area="" asp-controller="Lookup" asp-action="Index">Lookups</a></li>
-                        }
-                    </ul>
-                </div>
-                <div class="justify-content-end">
+                @if (User.IsInRole("Admin") || User.IsInRole("Quality Inspector") || User.IsInRole("Engineer") || User.IsInRole("Operations Manager") || User.IsInRole("Procurement"))
+                {
+                    <div class="dropdown layout-mobile-nav">
+                        <button class="dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-list"></i>
+                        </button>   
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                            @if (User.IsInRole("Admin") || User.IsInRole("Quality Inspector") || User.IsInRole("Engineer") || User.IsInRole("Operations Manager") || User.IsInRole("Procurement"))
+                            {
+                                <li><a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Dashboard</a></li>
+                                <li><a class="nav-link" asp-area="" asp-controller="NCR" asp-action="Index">NCR</a></li>
+                            }
+                            @if(User.IsInRole("Admin"))
+                            {
+                                <li><a class="nav-link" asp-area="" asp-controller="Employee" asp-action="Index">Employees</a></li>
+                                <li><a class="nav-link" asp-area="" asp-controller="Lookup" asp-action="Index">Lookups</a></li>
+                            }
+                        </ul>
+                    </div>
+                }
+                <div class="justify-content-end user-notification-menu">
+                    @if (User.IsInRole("Admin") || User.IsInRole("Quality Inspector") || User.IsInRole("Engineer") || User.IsInRole("Operations Manager") || User.IsInRole("Procurement"))
+                    {
+                        <!-- Button trigger modal -->
+                        <button class="notification-icon-button" type="button" data-toggle="modal" data-target="#notificationModalCenter">
+                            <i class="bi bi-bell"></i>
+                            <span></span>
+                        </button>
+
+                        <!-- Modal -->
+                        <div class="modal fade notification-modal" id="notificationModalCenter" tabindex="-1" role="dialog" aria-labelledby="notificationModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLongTitle">Notifications</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
                     <partial name="_LoginPartial" />
                 </div>
             </div>
@@ -76,6 +104,7 @@
             &copy; 2024 - Haver
         </div>
     </footer>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
@@ -88,6 +117,151 @@
     <script src="~/js/header-nav.js"></script>
 
     <script>
+
+
+        LoadNotifications();
+
+        function LoadNotifications() {
+            $.ajax({
+                type: 'GET',
+                url: "/Notification/LoadNotifications",
+                dataType: 'json',
+                contextType: "application/json; charset=utf8",
+                dataType: "json",
+                success: function (response) {
+                    console.log(response);
+
+                    // Clear existing table rows
+                    $('.notification-modal .modal-body').empty();
+
+                    // Populate table with new data
+                    $.each(response, function (index, notification) {
+                        //decide which icon to use
+                        var icon;
+                        var iconBackgroundColor;
+                        if (notification.type == "createFill") {
+                            icon = '<i class="bi bi-pencil-square" style=""></i>'
+                            iconBackgroundColor = 'style=" background-color: var(--blue);"'
+                        }
+                        else if (notification.type == "edited") {
+                            icon = '<i class="bi bi-pencil"></i>'
+                            iconBackgroundColor = 'style=" background-color: var(--yellow);"'
+                        }
+                        else if (notification.type == "rejected") {
+                            icon = '<i class="bi bi-file-earmark-excel"></i>'
+                            iconBackgroundColor = 'style=" background-color: var(--red);"'
+                        }
+                        else if (notification.type == "rejectedTwice") {
+                            icon = '<i class="bi bi-file-earmark-lock2"></i>'
+                            iconBackgroundColor = 'style=" background-color: var(--red);"'
+                        }
+                        else if (notification.type == "close") {
+                            icon = '<i class="bi bi-file-earmark-check"></i>'
+                            iconBackgroundColor = 'style=" background-color: var(--green);"'
+                        }
+                        else if (notification.type == "overdueFill") {
+                            icon = '<i class="bi bi-alarm"></i>'
+                            iconBackgroundColor = 'style=" background-color: var(--text2);"'
+                        }
+                        else if (notification.type == "overdueNCR") {
+                            icon = '<i class="bi bi-calendar3"></i>'
+                            iconBackgroundColor = 'style="background-color: var(--text2);"'
+                        }
+                        else if (notification.type == "expecDateReturn") {
+                            icon = '<i class="bi bi-box-seam"></i>'
+                            iconBackgroundColor = 'style="background-color: #084d57;"'
+                        }
+
+                        var notificationImage = '<div class="notification-icon"' + iconBackgroundColor + '>' + icon + '</div>'
+
+                        var notificationHtml =
+                            '<div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">' +
+                            '<div class="toast-header">' +
+                                notificationImage +
+                                '<strong class="me-auto">' + notification.title + '</strong>' +
+                                '<small>' + notification.date + '</small>' +
+                                '<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close" style="font-size: 1.5rem;" onclick="DeleteNotification(' + notification.id + ')"><span b-2frekbpj7o="" aria-hidden="true" style="color: black;">×</span></button>' +
+                            '</div>' +
+                            '<div class="toast-body">' + notification.message + '</div>' + // Assuming you have a message property in your notification object
+                            '</div>';
+
+                        $('.notification-modal .modal-body').append(notificationHtml);
+                    });
+
+                },
+                error: function (error) {
+
+                    console.log(error);
+                }
+            });
+        }
+
+        function DeleteNotification(id) {
+            $.ajax({
+                type: 'POST',
+                url: "/Notification/DeleteNotification",
+                dataType: 'json',
+                data: { id: id },
+                contextType: "application/json; charset=utf8",
+                dataType: "json",
+                success: function (response) {
+                    console.log("Notification deleted");
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        $('.notification-icon-button').click(function () {
+            NotificationSeen();
+        });
+        function NotificationSeen() {
+            $.ajax({
+                type: 'POST',
+                url: "/Notification/HandleNotificationView",
+                dataType: 'json',
+                contextType: "application/json; charset=utf8",
+                dataType: "json",
+                success: function (response) {
+                    console.log("Notifications viewed");
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        LoadNotificationCounter();
+
+        function LoadNotificationCounter() {
+            $.ajax({
+                type: 'GET',
+                url: "/Notification/LoadNotificationCounter",
+                dataType: 'json',
+                contextType: "application/json; charset=utf8",
+                dataType: "json",
+                success: function (response) {
+                    var counter = response > 9 ? '9+' : response;
+
+                    // Clear existing table rows
+                    if (response > 0) {
+                        $('.notification-icon-button span').css('display', 'block');
+                        $('.notification-icon-button span').append(counter);
+                    }
+                    else {
+                        $('.notification-icon-button').css('margin-right', '0');
+                    }
+
+                },
+                error: function (error) {
+
+                    console.log(error);
+                }
+            });
+        }
+
+
         function activateLink(link) {
             // Remove 'activated' class from previously clicked link
             const activeLink = document.querySelector('.nav-link.activated');

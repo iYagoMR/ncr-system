@@ -13,6 +13,8 @@ namespace Haver.Models
 
         public bool IsNCRArchived { get; set; }
 
+        public bool ExpecDateReturnReminded { get; set; }
+
         public bool IsNCRDraft { get; set; }
 
         [Display(Name = "Voiding reason")]

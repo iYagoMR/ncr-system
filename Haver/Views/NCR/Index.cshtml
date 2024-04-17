@@ -133,8 +133,14 @@ else
     <div class="filtering-fields form-horizontal">
         <div class="row">
             <div class="form-group col-md-3">
-                <label class="control-label">Search by NCR number</label>
-                @Html.TextBox("SearchString", null, new { @class = "form-control search-box", @placeholder = "Ex: 2024-023" })
+                <label class="control-label">Search NCR number</label>
+                <input name="SearchString" class="form-control" list="datalistOptions" id="exampleDataList" placeholder="Ex: 2024-010">
+                <datalist id="datalistOptions">
+                    @foreach (var ncr in ViewBag.NCRsToDL)
+                    {
+                        <option value="@ncr.NCRNum"></option>
+                    }
+                </datalist>
             </div>
             <div class="form-group col-md-3">
                 <label class="control-label">Filter by Supplier</label>
@@ -144,8 +150,9 @@ else
                 <label class="control-label">Filter by Phase</label>
                 @Html.DropDownList("SelectedOption", new List<SelectListItem>
                 {
-                new SelectListItem { Text = "Operations", Value = "Operations" },
+                new SelectListItem { Text = "Quality Representative", Value = "Quality Representative" },
                 new SelectListItem { Text = "Engineering", Value = "Engineering" },
+                new SelectListItem { Text = "Operations", Value = "Operations" },
                 new SelectListItem { Text = "Procurement", Value = "Procurement" },
                 new SelectListItem { Text = "Reinspection", Value = "Reinspection" }
                 }, "All Phases", htmlAttributes: new { @class = "form-select" })
@@ -154,6 +161,15 @@ else
                 <label class="form-check-label" for="flexSwitchCheckDefault">Show inactive/closed NCRs?</label>
                 <input class="form-check-input" type="checkbox" name="active" id="flexSwitchCheckDefault">
             </div>
+@*             <div class="form-group col-md-3">
+                <label class="control-label">Filter by time since last filled</label>
+                @Html.DropDownList("ncrsByActiveTime", new List<SelectListItem>
+                {
+                new SelectListItem { Text = "+3d", Value = "+3d" },
+                new SelectListItem { Text = "48h", Value = "48h" },
+                new SelectListItem { Text = "24h", Value = "24h" },
+                }, "All Periods", htmlAttributes: new { @class = "form-select" })
+            </div> *@
             <div class="form-group col-md-4 align-self-end fieltering-btns">
                 <button type="submit" name="actionButton" class="btn btn-primary">
                     <i class="bi bi-funnel-fill"></i>
@@ -200,7 +216,7 @@ else
                     string rowVersionBase64 = Convert.ToBase64String(item.RowVersion);
 
                     <tr id="tr-@item.ID">
-                        <td>
+                        <td class="ncr-num-td">
                             @if(item.NCRNum == null){
                                 <div>0000-000</div>
                             }
@@ -231,19 +247,19 @@ else
                                 <span style="color: var(--haver-blue);">@Html.DisplayFor(modelItem => item.Status)</span>
                             }
                         </td>
-                        <td>
+                        <td class="ncr-row-phase">
                             @Html.DisplayFor(modelItem => item.Phase)
                         </td>
-                        <td>
+                        <td class="pono-row">
                             @Html.DisplayFor(modelItem => item.QualityRepresentative.PoNo)
                         </td>
-                        <td>
+                        <td class="supplier-name-row">
                             @Html.DisplayFor(modelItem => item.QualityRepresentative.Supplier.SupplierName)
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.CreatedOnDO)
                         </td>
-                        <td>
+                        <td class="details-menu-row">
                             <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.ID"><i class="bi bi-card-list"></i>Details</a>
 
                             @* <a class="btn btn-primary" href="@Url.Action("DownloadPDF", "NCR", new { id = @item.ID })"><i class="bi bi-download"></i>Download PDF</a> *@
@@ -272,11 +288,9 @@ else
                                     {
                                         <li><a class="dropdown-item" asp-action="CreateReinspection" asp-route-id="@item.ID" asp-route-rowVersion="@rowVersionBase64">Fill in section</a></li>
                                     }
-                                    @if (item.Status != "Active" && User.IsInRole("Admin"))
-                                    {
-                                        <li><a class="dropdown-item" href="@Url.Action("DownloadPDF", "NCR", new { id = @item.ID })">Download PDF</a></li>
+
+                                    <li><a class="dropdown-item" href="@Url.Action("DownloadPDF", "NCR", new { id = @item.ID })">Download PDF</a></li>
                                         
-                                    }
                                     @if (item.PrevNCRID != null)
                                     {
                                         <li><a class="dropdown-item" asp-action="Details" asp-route-id="@item.PrevNCRID">Go to prev NCR</a></li>
@@ -418,10 +432,7 @@ else
                                 {
                                     <a class="btn btn-primary" asp-action="CreateReinspection" asp-route-id="@item.ID" asp-route-rowVersion="@rowVersionBase64">Fill in section</a>
                                 }
-                                @if (item.Status != "Active" && User.IsInRole("Admin"))
-                                {
-                                    <a class="btn btn-primary" href="@Url.Action("DownloadPDF", "NCR", new { id = @item.ID })">Download PDF</a>
-                                }
+                                <a class="btn btn-primary" href="@Url.Action("DownloadPDF", "NCR", new { id = @item.ID })">Download PDF</a>
                                 @if (item.PrevNCRID != null)
                                 {
                                     <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.PrevNCRID">Go to prev NCR</a>

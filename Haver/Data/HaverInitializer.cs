@@ -1,4 +1,5 @@
 ﻿using Haver.Models;
+using Haver.Utilities;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +17,7 @@ namespace Haver.Data
                 .ServiceProvider.GetRequiredService<HaverContext>();
             try
             {
-                context.Database.EnsureDeleted();
+                //context.Database.EnsureDeleted();
                 context.Database.Migrate();
 
                 if (!context.Employees.Any()) //Example, might be different names
@@ -26,7 +27,7 @@ namespace Haver.Data
                      {
                          FirstName = "Iago",
                          LastName = "Romao",
-                         Email = "iago.romao5@gmail.com"
+                         Email = "iago.romao5@gmail.com",
                      },
                      new Employee
                      {
@@ -61,6 +62,88 @@ namespace Haver.Data
 
                     context.SaveChanges();
                 }
+
+                if (!context.ConfigurationVariables.Any()) //Example, might be different names
+                {
+                    var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time"));
+                    // Calculate the start of tomorrow's day
+                    var tomorrowStart = now.Date.AddDays(1);
+
+                    context.ConfigurationVariables.AddRange(
+                    new ConfigurationVariable
+                    {
+                        ArchiveNCRsYears = 5,
+                        OverdueNCRsNotificationDays = 25,
+                        DateToRunNotificationJob = tomorrowStart,
+                        DateToRunArchiveJob = tomorrowStart,
+                    });
+                    context.SaveChanges();
+                }
+
+                //if (!context.Notifications.Any()) //Example, might be different names
+                //{
+                //    var nowToronto = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time"));
+
+                //    context.Notifications.AddRange(
+                //    new Notification
+                //    {
+                //        Title = "NCR overdue",
+                //        Type = "createFill",
+                //        Message = "asdaknsddddddd asdaasdasda asdmaknsdonaosdn asdasd asdas. <a href='/NCR/Details/1'>View NCR details</a>",
+                //        CreateOn = nowToronto,
+                //        EmployeeID = 1
+                //    },
+                //    new Notification
+                //    {
+                //        Title = "NCR overdue two",
+                //        Type = "edited",
+                //        Message = "asdaknsddddddd asdaasdasda asdmaknsdonaosdn asdasd asdas dasdknaslknd",
+                //        CreateOn = nowToronto,
+                //        EmployeeID = 1
+                //    },
+                //    new Notification
+                //    {
+                //        Title = "NCR overdue two",
+                //        Type = "rejected",
+                //        Message = "asdaknsddddddd asdaasdasda asdmaknsdonaosdn asdasd asdas dasdknaslknd",
+                //        CreateOn = nowToronto,
+                //        EmployeeID = 1
+                //    },
+                //    new Notification
+                //    {
+                //        Title = "NCR overdue two",
+                //        Type = "overdueFill",
+                //        Message = "asdaknsddddddd asdaasdasda asdmaknsdonaosdn asdasd asdas dasdknaslknd",
+                //        CreateOn = nowToronto,
+                //        EmployeeID = 1
+                //    },
+                //    new Notification
+                //    {
+                //        Title = "NCR overdue two",
+                //        Type = "rejectedTwice",
+                //        Message = "asdaknsddddddd asdaasdasda asdmaknsdonaosdn asdasd asdas dasdknaslknd",
+                //        CreateOn = nowToronto,
+                //        EmployeeID = 1
+                //    },
+                //    new Notification
+                //    {
+                //        Title = "NCR overdue two",
+                //        Type = "close",
+                //        Message = "asdaknsddddddd asdaasdasda asdmaknsdonaosdn asdasd asdas dasdknaslknd",
+                //        CreateOn = nowToronto,
+                //        EmployeeID = 1
+                //    },
+                //    new Notification
+                //    {
+                //        Title = "NCR overdue two",
+                //        Type = "overdueNCR",
+                //        Message = "asdaknsddddddd asdaasdasda asdmaknsdonaosdn asdasd asdas dasdknaslknd",
+                //        CreateOn = nowToronto,
+                //        EmployeeID = 1
+                //    });
+
+                //    context.SaveChanges();
+                //}
 
                 // Seed data for Parts if there aren't any.
                 string[] parts = new string[] { "Shaft, ~ 80 T-C 3 36 LOS 0 0", "Balance Weight, M 900 T/F-C 137 0.5", "Body Bracket, ~ 900 F-C ~ ~ F RM ST", "balance weight, M 900 T/F-C 186.7 0.5", "Shaft, ~ 100 F-C 5 0 LOS 0.1875 0", "bracket, ~ H-C SI", "bracket, ~ F-C RH G", "V-Belt Pulley, 2 3V 5.3", "feed box, M 8/9/1100 T/F/L-C 7 0 ST ~ ~", "back plate, M 8/9/1100 T/F-C 7 0 M SD ~" };
@@ -176,7 +259,7 @@ namespace Haver.Data
                 {
                     Random rnd = new Random();
                     DateTime startDate = new DateTime(2023, 1, 1);
-                    DateTime minDateToActive = new DateTime(2024, 3, 27);
+                    DateTime minDateToActive = new DateTime(2024, 3, 15);
                     DateTime endDate = DateTime.Today.AddDays(-7);
                     DateTime now = DateTime.Today;
 
@@ -255,19 +338,30 @@ namespace Haver.Data
                                 reinspectionFilled = rnd.Next(2) == 1;
                             }
 
+                            bool fillQualRep = false;
+                            bool fillEng = false;
+                            bool fillOper = false;
+                            bool fillProc = false;
+                            bool fillReinsp = false;
+
                             // Determine the phase based on which sections are filled
                             string phase = "Quality Representative";
                             string status = "Active";
                             if (qualityRepFilled)
                             {
+                                fillQualRep = true;
                                 if (engineeringFilled)
                                 {
+                                    fillEng = true;
                                     if (operationsFilled)
                                     {
+                                        fillOper = true;
                                         if (procurementFilled)
                                         {
+                                            fillProc = true;
                                             if (reinspectionFilled)
                                             {
+                                                fillReinsp = true;
                                                 phase = "Completed";
                                                 status = "Closed";
                                             }
@@ -300,7 +394,7 @@ namespace Haver.Data
                                 CreatedOn = createdOn,
                                 CreatedOnDO = createdOnDO,
                                 Phase = phase,
-                                QualityRepresentative = qualityRepFilled ? new QualityRepresentative
+                                QualityRepresentative = fillQualRep ? new QualityRepresentative
                                 {
                                     PoNo = rnd.Next(1000, 10000), // Example of random data
                                     SalesOrd = rnd.Next(1000, 10000).ToString(),
@@ -315,7 +409,7 @@ namespace Haver.Data
                                     SupplierID = rnd.Next(1, suppliers.Length), // Assuming you have the suppliers array accessible here
                                     ProcessApplicableID = rnd.Next(1, 3), // Assuming there are two processes
                                 } : null,
-                                Engineering = engineeringFilled ? new Engineering
+                                Engineering = fillEng ? new Engineering
                                 {
                                     CustIssueMsg = "Random customer issue message",
                                     Disposition = "Random disposition",
@@ -325,14 +419,14 @@ namespace Haver.Data
                                     CreatedOn = createdOn.AddDays(rnd.Next(1, 2)),
                                     EngReviewID = rnd.Next(1, 5), // Assuming you have the EngReviews array accessible here
                                 } : null,
-                                Operations = operationsFilled ? new Operations
+                                Operations = fillOper ? new Operations
                                 {
                                     OpManagerSign = "Operations manager signature",
                                     OperationsDate = createdOnDO.AddDays(rnd.Next(2, 3)), // Adjusting to be closer to creation date
                                     CreatedOn = createdOn.AddDays(rnd.Next(2, 3)),
                                     PrelDecisionID = rnd.Next(1, 5), // Assuming you have the PrelDecisions array accessible here
                                 } : null,
-                                Procurement = procurementFilled ? new Procurement
+                                Procurement = fillProc ? new Procurement
                                 {
                                     CarrierInfo = "Random carrier information",
                                     ProcurementSign = "Procurement signature",
@@ -341,7 +435,7 @@ namespace Haver.Data
                                     ProcurementDate = createdOnDO.AddDays(rnd.Next(3, 4)), // Adjusting to be closer to creation date
                                     NCRValue = rnd.Next(100, 1000), // Example of random data
                                 } : null,
-                                Reinspection = reinspectionFilled ? new Reinspection
+                                Reinspection = fillReinsp ? new Reinspection
                                 {
                                     ReinspecInspectorSign = "Reinspection signature",
                                     CreatedOn = createdOn.AddDays(rnd.Next(4, 5)),
@@ -382,19 +476,30 @@ namespace Haver.Data
                         bool procurementFilled = rnd.Next(2) == 1;
                         bool reinspectionFilled = rnd.Next(2) == 1;
 
+                        bool fillQualRep = false;
+                        bool fillEng = false;
+                        bool fillOper = false;
+                        bool fillProc = false;
+                        bool fillReinsp = false;
+
                         // Determine the phase based on which sections are filled
                         string phase = "Quality Representative";
                         string status = "Active";
                         if (qualityRepFilled)
                         {
+                            fillQualRep = true;
                             if (engineeringFilled)
                             {
+                                fillEng = true;
                                 if (operationsFilled)
                                 {
+                                    fillOper = true;
                                     if (procurementFilled)
                                     {
+                                        fillProc = true;
                                         if (reinspectionFilled)
                                         {
+                                            fillReinsp = true;
                                             phase = "Completed";
                                             status = "Closed";
                                         }
@@ -427,7 +532,7 @@ namespace Haver.Data
                             CreatedOn = createdOnPrevDays,
                             CreatedOnDO = createdOnDOPrevDays,
                             Phase = phase,
-                            QualityRepresentative = qualityRepFilled ? new QualityRepresentative
+                            QualityRepresentative = fillQualRep ? new QualityRepresentative
                             {
                                 PoNo = rnd.Next(1000, 10000), // Example of random data
                                 SalesOrd = rnd.Next(1000, 10000).ToString(),
@@ -442,7 +547,7 @@ namespace Haver.Data
                                 SupplierID = rnd.Next(1, suppliers.Length), // Assuming you have the suppliers array accessible here
                                 ProcessApplicableID = rnd.Next(1, 3), // Assuming there are two processes
                             } : null,
-                            Engineering = engineeringFilled ? new Engineering
+                            Engineering = fillEng ? new Engineering
                             {
                                 CustIssueMsg = "Random customer issue message",
                                 Disposition = "Random disposition",
@@ -452,14 +557,14 @@ namespace Haver.Data
                                 CreatedOn = createdOnPrevDays.AddDays(rnd.Next(1)),
                                 EngReviewID = rnd.Next(1, 5), // Assuming you have the EngReviews array accessible here
                             } : null,
-                            Operations = operationsFilled ? new Operations
+                            Operations = fillOper ? new Operations
                             {
                                 OpManagerSign = "Operations manager signature",
                                 OperationsDate = createdOnDOPrevDays.AddDays(rnd.Next(1)), // Adjusting to be closer to creation date
                                 CreatedOn = createdOnPrevDays.AddDays(rnd.Next(1)),
                                 PrelDecisionID = rnd.Next(1, 5), // Assuming you have the PrelDecisions array accessible here
                             } : null,
-                            Procurement = procurementFilled ? new Procurement
+                            Procurement = fillProc ? new Procurement
                             {
                                 CarrierInfo = "Random carrier information",
                                 ProcurementSign = "Procurement signature",
@@ -468,7 +573,7 @@ namespace Haver.Data
                                 ProcurementDate = createdOnDOPrevDays.AddDays(rnd.Next(1)), // Adjusting to be closer to creation date
                                 NCRValue = rnd.Next(100, 1000), // Example of random data
                             } : null,
-                            Reinspection = reinspectionFilled ? new Reinspection
+                            Reinspection = fillReinsp ? new Reinspection
                             {
                                 ReinspecInspectorSign = "Reinspection signature",
                                 CreatedOn = createdOnPrevDays.AddDays(rnd.Next(1)),

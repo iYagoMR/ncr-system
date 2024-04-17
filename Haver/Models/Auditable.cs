@@ -17,5 +17,7 @@ namespace Haver.Models
 
         [ScaffoldColumn(false)]
         public DateTime? UpdatedOn { get; set; }
+        [ScaffoldColumn(false)]
+        public string SectionUpdated { get; set; }
     }
 }

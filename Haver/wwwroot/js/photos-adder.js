@@ -38,7 +38,9 @@ function renderFileList(input, fileContainer) {
     // Display the selected files
     selectedFiles.forEach(function (file) {
         var listItem = document.createElement("li");
-        listItem.textContent = file.name;
+        var listItemText = document.createElement("p");
+        listItemText.classList.add("standard-border-bottom")
+        listItemText.textContent = file.name;
 
         // Add a button to remove the file
         var removeButton = document.createElement("button");
@@ -47,6 +49,7 @@ function renderFileList(input, fileContainer) {
 
         // Append the remove button to the list item
         listItem.appendChild(removeButton);
+        listItem.appendChild(listItemText);
 
         // Append the list item to the container
         fileListContainer.appendChild(listItem);

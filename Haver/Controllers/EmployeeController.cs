@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using System.Text;
 using System.Text.Encodings.Web;
 
@@ -73,7 +74,7 @@ namespace Haver.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("FirstName,LastName,Phone," +
-            "Email")] Employee employee, string[] selectedRoles)
+            "Email, Notification")] Employee employee, string[] selectedRoles)
         {
 
             try
@@ -414,7 +415,6 @@ namespace Haver.Controllers
                 TempData["ErrorAlert"] = "Could not send Invitation email to " + employee.FullName + " at " + employee.Email;
             }
         }
-
 
         private bool EmployeeExists(int id)
         {

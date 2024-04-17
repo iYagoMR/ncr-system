@@ -92,6 +92,14 @@
               "target": "Package",
               "version": "[7.0.12, )"
             },
+            "Quartz": {
+              "target": "Package",
+              "version": "[3.8.1, )"
+            },
+            "Quartz.Extensions.Hosting": {
+              "target": "Package",
+              "version": "[3.8.1, )"
+            },
             "QuestPDF": {
               "target": "Package",
               "version": "[2023.12.6, )"

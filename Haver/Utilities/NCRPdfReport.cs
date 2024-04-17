@@ -56,7 +56,7 @@ namespace Haver.Utilities
 
                     column.Item().Text(text =>
                     {
-                        text.Span("NCR completion date: ").SemiBold();
+                        text.Span("NCR start date: ").SemiBold();
                         text.Span($"{Model.CreatedOn:d}");
                     });
 
@@ -303,7 +303,7 @@ namespace Haver.Utilities
                         table.Cell().Row(1).Column(2).Element(BlockContent).Text($"{Model.Engineering.EngReview.Review}");
 
                         table.Cell().Row(2).Column(1).Element(BlockTitle).Text("Customer require notification?");
-                        table.Cell().Row(2).Column(2).Element(BlockContent).Text($"{Model.Engineering.IsCustNotificationNecessary}");
+                        table.Cell().Row(2).Column(2).Element(BlockContent).Text($"{(Model.Engineering.IsCustNotificationNecessary ? "Yes" : "No")}");
 
                         table.Cell().Row(1).Column(3).Element(BlockTitle).Text("PO or Prod. No.");
                         table.Cell().Row(2).Column(3).Element(BlockContent).Text($"{Model.Engineering.Disposition}");
@@ -344,7 +344,7 @@ namespace Haver.Utilities
                         });
 
                         table.Cell().Row(1).Column(1).Element(BlockTitle).Text("Does the drawing require updating?");
-                        table.Cell().Row(2).Column(1).Element(BlockContent).Text($"{Model.Engineering.DrawReqUpdating}");
+                        table.Cell().Row(2).Column(1).Element(BlockContent).Text($"{(Model.Engineering.DrawReqUpdating ? "Yes" : "No")}");
 
                         table.Cell().Row(1).Column(2).Element(BlockTitle).Text("Original Rev. Number");
                         table.Cell().Row(2).Column(2).Element(BlockContent).Text($"{Model.Engineering.OrgRevisionNum}");
@@ -422,10 +422,10 @@ namespace Haver.Utilities
                         table.Cell().Row(2).Column(1).Element(BlockContent).Text($"{Model.Operations.PrelDecision.Decision}");
 
                         table.Cell().Row(1).Column(2).Element(BlockTitle).Text("Was a CAR raised?");
-                        table.Cell().Row(2).Column(2).Element(BlockContent).Text($"{Model.Operations.CarRaised}");
+                        table.Cell().Row(2).Column(2).Element(BlockContent).Text($"{(Model.Operations.CarRaised ? "Yes" : "No")}");
 
                         table.Cell().Row(1).Column(3).Element(BlockTitle).Text("Follow up required?");
-                        table.Cell().Row(2).Column(3).Element(BlockContent).Text($"{Model.Operations.IsFollowUpReq}");
+                        table.Cell().Row(2).Column(3).Element(BlockContent).Text($"{(Model.Operations.IsFollowUpReq ? "Yes" : "No")}");
 
                         // for simplicity, you can also use extension method described in the "Extending DSL" section
                         static IContainer BlockTitle(IContainer container)
@@ -540,19 +540,19 @@ namespace Haver.Utilities
                         });
 
                         table.Cell().Row(1).Column(1).Element(BlockTitle).Text("Does the supplier wants the items returned?");
-                        table.Cell().Row(2).Column(1).Element(BlockContent).Text($"{Model.Procurement.SuppItemsBack}");
+                        table.Cell().Row(2).Column(1).Element(BlockContent).Text($"{(Model.Procurement.SuppItemsBack ? "Yes" : "No")}");
 
                         table.Cell().Row(1).Column(2).Element(BlockTitle).Text("Has supplier return been completed in SAP?");
-                        table.Cell().Row(2).Column(2).Element(BlockContent).Text($"{Model.Procurement.SuppReturnCompleted}");
+                        table.Cell().Row(2).Column(2).Element(BlockContent).Text($"{(Model.Procurement.SuppReturnCompleted ? "Yes" : "No")}");
 
                         table.Cell().Row(1).Column(3).Element(BlockTitle).Text("Is credit expected?");
-                        table.Cell().Row(2).Column(3).Element(BlockContent).Text($"{Model.Procurement.IsCreditExpec}");
+                        table.Cell().Row(2).Column(3).Element(BlockContent).Text($"{(Model.Procurement.IsCreditExpec ? "Yes" : "No")}");
 
                         table.Cell().Row(1).Column(4).Element(BlockTitle).Text("Charge supplier for expenses?");
-                        table.Cell().Row(2).Column(4).Element(BlockContent).Text($"{Model.Procurement.ChargeSupplier}");
+                        table.Cell().Row(2).Column(4).Element(BlockContent).Text($"{(Model.Procurement.ChargeSupplier ? "Yes" : "No")}");
 
                         table.Cell().Row(1).Column(5).Element(BlockTitle).Text("NCR Value");
-                        table.Cell().Row(2).Column(5).Element(BlockContent).Text($"$20,000");
+                        table.Cell().Row(2).Column(5).Element(BlockContent).Text($"${Model.Procurement.NCRValue}");
 
                         static IContainer BlockTitle(IContainer container)
                         {

@@ -5,9 +5,12 @@
 
     if (linkValue !== "") {
 
+
         // Create a list item to display the link
         var listItem = document.createElement("div");
-        listItem.textContent = linkValue;
+        var listItemText = document.createElement("p");
+        listItemText.textContent = linkValue;
+        listItemText.classList.add("standard-border-bottom");
 
         // Create a hidden input for the link
         var hiddenInput = document.createElement("input");
@@ -18,6 +21,7 @@
         // Add a button to remove the link and its hidden input
         var removeButton = document.createElement("button");
         removeButton.textContent = "Remove";
+
         removeButton.onclick = function () {
             linksListContainer.removeChild(listItem);
             linksListContainer.removeChild(hiddenInput);
@@ -29,6 +33,7 @@
 
         // Append the remove button to the list item
         listItem.appendChild(removeButton);
+        listItem.appendChild(listItemText);
 
         // Append the list item and hidden input to the container
         linksListContainer.appendChild(listItem);

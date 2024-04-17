@@ -34,6 +34,14 @@
     <h1>Edit NCR</h1>
 </div>
 
+<div class="alert alert-primary d-flex align-items-center standard-border-bottom alert-container" role="alert">
+    <i class="bi bi-info-circle-fill" style="color: var(--blue);"></i>
+    <div>
+        <p class="standard-border-bottom">You can only edit one section at a time</p>
+    </div>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
 <div class="accordion" id="accordionPanelsStayOpenExample">
     <div class="accordion-item">
         <h2 class="accordion-header" id="panelsStayOpen-headingOne">
@@ -58,21 +66,21 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label asp-for="QualityRepresentative.ProcessApplicableID" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="QualityRepresentative.ProcessApplicableID" class="control-label"></label><span> *</span>
                                     <select asp-for="QualityRepresentative.ProcessApplicableID" class="form-select" asp-items="ViewBag.ProcessApplicableID">
                                         <option value="">Select a Process Applicable</option>
                                     </select>
                                     <span asp-validation-for="QualityRepresentative.ProcessApplicableID" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="QualityRepresentative.PartID" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="QualityRepresentative.PartID" class="control-label"></label><span> *</span>
                                     <select asp-for="QualityRepresentative.PartID" class="form-select" asp-items="ViewBag.PartID">
                                         <option value="">Select a Part</option>
                                     </select>
                                     <span asp-validation-for="QualityRepresentative.PartID" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="QualityRepresentative.ProblemID" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="QualityRepresentative.ProblemID" class="control-label"></label><span> *</span>
                                     <select asp-for="QualityRepresentative.ProblemID" class="form-select" asp-items="ViewBag.ProblemID">
                                         <option value="">Select a Problem</option>
                                     </select>
@@ -91,36 +99,36 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label asp-for="QualityRepresentative.SupplierID" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="QualityRepresentative.SupplierID" class="control-label"></label><span> *</span>
                                     <select asp-for="QualityRepresentative.SupplierID" class="form-select" asp-items="ViewBag.SupplierID">
                                         <option value="">Select a Supplier</option>
                                     </select>
                                     <span asp-validation-for="QualityRepresentative.SupplierID" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="QualityRepresentative.QuantReceived" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="QualityRepresentative.QuantReceived" class="control-label"></label><span> *</span>
                                     <input asp-for="QualityRepresentative.QuantReceived" class="form-control" oninput="this.value = Math.abs(this.value)" />
                                     <span asp-validation-for="QualityRepresentative.QuantReceived" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="QualityRepresentative.QuantDefective" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="QualityRepresentative.QuantDefective" class="control-label"></label><span> *</span>
                                     <input asp-for="QualityRepresentative.QuantDefective" class="form-control" oninput="this.value = Math.abs(this.value)" />
                                     <span asp-validation-for="QualityRepresentative.QuantDefective" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label asp-for="NCRNum" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="NCRNum" class="control-label"></label><span> *</span>
                                     <input asp-for="NCRNum" class="form-control" readonly />
                                     <span asp-validation-for="NCRNum" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="QualityRepresentative.PoNo" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="QualityRepresentative.PoNo" class="control-label"></label><span> *</span>
                                     <input asp-for="QualityRepresentative.PoNo" class="form-control" oninput="this.value = Math.abs(this.value)" />
                                     <span asp-validation-for="QualityRepresentative.PoNo" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="QualityRepresentative.SalesOrd" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="QualityRepresentative.SalesOrd" class="control-label"></label><span> *</span>
                                     <input asp-for="QualityRepresentative.SalesOrd" id="myinputT" class="form-control" />
                                     <span asp-validation-for="QualityRepresentative.SalesOrd" class="text-danger"></span>
                                 </div>
@@ -129,14 +137,14 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label asp-for="QualityRepresentative.QualityRepresentativeSign" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="QualityRepresentative.QualityRepresentativeSign" class="control-label"></label><span> *</span>
                                     <input asp-for="QualityRepresentative.QualityRepresentativeSign" class="form-control" />
                                     <span asp-validation-for="QualityRepresentative.QualityRepresentativeSign" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label asp-for="QualityRepresentative.QualityRepDate" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="QualityRepresentative.QualityRepDate" class="control-label"></label><span> *</span>
                                     <input asp-for="QualityRepresentative.QualityRepDate" class="form-control" readonly />
                                     <span asp-validation-for="QualityRepresentative.QualityRepDate" class="text-danger"></span>
                                 </div>
@@ -150,7 +158,7 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label asp-for="QualityRepresentative.DescDefect" class="control-label"></label><span> (required)</span>
+                                <label asp-for="QualityRepresentative.DescDefect" class="control-label"></label><span> *</span>
                                 <textarea asp-for="QualityRepresentative.DescDefect" rows="5" class="form-control"></textarea>
                                 <span asp-validation-for="QualityRepresentative.DescDefect" class="text-danger"></span>
                             </div>
@@ -180,21 +188,42 @@
                             @if (Model.QualityRepresentative.QualityPhotos?.Any() ?? false)
                             {
                                 <div class="section-form multimedia">
-                                        <div class="form-group details-images editor">
-                                            @foreach (var image in Model.QualityRepresentative.QualityPhotos)
-                                            {
-                                                string imageBase64 = Convert.ToBase64String(image.Content);
-                                                string imageSrc = string.Format("data:" + image.MimeType + ";base64,{0}", imageBase64);
-
-                                                <div class="card editor" style="width: 14rem;">
-                                                    <img src="@imageSrc" alt="Image" title="Customer Image" class="card-img-top" />
-                                                    <div class="card-body">
-                                                        <p>Remove Image</p>
-                                                        <input class="form-check-input" type="checkbox" id="imagesToRemove" name="imagesToRemove" value="@image.ID">
+                                    <div class="form-group details-images editor">
+                                        @for (int i = 0; i < Model.QualityRepresentative.QualityPhotos.Count; i++)
+                                        {
+                                            var image = Model.QualityRepresentative.QualityPhotos[i];
+                                            string imageBase64 = Convert.ToBase64String(image.Content);
+                                            string imageSrc = string.Format("data:" + image.MimeType + ";base64,{0}", imageBase64);
+                                            <div class="card editor" style="width: 14rem;">
+                                                <!-- Button trigger modal -->
+                                                <button type="button" class="btn btn-primary expand-img" data-bs-toggle="modal" data-bs-target="#imgQualRepModal-@i">
+                                                    <i class="bi bi-arrows-angle-expand"></i>
+                                                </button>
+                                                <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="card-img-top" />
+                                                <div class="card-body">
+                                                    <p>Remove Image</p>
+                                                    <input class="form-check-input" type="checkbox" id="imagesToRemove" name="imagesToRemove" value="@image.ID">
+                                                </div>
+                                            </div>
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="imgQualRepModal-@i" tabindex="-1" aria-labelledby="imgQualRepModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h1 class="modal-title fs-5" id="imgQualRepModalLabel">Image</h1>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="img-fluid rounded" />
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            }
-                                        </div>
+                                            </div>
+                                        }
+                                    </div>
                                 </div>
                             }
 
@@ -202,8 +231,8 @@
                                 <div class="form-group link-adder">
                                     <label for="Links" class="form-label">Links</label>
                                     <div>
-                                        <input class="form-control" name="Links" type="text" id="Links" />
-                                        <button type="button" id="addLinkButton" class="btn btn-sm btn-primary" onclick="addLink('linksListContainerQuality')"><i class="bi bi-plus-lg"></i></button>
+                                        <input class="form-control" name="Links" type="text" id="LinksQuality" />
+                                        <button type="button" id="addLinkButton" class="btn btn-sm btn-primary" onclick="addLink('linksListContainerQuality', 'LinksQuality')"><i class="bi bi-plus-lg"></i></button>
                                     </div>
                                 </div>
 
@@ -262,7 +291,7 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label asp-for="Engineering.EngReviewID" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="Engineering.EngReviewID" class="control-label"></label><span> *</span>
                                     <select asp-for="Engineering.EngReviewID" class="form-select" asp-items="ViewBag.EngReviewID">
                                         <option value="">Select an option</option>
                                     </select>
@@ -285,14 +314,14 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label asp-for="Engineering.EngineerSign" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="Engineering.EngineerSign" class="control-label"></label><span> *</span>
                                     <input asp-for="Engineering.EngineerSign" class="form-control" />
                                     <span asp-validation-for="Engineering.EngineerSign" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label asp-for="Engineering.EngineeringDate" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="Engineering.EngineeringDate" class="control-label"></label><span> *</span>
                                     <input asp-for="Engineering.EngineeringDate" id="engineeringDate" class="form-control" readonly />
                                     <span asp-validation-for="Engineering.EngineeringDate" class="text-danger"></span>
                                 </div>
@@ -338,7 +367,7 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label asp-for="Engineering.Disposition" class="control-label"></label><span> (required)</span>
+                                <label asp-for="Engineering.Disposition" class="control-label"></label><span> *</span>
                                 <textarea asp-for="Engineering.Disposition" rows="5" class="form-control"></textarea>
                                 <span asp-validation-for="Engineering.Disposition" class="text-danger"></span>
                             </div>
@@ -373,21 +402,42 @@
                             @if (Model.Engineering.QualityPhotos?.Any() ?? false)
                             {
                                 <div class="section-form multimedia">
-                                        <div class="form-group details-images editor">
-                                            @foreach (var image in Model.Engineering.QualityPhotos)
-                                            {
-                                                string imageBase64 = Convert.ToBase64String(image.Content);
-                                                string imageSrc = string.Format("data:" + image.MimeType + ";base64,{0}", imageBase64);
-
-                                                <div class="card editor" style="width: 14rem;">
-                                                    <img src="@imageSrc" alt="Image" title="Customer Image" class="card-img-top" />
-                                                    <div class="card-body">
-                                                        <p>Remove Image</p>
-                                                        <input class="form-check-input" type="checkbox" id="imagesToRemove" name="imagesToRemove" value="@image.ID">
+                                    <div class="form-group details-images editor">
+                                        @for (int i = 0; i < Model.Engineering.QualityPhotos.Count; i++)
+                                        {
+                                            var image = Model.Engineering.QualityPhotos[i];
+                                            string imageBase64 = Convert.ToBase64String(image.Content);
+                                            string imageSrc = string.Format("data:" + image.MimeType + ";base64,{0}", imageBase64);
+                                            <div class="card editor" style="width: 14rem;">
+                                                <!-- Button trigger modal -->
+                                                <button type="button" class="btn btn-primary expand-img" data-bs-toggle="modal" data-bs-target="#imgEngModal-@i">
+                                                    <i class="bi bi-arrows-angle-expand"></i>
+                                                </button>
+                                                <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="card-img-top" />
+                                                <div class="card-body">
+                                                    <p>Remove Image</p>
+                                                    <input class="form-check-input" type="checkbox" id="imagesToRemove" name="imagesToRemove" value="@image.ID">
+                                                </div>
+                                            </div>
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="imgEngModal-@i" tabindex="-1" aria-labelledby="imgEngModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h1 class="modal-title fs-5" id="imgEngModalLabel">Image</h1>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="img-fluid rounded" />
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            }
-                                        </div>
+                                            </div>
+                                        }
+                                    </div>
                                 </div>
                             }
 
@@ -395,8 +445,8 @@
                                 <div class="form-group link-adder">
                                     <label for="Links" class="form-label">Links</label>
                                     <div>
-                                        <input class="form-control" name="Links" type="text" id="Links" />
-                                        <button type="button" id="addLinkButton" class="btn btn-sm btn-primary" onclick="addLink('linksListContainerEngineering')"><i class="bi bi-plus-lg"></i></button>
+                                        <input class="form-control" name="Links" type="text" id="LinksEngineering" />
+                                        <button type="button" id="addLinkButton" class="btn btn-sm btn-primary" onclick="addLink('linksListContainerEngineering', 'LinksEngineering')"><i class="bi bi-plus-lg"></i></button>
                                     </div>
                                 </div>
 
@@ -453,7 +503,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label asp-for="Operations.PrelDecisionID" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="Operations.PrelDecisionID" class="control-label"></label><span> *</span>
                                     <select asp-for="Operations.PrelDecisionID" class="form-select" asp-items="ViewBag.PrelDecisionID">
                                         <option value="">Select a PrelDecision</option>
                                     </select>
@@ -499,14 +549,14 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label asp-for="Operations.OpManagerSign" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="Operations.OpManagerSign" class="control-label"></label><span> *</span>
                                     <input asp-for="Operations.OpManagerSign" class="form-control" />
                                     <span asp-validation-for="Operations.OpManagerSign" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label asp-for="Operations.OperationsDate" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="Operations.OperationsDate" class="control-label"></label><span> *</span>
                                     <input asp-for="Operations.OperationsDate" class="form-control" id="operationsDate" readonly />
                                     <span asp-validation-for="Operations.OperationsDate" class="text-danger"></span>
                                 </div>
@@ -552,16 +602,37 @@
                                 @if (Model.Operations.QualityPhotos?.Any() ?? false)
                                 {
                                     <div class="form-group details-images editor">
-                                        @foreach (var image in Model.Operations.QualityPhotos)
+                                        @for (int i = 0; i < Model.Operations.QualityPhotos.Count; i++)
                                         {
+                                            var image = Model.Operations.QualityPhotos[i];
                                             string imageBase64 = Convert.ToBase64String(image.Content);
                                             string imageSrc = string.Format("data:" + image.MimeType + ";base64,{0}", imageBase64);
-
                                             <div class="card editor" style="width: 14rem;">
-                                                <img src="@imageSrc" alt="Image" title="Customer Image" class="card-img-top" />
+                                                <!-- Button trigger modal -->
+                                                <button type="button" class="btn btn-primary expand-img" data-bs-toggle="modal" data-bs-target="#imgOperModal-@i">
+                                                    <i class="bi bi-arrows-angle-expand"></i>
+                                                </button>
+                                                <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="card-img-top" />
                                                 <div class="card-body">
                                                     <p>Remove Image</p>
                                                     <input class="form-check-input" type="checkbox" id="imagesToRemove" name="imagesToRemove" value="@image.ID">
+                                                </div>
+                                            </div>
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="imgOperModal-@i" tabindex="-1" aria-labelledby="imgOperModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h1 class="modal-title fs-5" id="imgOperModalLabel">Image</h1>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="img-fluid rounded" />
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         }
@@ -573,8 +644,8 @@
                                 <div class="form-group link-adder">
                                     <label for="Links" class="form-label">Links</label>
                                     <div>
-                                        <input class="form-control" name="Links" type="text" id="Links" />
-                                        <button type="button" id="addLinkButton" class="btn btn-sm btn-primary" onclick="addLink('linksListContainerOperations')"><i class="bi bi-plus-lg"></i></button>
+                                        <input class="form-control" name="Links" type="text" id="LinksOperations" />
+                                        <button type="button" id="addLinkButton" class="btn btn-sm btn-primary" onclick="addLink('linksListContainerOperations', 'LinksOperations')"><i class="bi bi-plus-lg"></i></button>
                                     </div>
                                 </div>
 
@@ -674,7 +745,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label asp-for="Procurement.ExpecDateOfReturn" class="control-label"></label><span> (required)</span>
+                                    <label class="control-label">When replaced items expected to be returned </label><span> *</span>
                                     <input asp-for="Procurement.ExpecDateOfReturn" class="form-control" />
                                     <span asp-validation-for="Procurement.ExpecDateOfReturn" class="text-danger"></span>
                                 </div>
@@ -683,14 +754,14 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label asp-for="Procurement.ProcurementSign" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="Procurement.ProcurementSign" class="control-label"></label><span> *</span>
                                     <input asp-for="Procurement.ProcurementSign" class="form-control" />
                                     <span asp-validation-for="Procurement.ProcurementSign" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label asp-for="Procurement.ProcurementDate" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="Procurement.ProcurementDate" class="control-label"></label><span> *</span>
                                     <input asp-for="Procurement.ProcurementDate" class="form-control" id="procurementDate" readonly />
                                     <span asp-validation-for="Procurement.ProcurementDate" class="text-danger"></span>
                                 </div>
@@ -736,16 +807,37 @@
                                 @if (Model.Procurement.QualityPhotos?.Any() ?? false)
                                 {
                                     <div class="form-group details-images editor">
-                                        @foreach (var image in Model.Procurement.QualityPhotos)
+                                        @for (int i = 0; i < Model.Procurement.QualityPhotos.Count; i++)
                                         {
+                                            var image = Model.Procurement.QualityPhotos[i];
                                             string imageBase64 = Convert.ToBase64String(image.Content);
                                             string imageSrc = string.Format("data:" + image.MimeType + ";base64,{0}", imageBase64);
-
                                             <div class="card editor" style="width: 14rem;">
-                                                <img src="@imageSrc" alt="Image" title="Customer Image" class="card-img-top" />
+                                                <!-- Button trigger modal -->
+                                                <button type="button" class="btn btn-primary expand-img" data-bs-toggle="modal" data-bs-target="#imgProcModal-@i">
+                                                    <i class="bi bi-arrows-angle-expand"></i>
+                                                </button>
+                                                <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="card-img-top" />
                                                 <div class="card-body">
                                                     <p>Remove Image</p>
                                                     <input class="form-check-input" type="checkbox" id="imagesToRemove" name="imagesToRemove" value="@image.ID">
+                                                </div>
+                                            </div>
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="imgProcModal-@i" tabindex="-1" aria-labelledby="imgProcModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h1 class="modal-title fs-5" id="imgProcModalLabel">Image</h1>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="img-fluid rounded" />
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         }
@@ -757,8 +849,8 @@
                                 <div class="form-group link-adder">
                                     <label for="Links" class="form-label">Links</label>
                                     <div>
-                                        <input class="form-control" name="Links" type="text" id="Links" />
-                                        <button type="button" id="addLinkButton" class="btn btn-sm btn-primary" onclick="addLink('linksListContainerProcurement')"><i class="bi bi-plus-lg"></i></button>
+                                        <input class="form-control" name="Links" type="text" id="LinksProc" />
+                                        <button type="button" id="addLinkButton" class="btn btn-sm btn-primary" onclick="addLink('linksListContainerProcurement', 'LinksProc')"><i class="bi bi-plus-lg"></i></button>
                                     </div>
                                 </div>
 
@@ -824,14 +916,14 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label asp-for="Reinspection.ReinspecInspectorSign" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="Reinspection.ReinspecInspectorSign" class="control-label"></label><span> *</span>
                                     <input asp-for="Reinspection.ReinspecInspectorSign" class="form-control" />
                                     <span asp-validation-for="Reinspection.ReinspecInspectorSign" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label asp-for="Reinspection.ReinspectionDate" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="Reinspection.ReinspectionDate" class="control-label"></label><span> *</span>
                                     <input asp-for="Reinspection.ReinspectionDate" class="form-control" id="reinspectionDate" readonly />
                                     <span asp-validation-for="Reinspection.ReinspectionDate" class="text-danger"></span>
                                 </div>
@@ -863,16 +955,37 @@
                                 @if (Model.Reinspection.QualityPhotos?.Any() ?? false)
                                 {
                                     <div class="form-group details-images editor">
-                                        @foreach (var image in Model.Reinspection.QualityPhotos)
+                                        @for (int i = 0; i < Model.Reinspection.QualityPhotos.Count; i++)
                                         {
+                                            var image = Model.Reinspection.QualityPhotos[i];
                                             string imageBase64 = Convert.ToBase64String(image.Content);
                                             string imageSrc = string.Format("data:" + image.MimeType + ";base64,{0}", imageBase64);
-
                                             <div class="card editor" style="width: 14rem;">
-                                                <img src="@imageSrc" alt="Image" title="Customer Image" class="card-img-top" />
+                                                <!-- Button trigger modal -->
+                                                <button type="button" class="btn btn-primary expand-img" data-bs-toggle="modal" data-bs-target="#imgReinspModal-@i">
+                                                    <i class="bi bi-arrows-angle-expand"></i>
+                                                </button>
+                                                <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="card-img-top" />
                                                 <div class="card-body">
                                                     <p>Remove Image</p>
                                                     <input class="form-check-input" type="checkbox" id="imagesToRemove" name="imagesToRemove" value="@image.ID">
+                                                </div>
+                                            </div>
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="imgReinspModal-@i" tabindex="-1" aria-labelledby="imgReinspModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h1 class="modal-title fs-5" id="imgReinspModalLabel">Image</h1>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="img-fluid rounded" />
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         }
@@ -884,8 +997,8 @@
                                 <div class="form-group link-adder">
                                     <label for="Links" class="form-label">Links</label>
                                     <div>
-                                        <input class="form-control" name="Links" type="text" id="Links" />
-                                        <button type="button" id="addLinkButton" class="btn btn-sm btn-primary" onclick="addLink('linksListContainerReinspection')"><i class="bi bi-plus-lg"></i></button>
+                                        <input class="form-control" name="Links" type="text" id="LinksReinspec" />
+                                        <button type="button" id="addLinkButton" class="btn btn-sm btn-primary" onclick="addLink('linksListContainerReinspection', 'LinksReinspec')"><i class="bi bi-plus-lg"></i></button>
                                     </div>
                                 </div>
 
@@ -934,7 +1047,7 @@
     <script src="~/js/form-fill.js"></script>
     <script src="~/js/form-dates-filler.js"></script>
     <script src="~/js/block-fields.js"></script>
-    <script src="~/js/video-link.js"></script>
+    @* <script src="~/js/video-link.js"></script> *@
 
     <script>
 
@@ -1024,6 +1137,58 @@
                 }
             }
         });
+
+        //Links adder
+        function addLink(containerId, linksInputID) {
+            var linksListContainer = document.getElementById(containerId);
+            var linkInput = document.getElementById(linksInputID);
+            var linkValue = linkInput.value.trim();
+
+            if (linkValue !== "") {
+
+                // Create a list item to display the link
+                var listItem = document.createElement("div");
+                var listItemText = document.createElement("p");
+                listItemText.textContent = linkValue;
+                listItemText.classList.add("standard-border-bottom");
+
+                // Create a hidden input for the link
+                var hiddenInput = document.createElement("input");
+                hiddenInput.type = "hidden";
+                hiddenInput.name = "links";
+                hiddenInput.value = linkValue;
+
+                // Add a button to remove the link and its hidden input
+                var removeButton = document.createElement("button");
+                removeButton.textContent = "Remove";
+
+                removeButton.onclick = function () {
+                    linksListContainer.removeChild(listItem);
+                    linksListContainer.removeChild(hiddenInput);
+
+                    if (linksListContainer.children.length === 0) {
+                        linksListContainer.style.display = "none";
+                    }
+                };
+
+                // Append the remove button to the list item
+                listItem.appendChild(removeButton);
+                listItem.appendChild(listItemText);
+
+                // Append the list item and hidden input to the container
+                linksListContainer.appendChild(listItem);
+                linksListContainer.appendChild(hiddenInput);
+
+
+                // Clear the input field
+                linkInput.value = "";
+
+                if (linksListContainer.children.length > 0) {
+                    linksListContainer.style.display = "flex";
+                }
+            }
+
+        }
 
     </script>
 

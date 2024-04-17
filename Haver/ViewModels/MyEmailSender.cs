@@ -2,6 +2,7 @@
 using MimeKit.Text;
 using MimeKit;
 using MailKit.Net.Smtp;
+using Org.BouncyCastle.Crypto.Modes;
 
 namespace Haver.Utilities
 {
@@ -16,27 +17,34 @@ namespace Haver.Utilities
 
         public async Task SendOneAsync(string name, string email, string subject, string htmlMessage)
         {
-            if (String.IsNullOrEmpty(name))
+            try
             {
-                name = email;
+                if (String.IsNullOrEmpty(name))
+                {
+                    name = email;
+                }
+                var message = new MimeMessage();
+                message.To.Add(new MailboxAddress(name, email));
+                message.From.Add(new MailboxAddress(_emailConfiguration.SmtpFromName, _emailConfiguration.SmtpUserName));
+
+                message.Subject = subject;
+                message.Body = new TextPart(TextFormat.Html)
+                {
+                    Text = htmlMessage
+                };
+
+                using var emailClient = new SmtpClient();
+                emailClient.Connect(_emailConfiguration.SmtpServer, _emailConfiguration.SmtpPort, false);
+                emailClient.AuthenticationMechanisms.Remove("XOAUTH2");
+
+                emailClient.Authenticate(_emailConfiguration.SmtpUserName, _emailConfiguration.SmtpPassword);
+                await emailClient.SendAsync(message);
+                emailClient.Disconnect(true);
             }
-            var message = new MimeMessage();
-            message.To.Add(new MailboxAddress(name, email));
-            message.From.Add(new MailboxAddress(_emailConfiguration.SmtpFromName, _emailConfiguration.SmtpUserName));
-
-            message.Subject = subject;
-            message.Body = new TextPart(TextFormat.Html)
+            catch(Exception)
             {
-                Text = htmlMessage
-            };
 
-            using var emailClient = new SmtpClient();
-            emailClient.Connect(_emailConfiguration.SmtpServer, _emailConfiguration.SmtpPort, false);
-            emailClient.AuthenticationMechanisms.Remove("XOAUTH2");
-
-            emailClient.Authenticate(_emailConfiguration.SmtpUserName, _emailConfiguration.SmtpPassword);
-            await emailClient.SendAsync(message);
-            emailClient.Disconnect(true);
+            }
         }
 
         public async Task SendToManyAsync(EmailMessage emailMessage)

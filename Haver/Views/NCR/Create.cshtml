@@ -1,11 +1,16 @@
 ﻿@model NCR
+@using Microsoft.EntityFrameworkCore;
+@using Microsoft.AspNetCore.Identity
+@using Haver.Data;
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@inject HaverContext _context
 
 @{
     ViewData["Title"] = "Create";
 }
 
 @{
-
     //Scroll to section
     var sectionEdited = TempData["SectionEdited"] as string;
     var infoAlert = TempData["InfoAlertCreate"] as string;
@@ -55,21 +60,21 @@
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label asp-for="QualityRepresentative.ProcessApplicableID" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="QualityRepresentative.ProcessApplicableID" class="control-label"></label><span> *</span>
                                     <select asp-for="QualityRepresentative.ProcessApplicableID" class="form-select" asp-items="ViewBag.ProcessApplicableID" data-val="disabled">
                                         <option value="">Select a Process Applicable</option>
                                     </select>
                                     <span asp-validation-for="QualityRepresentative.ProcessApplicableID" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="QualityRepresentative.PartID" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="QualityRepresentative.PartID" class="control-label"></label><span> *</span>
                                     <select asp-for="QualityRepresentative.PartID" class="form-select" asp-items="ViewBag.PartID" data-val="disabled">
                                         <option value="">Select a Part</option>
                                     </select>
                                     <span asp-validation-for="QualityRepresentative.PartID" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="QualityRepresentative.ProblemID" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="QualityRepresentative.ProblemID" class="control-label"></label><span> *</span>
                                     <select asp-for="QualityRepresentative.ProblemID" class="form-select" asp-items="ViewBag.ProblemID" data-val="disabled">
                                         <option value="">Select a Problem</option>
                                     </select>
@@ -89,44 +94,35 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <label asp-for="QualityRepresentative.SupplierID" class="control-label"></label>
-                                    <div class="input-group mb-3">
-                                        <select asp-for="QualityRepresentative.SupplierID" class="form-control" asp-items="ViewBag.SupplierID" data-val="disabled">
-                                            <option value="">Select a Supplier</option>
-                                        </select>
-                                        <button class="btn-plus" type="button" id="nowAddSupplier" data-bs-toggle="modal" data-bs-target="#addSupplierModal" typeof="button">
-                                            <svg width="53" height="48" viewBox="0 0 53 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M0.333252 0H47.3333C50.0947 0 52.3333 2.23858 52.3333 5V43C52.3333 45.7614 50.0947 48 47.3333 48H0.333252V0Z" fill="#19416D" />
-                                                <path d="M26.3333 13.3334V34.6667" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
-                                                <path d="M15.6665 24H36.9998" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
-                                            </svg>
-                                        </button>
-                                        <span asp-validation-for="QualityRepresentative.SupplierID" class="text-danger"></span>
-                                    </div>
+                                    <select asp-for="QualityRepresentative.SupplierID" class="form-control" asp-items="ViewBag.SupplierID" data-val="disabled">
+                                        <option value="">Select a Supplier</option>
+                                    </select>
+                                    <span asp-validation-for="QualityRepresentative.SupplierID" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="QualityRepresentative.QuantReceived" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="QualityRepresentative.QuantReceived" class="control-label"></label><span> *</span>
                                     <input asp-for="QualityRepresentative.QuantReceived" class="form-control" oninput="this.value = Math.abs(this.value)" data-val="disabled" />
                                     <span asp-validation-for="QualityRepresentative.QuantReceived" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="QualityRepresentative.QuantDefective" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="QualityRepresentative.QuantDefective" class="control-label"></label><span> *</span>
                                     <input asp-for="QualityRepresentative.QuantDefective" class="form-control" oninput="this.value = Math.abs(this.value)" data-val="disabled" />
                                     <span asp-validation-for="QualityRepresentative.QuantDefective" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label asp-for="NCRNum" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="NCRNum" class="control-label"></label><span> *</span>
                                     <input asp-for="NCRNum" class="form-control" readonly />
                                     <span asp-validation-for="NCRNum" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="QualityRepresentative.PoNo" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="QualityRepresentative.PoNo" class="control-label"></label><span> *</span>
                                     <input asp-for="QualityRepresentative.PoNo" class="form-control" oninput="this.value = Math.abs(this.value)" data-val="disabled" />
                                     <span asp-validation-for="QualityRepresentative.PoNo" class="text-danger"></span>
                                 </div>
                                 <div class="form-group">
-                                    <label asp-for="QualityRepresentative.SalesOrd" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="QualityRepresentative.SalesOrd" class="control-label"></label><span> *</span>
                                     <input asp-for="QualityRepresentative.SalesOrd" id="myinputT" class="form-control" data-val="disabled"/>
                                     <span asp-validation-for="QualityRepresentative.SalesOrd" class="text-danger"></span>
                                 </div>
@@ -135,14 +131,14 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label asp-for="QualityRepresentative.QualityRepresentativeSign" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="QualityRepresentative.QualityRepresentativeSign" class="control-label"></label><span> *</span>
                                     <input asp-for="QualityRepresentative.QualityRepresentativeSign" class="form-control" data-val="disabled" />
                                     <span asp-validation-for="QualityRepresentative.QualityRepresentativeSign" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label asp-for="QualityRepresentative.QualityRepDate" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="QualityRepresentative.QualityRepDate" class="control-label"></label><span> *</span>
                                     <input asp-for="QualityRepresentative.QualityRepDate" class="form-control" id="qualityRepDate" readonly data-val="disabled"/>
                                     <span asp-validation-for="QualityRepresentative.QualityRepDate" class="text-danger"></span>
                                 </div>
@@ -156,7 +152,7 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label asp-for="QualityRepresentative.DescDefect" class="control-label"></label><span> (required)</span>
+                                <label asp-for="QualityRepresentative.DescDefect" class="control-label"></label><span> *</span>
                                 <textarea asp-for="QualityRepresentative.DescDefect" rows="5" class="form-control" data-val="disabled"></textarea>
                                 <span asp-validation-for="QualityRepresentative.DescDefect" class="text-danger"></span>
                             </div>
@@ -178,13 +174,34 @@
                             {
                                 <p class="control-label">Images</p>
                                 <div class="form-group details-images">
-                                    @foreach (var image in Model.QualityRepresentative.QualityPhotos)
+                                    @for (int i = 0; i < Model.QualityRepresentative.QualityPhotos.Count; i++)
                                     {
+                                        var image = Model.QualityRepresentative.QualityPhotos[i];
                                         string imageBase64 = Convert.ToBase64String(image.Content);
                                         string imageSrc = string.Format("data:" + image.MimeType + ";base64,{0}", imageBase64);
                                         <div class="card editor" style="width: 14rem;">
+                                            <!-- Button trigger modal -->
+                                            <button type="button" class="btn btn-primary expand-img" data-bs-toggle="modal" data-bs-target="#imgQualRepModal-@i">
+                                                <i class="bi bi-arrows-angle-expand"></i>
+                                            </button>
                                             <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="img-fluid rounded" />
-
+                                        </div>
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="imgQualRepModal-@i" tabindex="-1" aria-labelledby="imgQualRepModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5" id="imgQualRepModalLabel">Image</h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="img-fluid rounded" />
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     }
                                 </div>
@@ -230,16 +247,37 @@
                             {
                             <div class="section-form multimedia">
                                     <div class="form-group details-images editor">
-                                        @foreach (var image in Model.QualityRepresentative.QualityPhotos)
+                                        @for (int i = 0; i < Model.QualityRepresentative.QualityPhotos.Count; i++)
                                         {
+                                            var image = Model.QualityRepresentative.QualityPhotos[i];
                                             string imageBase64 = Convert.ToBase64String(image.Content);
                                             string imageSrc = string.Format("data:" + image.MimeType + ";base64,{0}", imageBase64);
-
                                             <div class="card editor" style="width: 14rem;">
+                                                <!-- Button trigger modal -->
+                                                <button type="button" class="btn btn-primary expand-img" data-bs-toggle="modal" data-bs-target="#imgQualRepModal-@i">
+                                                    <i class="bi bi-arrows-angle-expand"></i>
+                                                </button>
                                                 <img src="@imageSrc" alt="Image" title="Customer Image" class="card-img-top" />
                                                 <div class="card-body">
                                                     <p>Remove Image</p>
                                                     <input class="form-check-input" type="checkbox" id="imagesToRemove" name="imagesToRemove" value="@image.ID">
+                                                </div>
+                                            </div>
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="imgQualRepModal-@i" tabindex="-1" aria-labelledby="imgQualRepModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h1 class="modal-title fs-5" id="imgQualRepModalLabel">Image</h1>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="img-fluid rounded" />
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         }
@@ -316,18 +354,14 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="text-danger">@ViewData["Message"]</div>
-                                    <div class="form-group">
-                                        <label for="Subject" class="control-label">Email Subject</label><span style="color: var(--text3);"> (NCR number will be added to the start of the subject)</span>
+@*                                  <div class="form-group">
+                                        <label for="Subject" class="control-label">Email Subject</label>
                                         <input type="text" id="Subject" name="Subject" class="form-control" value="a new NCR was created"/>
-                                    </div>
+                                    </div> *@
                                     <div class="form-group">
                                         <label for="emailContent" class="control-label">Message Content</label>
                                         <textarea id="emailContent" name="emailContent" rows="5" cols="40" class="form-control">
-Hello All,
-
-I have created a new NCR for review.
-
-Regards
+A new NCR was created.
                                         </textarea>
                                     </div>
                                 </div>
@@ -364,7 +398,7 @@ Regards
                         <div class="row">
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label asp-for="Engineering.EngReviewID" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="Engineering.EngReviewID" class="control-label"></label><span> *</span>
                                     <select asp-for="Engineering.EngReviewID" class="form-select" asp-items="ViewBag.EngReviewID" data-val="disabled">
                                         <option value="">Select an option</option>
                                     </select>
@@ -387,14 +421,14 @@ Regards
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label asp-for="Engineering.EngineerSign" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="Engineering.EngineerSign" class="control-label"></label><span> *</span>
                                     <input asp-for="Engineering.EngineerSign" class="form-control" data-val="disabled" />
                                     <span asp-validation-for="Engineering.EngineerSign" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label asp-for="Engineering.EngineeringDate" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="Engineering.EngineeringDate" class="control-label"></label><span> *</span>
                                     <input asp-for="Engineering.EngineeringDate" id="engineeringDate" class="form-control" readonly data-val="disabled" />
                                     <span asp-validation-for="Engineering.EngineeringDate" class="text-danger"></span>
                                 </div>
@@ -440,7 +474,7 @@ Regards
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <label asp-for="Engineering.Disposition" class="control-label"></label><span> (required)</span>
+                                <label asp-for="Engineering.Disposition" class="control-label"></label><span> *</span>
                                 <textarea asp-for="Engineering.Disposition" rows="5" class="form-control" data-val="disabled"></textarea>
                                 <span asp-validation-for="Engineering.Disposition" class="text-danger"></span>
                             </div>
@@ -467,13 +501,34 @@ Regards
                             {
                                 <p class="control-label">Images</p>
                                 <div class="form-group details-images">
-                                    @foreach (var image in Model.Engineering.QualityPhotos)
+                                    @for (int i = 0; i < Model.Engineering.QualityPhotos.Count; i++)
                                     {
+                                        var image = Model.Engineering.QualityPhotos[i];
                                         string imageBase64 = Convert.ToBase64String(image.Content);
                                         string imageSrc = string.Format("data:" + image.MimeType + ";base64,{0}", imageBase64);
                                         <div class="card editor" style="width: 14rem;">
+                                            <!-- Button trigger modal -->
+                                            <button type="button" class="btn btn-primary expand-img" data-bs-toggle="modal" data-bs-target="#imgEngModal-@i">
+                                                <i class="bi bi-arrows-angle-expand"></i>
+                                            </button>
                                             <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="img-fluid rounded" />
-
+                                        </div>
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="imgEngModal-@i" tabindex="-1" aria-labelledby="imgEngModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5" id="imgEngModalLabel">Image</h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="img-fluid rounded" />
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     }
                                 </div>
@@ -519,16 +574,37 @@ Regards
                             {
                                 <div class="section-form multimedia">
                                     <div class="form-group details-images editor">
-                                        @foreach (var image in Model.Engineering.QualityPhotos)
+                                        @for (int i = 0; i < Model.Engineering.QualityPhotos.Count; i++)
                                         {
+                                            var image = Model.Engineering.QualityPhotos[i];
                                             string imageBase64 = Convert.ToBase64String(image.Content);
                                             string imageSrc = string.Format("data:" + image.MimeType + ";base64,{0}", imageBase64);
-
                                             <div class="card editor" style="width: 14rem;">
-                                                <img src="@imageSrc" alt="Image" title="Customer Image" class="card-img-top" />
+                                                <!-- Button trigger modal -->
+                                                <button type="button" class="btn btn-primary expand-img" data-bs-toggle="modal" data-bs-target="#imgEngModal-@i">
+                                                    <i class="bi bi-arrows-angle-expand"></i>
+                                                </button>
+                                                <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="card-img-top" />
                                                 <div class="card-body">
                                                     <p>Remove Image</p>
                                                     <input class="form-check-input" type="checkbox" id="imagesToRemove" name="imagesToRemove" value="@image.ID">
+                                                </div>
+                                            </div>
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="imgEngModal-@i" tabindex="-1" aria-labelledby="imgEngModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h1 class="modal-title fs-5" id="imgEngModalLabel">Image</h1>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="img-fluid rounded" />
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         }
@@ -605,10 +681,10 @@ Regards
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="text-danger">@ViewData["Message"]</div>
-                                    <div class="form-group">
+@*                                     <div class="form-group">
                                         <label for="Subject" class="control-label">Email Subject</label><span>(NCR number will be added to the start of the subject)</span>
                                         <input type="text" id="Subject" name="Subject" class="form-control" value="@Model.Phase section completed" />
-                                    </div>
+                                    </div> *@
                                     <div class="form-group">
                                         <label for="emailContent" class="control-label">Message Content</label>
                                         <textarea id="emailContent" name="emailContent" rows="5" cols="40" class="form-control">
@@ -652,7 +728,7 @@ Regards
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label asp-for="Operations.PrelDecisionID" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="Operations.PrelDecisionID" class="control-label"></label><span> *</span>
                                     <select asp-for="Operations.PrelDecisionID" class="form-select" asp-items="ViewBag.PrelDecisionID" data-val="disabled">
                                         <option value="">Select a PrelDecision</option>
                                     </select>
@@ -698,14 +774,14 @@ Regards
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label asp-for="Operations.OpManagerSign" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="Operations.OpManagerSign" class="control-label"></label><span> *</span>
                                     <input asp-for="Operations.OpManagerSign" class="form-control" data-val="disabled" />
                                     <span asp-validation-for="Operations.OpManagerSign" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label asp-for="Operations.OperationsDate" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="Operations.OperationsDate" class="control-label"></label><span> *</span>
                                     <input asp-for="Operations.OperationsDate" class="form-control" id="operationsDate" readonly data-val="disabled" />
                                     <span asp-validation-for="Operations.OperationsDate" class="text-danger"></span>
                                 </div>
@@ -742,13 +818,34 @@ Regards
                             {
                                 <p class="control-label">Images</p>
                                 <div class="form-group details-images">
-                                    @foreach (var image in Model.Operations.QualityPhotos)
+                                    @for (int i = 0; i < Model.Operations.QualityPhotos.Count; i++)
                                     {
+                                        var image = Model.Operations.QualityPhotos[i];
                                         string imageBase64 = Convert.ToBase64String(image.Content);
                                         string imageSrc = string.Format("data:" + image.MimeType + ";base64,{0}", imageBase64);
                                         <div class="card editor" style="width: 14rem;">
+                                            <!-- Button trigger modal -->
+                                            <button type="button" class="btn btn-primary expand-img" data-bs-toggle="modal" data-bs-target="#imgOperModal-@i">
+                                                <i class="bi bi-arrows-angle-expand"></i>
+                                            </button>
                                             <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="img-fluid rounded" />
-
+                                        </div>
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="imgOperModal-@i" tabindex="-1" aria-labelledby="imgOperModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5" id="imgOperModalLabel">Image</h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="img-fluid rounded" />
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     }
                                 </div>
@@ -794,19 +891,41 @@ Regards
                             {
                                 <div class="section-form multimedia">
                                     <div class="form-group details-images editor">
-                                        @foreach (var image in Model.Operations.QualityPhotos)
+                                        @for (int i = 0; i < Model.Operations.QualityPhotos.Count; i++)
                                         {
+                                            var image = Model.Operations.QualityPhotos[i];
                                             string imageBase64 = Convert.ToBase64String(image.Content);
                                             string imageSrc = string.Format("data:" + image.MimeType + ";base64,{0}", imageBase64);
-
                                             <div class="card editor" style="width: 14rem;">
-                                                <img src="@imageSrc" alt="Image" title="Customer Image" class="card-img-top" />
+                                                <!-- Button trigger modal -->
+                                                <button type="button" class="btn btn-primary expand-img" data-bs-toggle="modal" data-bs-target="#imgOperModal-@i">
+                                                    <i class="bi bi-arrows-angle-expand"></i>
+                                                </button>
+                                                <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="card-img-top" />
                                                 <div class="card-body">
                                                     <p>Remove Image</p>
                                                     <input class="form-check-input" type="checkbox" id="imagesToRemove" name="imagesToRemove" value="@image.ID">
                                                 </div>
                                             </div>
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="imgOperModal-@i" tabindex="-1" aria-labelledby="imgOperModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h1 class="modal-title fs-5" id="imgOperModalLabel">Image</h1>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="img-fluid rounded" />
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         }
+
                                     </div>
                                 </div>
                             }
@@ -880,10 +999,10 @@ Regards
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="text-danger">@ViewData["Message"]</div>
-                                    <div class="form-group">
+@*                                     <div class="form-group">
                                         <label for="Subject" class="control-label">Email Subject</label><span>(NCR number will be added to the start of the subject)</span>
                                         <input type="text" id="Subject" name="Subject" class="form-control" value="@Model.Phase section completed" />
-                                    </div>
+                                    </div> *@
                                     <div class="form-group">
                                         <label for="emailContent" class="control-label">Message Content</label>
                                         <textarea id="emailContent" name="emailContent" rows="5" cols="40" class="form-control">
@@ -970,7 +1089,7 @@ Regards
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label asp-for="Procurement.ExpecDateOfReturn" class="control-label"></label><span> (required)</span>
+                                    <label class="control-label">When replaced items expected to be returned</label><span> *</span>
                                     <input asp-for="Procurement.ExpecDateOfReturn" class="form-control" data-val="disabled" />
                                     <span asp-validation-for="Procurement.ExpecDateOfReturn" class="text-danger"></span>
                                 </div>
@@ -979,14 +1098,14 @@ Regards
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label asp-for="Procurement.ProcurementSign" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="Procurement.ProcurementSign" class="control-label"></label><span> *</span>
                                     <input asp-for="Procurement.ProcurementSign" class="form-control" data-val="disabled" />
                                     <span asp-validation-for="Procurement.ProcurementSign" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label asp-for="Procurement.ProcurementDate" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="Procurement.ProcurementDate" class="control-label"></label><span> *</span>
                                     <input asp-for="Procurement.ProcurementDate" class="form-control" id="procurementDate" readonly data-val="disabled" />
                                     <span asp-validation-for="Procurement.ProcurementDate" class="text-danger"></span>
                                 </div>
@@ -1023,13 +1142,34 @@ Regards
                             {
                                 <p class="control-label">Images</p>
                                 <div class="form-group details-images">
-                                    @foreach (var image in Model.Procurement.QualityPhotos)
+                                    @for (int i = 0; i < Model.Procurement.QualityPhotos.Count; i++)
                                     {
+                                        var image = Model.Procurement.QualityPhotos[i];
                                         string imageBase64 = Convert.ToBase64String(image.Content);
                                         string imageSrc = string.Format("data:" + image.MimeType + ";base64,{0}", imageBase64);
                                         <div class="card editor" style="width: 14rem;">
+                                            <!-- Button trigger modal -->
+                                            <button type="button" class="btn btn-primary expand-img" data-bs-toggle="modal" data-bs-target="#imgProcModal-@i">
+                                                <i class="bi bi-arrows-angle-expand"></i>
+                                            </button>
                                             <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="img-fluid rounded" />
-
+                                        </div>
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="imgProcModal-@i" tabindex="-1" aria-labelledby="imgProcModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5" id="imgProcModalLabel">Image</h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="img-fluid rounded" />
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     }
                                 </div>
@@ -1075,16 +1215,37 @@ Regards
                             {
                                 <div class="section-form multimedia">
                                     <div class="form-group details-images editor">
-                                        @foreach (var image in Model.Procurement.QualityPhotos)
+                                        @for (int i = 0; i < Model.Procurement.QualityPhotos.Count; i++)
                                         {
+                                            var image = Model.Procurement.QualityPhotos[i];
                                             string imageBase64 = Convert.ToBase64String(image.Content);
                                             string imageSrc = string.Format("data:" + image.MimeType + ";base64,{0}", imageBase64);
-
                                             <div class="card editor" style="width: 14rem;">
-                                                <img src="@imageSrc" alt="Image" title="Customer Image" class="card-img-top" />
+                                                <!-- Button trigger modal -->
+                                                <button type="button" class="btn btn-primary expand-img" data-bs-toggle="modal" data-bs-target="#imgProcModal-@i">
+                                                    <i class="bi bi-arrows-angle-expand"></i>
+                                                </button>
+                                                <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="card-img-top" />
                                                 <div class="card-body">
                                                     <p>Remove Image</p>
                                                     <input class="form-check-input" type="checkbox" id="imagesToRemove" name="imagesToRemove" value="@image.ID">
+                                                </div>
+                                            </div>
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="imgProcModal-@i" tabindex="-1" aria-labelledby="imgProcModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h1 class="modal-title fs-5" id="imgProcModalLabel">Image</h1>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="img-fluid rounded" />
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         }
@@ -1161,10 +1322,10 @@ Regards
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="text-danger">@ViewData["Message"]</div>
-                                    <div class="form-group">
+@*                                     <div class="form-group">
                                         <label for="Subject" class="control-label">Email Subject</label><span>(NCR number will be added to the start of the subject)</span>
                                         <input type="text" id="Subject" name="Subject" class="form-control" value="@Model.Phase section completed" />
-                                    </div>
+                                    </div> *@
                                     <div class="form-group">
                                         <label for="emailContent" class="control-label">Message Content</label>
                                         <textarea id="emailContent" name="emailContent" rows="5" cols="40" class="form-control">
@@ -1217,14 +1378,14 @@ Regards
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label asp-for="Reinspection.ReinspecInspectorSign" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="Reinspection.ReinspecInspectorSign" class="control-label"></label><span> *</span>
                                     <input asp-for="Reinspection.ReinspecInspectorSign" class="form-control" data-val="disabled" />
                                     <span asp-validation-for="Reinspection.ReinspecInspectorSign" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label asp-for="Reinspection.ReinspectionDate" class="control-label"></label><span> (required)</span>
+                                    <label asp-for="Reinspection.ReinspectionDate" class="control-label"></label><span> *</span>
                                     <input asp-for="Reinspection.ReinspectionDate" class="form-control" id="reinspectionDate" readonly data-val="disabled" />
                                     <span asp-validation-for="Reinspection.ReinspectionDate" class="text-danger"></span>
                                 </div>
@@ -1247,13 +1408,34 @@ Regards
                             {
                                 <p class="control-label">Images</p>
                                 <div class="form-group details-images">
-                                    @foreach (var image in Model.Reinspection.QualityPhotos)
+                                    @for (int i = 0; i < Model.Reinspection.QualityPhotos.Count; i++)
                                     {
+                                        var image = Model.Reinspection.QualityPhotos[i];
                                         string imageBase64 = Convert.ToBase64String(image.Content);
                                         string imageSrc = string.Format("data:" + image.MimeType + ";base64,{0}", imageBase64);
                                         <div class="card editor" style="width: 14rem;">
+                                            <!-- Button trigger modal -->
+                                            <button type="button" class="btn btn-primary expand-img" data-bs-toggle="modal" data-bs-target="#imgReinspModal-@i">
+                                                <i class="bi bi-arrows-angle-expand"></i>
+                                            </button>
                                             <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="img-fluid rounded" />
-
+                                        </div>
+                                        <!-- Modal -->
+                                        <div class="modal fade" id="imgReinspModal-@i" tabindex="-1" aria-labelledby="imgReinspModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5" id="imgReinspModalLabel">Image</h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="img-fluid rounded" />
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     }
                                 </div>
@@ -1299,16 +1481,37 @@ Regards
                             {
                                 <div class="section-form multimedia">
                                     <div class="form-group details-images editor">
-                                        @foreach (var image in Model.Reinspection.QualityPhotos)
+                                        @for (int i = 0; i < Model.Reinspection.QualityPhotos.Count; i++)
                                         {
+                                            var image = Model.Reinspection.QualityPhotos[i];
                                             string imageBase64 = Convert.ToBase64String(image.Content);
                                             string imageSrc = string.Format("data:" + image.MimeType + ";base64,{0}", imageBase64);
-
                                             <div class="card editor" style="width: 14rem;">
-                                                <img src="@imageSrc" alt="Image" title="Customer Image" class="card-img-top" />
+                                                <!-- Button trigger modal -->
+                                                <button type="button" class="btn btn-primary expand-img" data-bs-toggle="modal" data-bs-target="#imgReinspModal-@i">
+                                                    <i class="bi bi-arrows-angle-expand"></i>
+                                                </button>
+                                                <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="card-img-top" />
                                                 <div class="card-body">
                                                     <p>Remove Image</p>
                                                     <input class="form-check-input" type="checkbox" id="imagesToRemove" name="imagesToRemove" value="@image.ID">
+                                                </div>
+                                            </div>
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="imgReinspModal-@i" tabindex="-1" aria-labelledby="imgReinspModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h1 class="modal-title fs-5" id="imgReinspModalLabel">Image</h1>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <img src="@imageSrc" alt="Customer Image" title="Customer Image" class="img-fluid rounded" />
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         }
@@ -1385,19 +1588,15 @@ Regards
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="text-danger">@ViewData["Message"]</div>
-                                    <div class="form-group">
+@*                                     <div class="form-group">
                                         <label for="Subject" class="control-label">Email Subject</label><span>(NCR number will be added to the start of the subject)</span>
                                         <input type="text" id="Subject" name="Subject" class="form-control" value="@Model.Phase section completed" />
-                                    </div>
+                                    </div> *@
                                     <div class="form-group">
                                         <label for="emailContent" class="control-label">Message Content</label>
                                         <textarea id="emailContent" name="emailContent" rows="5" cols="40" class="form-control">
-            Hello All,
-
-            I have completed the @Model.Phase section.
-
-            Regards
-                                                    </textarea>
+Hi, i just completed the reinspection.
+                                        </textarea>
                                     </div>
                                 </div>
                             </div>
@@ -1430,176 +1629,6 @@ Regards
     <script src="~/js/video-link.js"></script>
 
     <script>
-
-        //First Lookup value adder
-        $('#submitPartCreate').click(function (event) {
-            event.preventDefault();
-            ClearErrors();
-            var form = $('#createPartForm');
-
-            $.ajax({
-                type: "POST",
-                url: form.attr('action'),
-                data: form.serialize(),
-                success: function () {
-                    $('#addPartModal').modal('hide');
-                },
-                error: function (xhr) { //Note: xhr is the XMLHttpRequest
-                    var errorMessages = [];
-                    switch (xhr.status) {
-                        case 401:
-                            errorMessages.push("You must be logged in first.");
-                            break;
-                        case 403:
-                            errorMessages.push("You are not authorized for this action.");
-                            break;
-                        default:
-                            //Messages coming from the Model State Errors
-                            //We split on the | delimeter and the .slice removes the last one
-                            errorMessages = xhr.responseText.split("|").slice(0, -1);
-                    }
-                    //This checks if there are any elements with some content
-                    //and if not then it provides a default feedback message.
-                    if (!errorMessages.some((str) => str !== "")) {
-                        errorMessages.push("Error: Unable to complete operation");
-                    }
-                    //Put the messages in the ErrorList ul contained in the 'ValidaitonSummary' div.
-                    var ul = document.getElementById("ErrorList");
-                    for (var i = 0; i < errorMessages.length; i++) {
-                        var errorMessage = errorMessages[i];
-                        var li = document.createElement("li");
-                        li.innerHTML = errorMessage;
-                        ul.appendChild(li);
-                    }
-                }
-            });
-            // if (form.valid()) {
-            // }
-            return false;
-        });
-
-        $('#addPartModal').on('hide.bs.modal', function () {
-            document.getElementById("createPartForm").reset();//to clear the data in the popup form
-            ClearErrors();
-            var selectedOption = $('#PartID').val();//Return to the current selected value
-            refreshDDL('PartID', '/NCR/GetParts/' + selectedOption, false, null, true, 'None', true);
-        });
-
-        //Second Lookup value adder
-        $('#submitProblemCreate').click(function (event) {
-            event.preventDefault();
-            ClearErrors();
-            var form = $('#createProblemForm');
-
-            $.ajax({
-                type: "POST",
-                url: form.attr('action'),
-                data: form.serialize(),
-                success: function () {
-                    $('#addProblemModal').modal('hide');
-                },
-                error: function (xhr) { //Note: xhr is the XMLHttpRequest
-                    var errorMessages = [];
-                    switch (xhr.status) {
-                        case 401:
-                            errorMessages.push("You must be logged in first.");
-                            break;
-                        case 403:
-                            errorMessages.push("You are not authorized for this action.");
-                            break;
-                        default:
-                            //Messages coming from the Model State Errors
-                            //We split on the | delimeter and the .slice removes the last one
-                            errorMessages = xhr.responseText.split("|").slice(0, -1);
-                    }
-                    //This checks if there are any elements with some content
-                    //and if not then it provides a default feedback message.
-                    if (!errorMessages.some((str) => str !== "")) {
-                        errorMessages.push("Error: Unable to complete operation");
-                    }
-                    //Put the messages in the ErrorList ul contained in the 'ValidaitonSummary' div.
-                    var ul = document.getElementById("ErrorList");
-                    for (var i = 0; i < errorMessages.length; i++) {
-                        var errorMessage = errorMessages[i];
-                        var li = document.createElement("li");
-                        li.innerHTML = errorMessage;
-                        ul.appendChild(li);
-                    }
-                }
-            });
-            // if (form.valid()) {
-            // }
-            return false;
-        });
-
-        $('#addProblemModal').on('hide.bs.modal', function () {
-            document.getElementById("createProblemForm").reset();//to clear the data in the popup form
-            ClearErrors();
-            var selectedOption = $('#ProblemID').val();//Return to the current selected value
-            refreshDDL('ProblemID', '/NCR/GetProblems/' + selectedOption, false, null, true, 'None', true);
-        });
-
-        //Third Lookup value adder
-        $('#submitSupplierCreate').click(function (event) {
-            event.preventDefault();
-            ClearErrors();
-            var form = $('#createSupplierForm');
-
-            $.ajax({
-                type: "POST",
-                url: form.attr('action'),
-                data: form.serialize(),
-                success: function () {
-                    $('#addSupplierModal').modal('hide');
-                },
-                error: function (xhr) { //Note: xhr is the XMLHttpRequest
-                    var errorMessages = [];
-                    switch (xhr.status) {
-                        case 401:
-                            errorMessages.push("You must be logged in first.");
-                            break;
-                        case 403:
-                            errorMessages.push("You are not authorized for this action.");
-                            break;
-                        default:
-                            //Messages coming from the Model State Errors
-                            //We split on the | delimeter and the .slice removes the last one
-                            errorMessages = xhr.responseText.split("|").slice(0, -1);
-                    }
-                    //This checks if there are any elements with some content
-                    //and if not then it provides a default feedback message.
-                    if (!errorMessages.some((str) => str !== "")) {
-                        errorMessages.push("Error: Unable to complete operation");
-                    }
-                    //Put the messages in the ErrorList ul contained in the 'ValidaitonSummary' div.
-                    var ul = document.getElementById("ErrorList");
-                    for (var i = 0; i < errorMessages.length; i++) {
-                        var errorMessage = errorMessages[i];
-                        var li = document.createElement("li");
-                        li.innerHTML = errorMessage;
-                        ul.appendChild(li);
-                    }
-                }
-            });
-            // if (form.valid()) {
-            // }
-            return false;
-        });
-
-        $('#addSupplierModal').on('hide.bs.modal', function () {
-            document.getElementById("createSupplierForm").reset();//to clear the data in the popup form
-            ClearErrors();
-            var selectedOption = $('#SupplierID').val();//Return to the current selected value
-            refreshDDL('SupplierID', '/NCR/GetSuppliers/' + selectedOption, false, null, true, 'None', true);
-        });
-
-        function ClearErrors() {
-            //Empty out the list of validation errors if there are any
-            var ul = document.getElementById("ErrorList");
-            while (ul.firstChild) {
-                ul.removeChild(ul.firstChild);
-            }
-        }
 
         // Helper method to unfold sections
         function toggleAccordion(sectionId, sectionButtonId, section) {

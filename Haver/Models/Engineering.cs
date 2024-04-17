@@ -39,7 +39,7 @@ namespace Haver.Models
         [Display(Name = "Engineering")]
         public string EngineerSign { get; set; } // LaterAdd - Automaticaly fill with user's name
 
-        [Required(ErrorMessage = "The Disposition is required.")]
+        [Required(ErrorMessage = "The Date is required.")]
         [Display(Name = "Date")]
         public DateOnly EngineeringDate { get; set; } = DateOnly.FromDateTime(DateTime.Now);
 

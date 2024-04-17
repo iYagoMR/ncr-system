@@ -65,12 +65,15 @@ namespace Haver.Controllers
         }
 
         //GET: NCR
-        public async Task<IActionResult> Index(string filter1, string SearchString, int? SupplierID, int? page, int? pageSizeID, string SelectedOption
+        public async Task<IActionResult> Index(string ncrsByActiveTime, string SearchString, int? SupplierID, int? page, int? pageSizeID, string SelectedOption
             , string actionButton, string active, string sortDirection = "desc", string sortField = "CREATED ON")
         {
-            //var countersConstructor = new CalculateNCRTimeCounters();
 
             PopulateList();
+
+            //Dropdown data
+            var ncrsDL = _context.NCRs.ToList();
+            ViewBag.NCRsToDL = ncrsDL;
 
             string[] sortOptions = new[] { "NCR NO.", "CREATED ON" };
 
@@ -82,27 +85,28 @@ namespace Haver.Controllers
                                             .Where(n => !n.IsNCRArchived)
                                             .AsNoTracking();
 
-            ////Redirect counters handler
-            //// Filter NCR records with Active phase
-            //var activeNCRs = _context.NCRs.Where(ncr => ncr.Status == "Active")
-            //                              .Where(ncr => !ncr.IsNCRDraft);
+            //Create time variables for each "orverdue period"
+            var nowToronto = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time"));
+            var threeDaysAgo = nowToronto.AddDays(-3).Date;
+            var twoDaysAgo = nowToronto.AddDays(-2).Date;
+            var oneDayAgo = nowToronto.AddDays(-1).Date;
 
-            ////Get NCRs in Each section
-            //var QualNCRs = activeNCRs.Where(ncr => ncr.Phase == "Quality Representative").ToList();
-            //var EngNCRs = activeNCRs.Include(ncr => ncr.QualityRepresentative).Where(ncr => ncr.Phase == "Engineering").ToList();
-            //var OperNCRs = activeNCRs.Include(ncr => ncr.Engineering).Include(ncr => ncr.QualityRepresentative).Where(ncr => ncr.Phase == "Operations").ToList();
-            //var ProcNCRs = activeNCRs.Include(ncr => ncr.Procurement).Where(ncr => ncr.Phase == "Procurement").ToList();
-            //var ReinspNCRs = activeNCRs.Include(ncr => ncr.Operations).Where(ncr => ncr.Phase == "Reinspection").ToList();
-
-            //(int qual24, int qual48, int qual5, int qualTotal, List<NCR> qualNCR) qualCounters = countersConstructor.QualCounters(QualNCRs);
-            //(int eng24, int eng48, int eng5, int engTotal) engCounters = countersConstructor.EngCounters(EngNCRs);
-            //(int oper24, int oper48, int oper5, int operTotal) operCounters = countersConstructor.OperCounters(OperNCRs);
-            //(int proc24, int proc48, int proc5, int procTotal) procCounters = countersConstructor.ProcCounters(ProcNCRs);
-            //(int reinsp24, int reinsp48, int reinsp5, int reinspTotal) reinspCounters = countersConstructor.ReinspCounters(ReinspNCRs);
-
-            if (filter1 != null)
+            if (ncrsByActiveTime != null)
             {
-                haverContext = haverContext.Where(p => p.Phase == filter1);
+                //Fieltering overdue NCRs, by time and by phase
+                if (ncrsByActiveTime == "+3d")
+                {
+                    haverContext = haverContext.Where(ncr => ncr.CreatedOn.Value.Date <= threeDaysAgo);
+                }
+                else if (ncrsByActiveTime == "48h")
+                {
+                    haverContext = haverContext.Where(ncr => ncr.CreatedOn.Value.Date == twoDaysAgo);
+                                               
+                }
+                else if (ncrsByActiveTime == "24h")
+                {
+                    haverContext = haverContext.Where(ncr => ncr.CreatedOn.Value.Date == oneDayAgo);
+                }
             }
             if (SupplierID.HasValue)
             {
@@ -524,7 +528,7 @@ namespace Haver.Controllers
                 ViewData["sortDirection"] = sortDirection;
 
                 // Pagination
-                int pageSize = 5; // Number of items per page
+                int pageSize = 4; // Number of items per page
                 int recordsInTheList = defectivePartsList.Count();
                 int numbOfPages = (int)Math.Ceiling((double)recordsInTheList / pageSize);
 
@@ -565,7 +569,7 @@ namespace Haver.Controllers
                 var qualRepsLinkedToSupplier = GetQualRepsBySupplier(supplierNumber, timeSpan, false);
 
                 //Is data enough?
-                partsDefectiveVM.EnoughData = qualRepsLinkedToSupplier.Count() <= 3 ? false : true;
+                partsDefectiveVM.EnoughData = qualRepsLinkedToSupplier.Count() <= 1 ? false : true;
 
                 (double periodChange, int total, int previousTotal) periodChange = PoPChange(supplierNumber, timeSpan, "supplier");
 
@@ -779,6 +783,17 @@ namespace Haver.Controllers
                         ncrTimeList = ncrTimeList.OrderByDescending(d => d.SinceCreated).ToList();
                     }
                 }
+                else if (sortField == "LAST FILLED")
+                {
+                    if (sortDirection == "asc")
+                    {
+                        ncrTimeList = ncrTimeList.OrderBy(d => d.LastFilled).ToList();
+                    }
+                    else
+                    {
+                        ncrTimeList = ncrTimeList.OrderByDescending(d => d.LastFilled).ToList();
+                    }
+                }
 
                 ViewData["sortDirection"] = sortDirection;
 
@@ -915,7 +930,7 @@ namespace Haver.Controllers
                 var qualRepsLinkedToPart = GetQualRepsByPart(partNumber, timeSpan, false);
 
                 //Is data enough?
-                partsDefectiveVM.EnoughData = qualRepsLinkedToPart.Count() <= 3 ? false : true;
+                partsDefectiveVM.EnoughData = qualRepsLinkedToPart.Count() <= 1 ? false : true;
 
                 (double periodChange, int total, int previousTotal) periodChange = PoPChange(partNumber, timeSpan, "part");
 
@@ -1096,6 +1111,7 @@ namespace Haver.Controllers
                                                                             .Where(p => p.QualityRepDate <= timeSpan[1])
                                                                             .ToList();
             }
+
             return qualRepsLinkedToPart;
         }
         public List<QualityRepresentative> GetQualRepsBySupplier(string supplierNumber, List<DateOnly> timeSpan, bool previousTimeSpan)
@@ -1222,6 +1238,22 @@ namespace Haver.Controllers
                     TempData["ErrorAlert"] = "Unable to complete task. Please try again, if error persist see your system administrator.";
                     return RedirectToAction(nameof(Index));
                 }
+                if (quality.Phase != "Quality Representative")
+                {
+                    TempData["ErrorAlert"] = "Unable to complete task. The NCR was already filled.";
+                    return RedirectToAction(nameof(Index));
+                }
+                if (quality.IsNCRArchived == true)
+                {
+                    TempData["ErrorAlert"] = "Unable to complete task. The NCR was Archived.";
+                    return RedirectToAction(nameof(Index));
+                }
+                if (quality.Status != "Active")
+                {
+                    TempData["ErrorAlert"] = "Unable to complete task. The is not active anymore.";
+                    return RedirectToAction(nameof(Index));
+                }
+
                 //Check for concurrency error
                 if (rowVersion != null)
                 {
@@ -1311,6 +1343,12 @@ namespace Haver.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    var usersInQualInspRole = _userManager.GetUsersInRoleAsync("Quality Inspector").Result;
+                    var usersInEngineeringRole = _userManager.GetUsersInRoleAsync("Engineer").Result;
+                    //Initialize Notification sender
+                    NotificationGenerator notificationGenerator = new NotificationGenerator(_context, _emailSender, _userManager);
+                    List<NCR> ncrToNotify = new List<NCR>();
+                    //Initialize NCR generator
                     NCRNumber createNCRNumber = new NCRNumber();
 
                     string emailSubject = $"NCR {genNCR.NCRNum} - {Subject}";
@@ -1381,17 +1419,17 @@ namespace Haver.Controllers
                         else
                         {
                             var nowTorontoOne = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time"));
+                            //Initialize draft model
+                            NCR ncrModelDraft = new NCR();
+
                             //Set up NCR model for draft
-                            NCR ncrModelDraft = new NCR
-                            {
-                                IsNCRDraft = true,
-                                CreatedOnDO = DateOnly.FromDateTime(nowTorontoOne),
-                                CreatedOn = nowTorontoOne,
-                                Status = "Active",
-                                Phase = "Quality Representative",
-                                NCRNum = null,
-                                DraftQualityRepresentative = draftQual
-                            };
+                            ncrModelDraft.IsNCRDraft = true;
+                            ncrModelDraft.CreatedOnDO = DateOnly.FromDateTime(nowTorontoOne);
+                            ncrModelDraft.CreatedOn = nowTorontoOne;
+                            ncrModelDraft.Status = "Active";
+                            ncrModelDraft.Phase = "Quality Representative";
+                            ncrModelDraft.NCRNum = null;
+                            ncrModelDraft.DraftQualityRepresentative = draftQual;
 
                             //Add photos and pictures
                             await AddQualityPhotos(ncrModelDraft.DraftQualityRepresentative, Pictures);
@@ -1541,8 +1579,11 @@ namespace Haver.Controllers
                         
                         await _context.SaveChangesAsync();
 
-                        emailSubject = $"NCR {ncrToUpdate.NCRNum} - {Subject}";
-                        SendNotificationEmail(selectedOptions, emailSubject, emailContent);
+                        ncrToNotify.Add(ncrToUpdate);
+                        notificationGenerator.SendNotificationsForNCRList(ncrToNotify, (List<IdentityUser>)usersInEngineeringRole, "create", null, emailContent);
+
+                        //emailSubject = $"NCR {ncrToUpdate.NCRNum} - {Subject}";
+                        //SendNotificationEmail(selectedOptions, emailSubject, emailContent);
                         TempData["SuccessAlert"] = $"A new NCR of number {ncrToUpdate.NCRNum} was started.";
 
                         return RedirectToAction("Index");
@@ -1574,8 +1615,12 @@ namespace Haver.Controllers
                         _context.NCRs.Update(ncrModelFill);
                         await _context.SaveChangesAsync();
 
+                        //Send notification
+                        ncrToNotify.Add(ncrModelFill);
+                        notificationGenerator.SendNotificationsForNCRList(ncrToNotify, (List<IdentityUser>)usersInEngineeringRole, "create", null, emailContent);
+
                         emailSubject = $"NCR {ncrModelFill.NCRNum} - {Subject}";
-                        SendNotificationEmail(selectedOptions, emailSubject, emailContent);
+                        //SendNotificationEmail(selectedOptions, emailSubject, emailContent);
                         TempData["SuccessAlert"] = $"A new NCR of number {ncrModelFill.NCRNum} was started.";
 
                         return RedirectToAction("Index");
@@ -1611,16 +1656,24 @@ namespace Haver.Controllers
                     if (genNCR.QualityRepresentative.ConfirmingEng == true)
                     {   
                         _context.NCRs.Add(ncrModelNoEng);
+                        //Add ncr notification list
+                        ncrToNotify.Add(ncrModelNoEng);
+                        
                     }
                     else
                     {
                         _context.NCRs.Add(ncrModel);
+                        //Add ncr notification list
+                        ncrToNotify.Add(ncrModel);
                     }
                     _context.NCRNumbers.Add(createNCRNumber);
                     
                     await _context.SaveChangesAsync();
 
-                    SendNotificationEmail(selectedOptions, emailSubject, emailContent);
+                    //Send notification
+                    notificationGenerator.SendNotificationsForNCRList(ncrToNotify, (List<IdentityUser>)usersInEngineeringRole, "create", null, emailContent);
+
+                    //SendNotificationEmail(selectedOptions, emailSubject, emailContent);
                     
                     return RedirectToAction("Index");
                 }
@@ -1668,16 +1721,14 @@ namespace Haver.Controllers
             }
 
             //Check for concurrency when reloading the page
-            NCR ncrModelRepeat = GetNCR(quality.ID);
-            if (ncrModelRepeat == null)
-            {
-                TempData["ErrorAlert"] = "Unable to complete task. Please try again, if error persist see your system administrator.";
-                return RedirectToAction(nameof(Index));
-            }
-            _context.Entry(ncrModelRepeat).Reload();
+            PopulateUserEmailData(selectedOptions);
+            PopulateList();
 
+            NCR ncrModelRepeat = GetNCR(quality.ID);
             if (ncrModelRepeat != null)
             {
+                _context.Entry(ncrModelRepeat).Reload();
+
                 if (!ncrModelRepeat.RowVersion.SequenceEqual(RowVersion))
                 {
                     if (!NCRExists(ncrModelRepeat.ID))
@@ -1698,22 +1749,19 @@ namespace Haver.Controllers
                     }
                     return RedirectToAction(nameof(Index));
                 }
+                ncrModelRepeat.QualityRepresentative = quality.QualityRepresentative;
+                ncrModelRepeat.QualityRepresentative = genNCR.QualityRepresentative;
+                TempData["SectionEdited"] = sectionEdited;
+
+                //If NCR is a draft
+                if (ncrModelRepeat.IsNCRDraft)
+                {
+                    ncrModelRepeat.QualityRepresentative.QualityPhotos = ncrModelRepeat.DraftQualityRepresentative.QualityPhotos;
+                    ncrModelRepeat.QualityRepresentative.VideoLinks = ncrModelRepeat.DraftQualityRepresentative.VideoLinks;
+                    return View("Create", ncrModelRepeat);
+                }
             }
 
-            ncrModelRepeat.QualityRepresentative = quality.QualityRepresentative;
-            ncrModelRepeat.QualityRepresentative = genNCR.QualityRepresentative;
-            TempData["SectionEdited"] = sectionEdited;
-
-            PopulateUserEmailData(selectedOptions);
-            PopulateList();
-
-            //If NCR is a draft
-            if (ncrModelRepeat.IsNCRDraft)
-            {
-                ncrModelRepeat.QualityRepresentative.QualityPhotos = ncrModelRepeat.DraftQualityRepresentative.QualityPhotos;
-                ncrModelRepeat.QualityRepresentative.VideoLinks = ncrModelRepeat.DraftQualityRepresentative.VideoLinks;
-                return View("Create", ncrModelRepeat);
-            }
             return View("Create", genNCR);
         }
 
@@ -1731,12 +1779,30 @@ namespace Haver.Controllers
                 TempData["ErrorAlert"] = "Unable to complete task. Please try again, if error persist see your system administrator.";
                 return RedirectToAction(nameof(Index));
             }
+            if (eng.Phase != "Engineering")
+            {
+                TempData["ErrorAlert"] = "Unable to complete task. The NCR was already filled.";
+                return RedirectToAction(nameof(Index));
+            }
+            if (eng.IsNCRArchived == true)
+            {
+                TempData["ErrorAlert"] = "Unable to complete task. The NCR was Archived.";
+                return RedirectToAction(nameof(Index));
+            }
+            if (eng.Status != "Active")
+            {
+                TempData["ErrorAlert"] = "Unable to complete task. The is not active anymore.";
+                return RedirectToAction(nameof(Index));
+            }
 
             //Check for concurrency error
-            if (!eng.RowVersion.SequenceEqual(rowVersion))
+            if(rowVersion != null)
             {
-                TempData["ErrorAlert"] = "This NCR was edited or modified by another user. Try again.";
-                return RedirectToAction("Index");
+                if (!eng.RowVersion.SequenceEqual(rowVersion))
+                {
+                    TempData["ErrorAlert"] = "This NCR was edited or modified by another user. Try again.";
+                    return RedirectToAction("Index");
+                }
             }
 
             if (eng.IsNCRDraft == true)
@@ -1782,6 +1848,11 @@ namespace Haver.Controllers
                 {
                     PopulateUserEmailData(selectedOptions);
                     NCR ncrModel = GetNCR(eng.ID);
+
+                    //Intialize Notification sender
+                    NotificationGenerator notificationGenerator = new NotificationGenerator(_context, _emailSender, _userManager);
+                    List<NCR> ncrToNotify = new List<NCR>();
+                    var usersInOperationsRole = _userManager.GetUsersInRoleAsync("Operations Manager").Result;
 
                     string emailSubject = $"NCR {ncrModel.NCRNum} - {Subject}";
                     TempData["SuccessAlert"] = $"NCR {ncrModel.NCRNum}. 'Engineering' section was successfully filled.";
@@ -1945,7 +2016,11 @@ namespace Haver.Controllers
 
                         await _context.SaveChangesAsync();
 
-                        SendNotificationEmail(selectedOptions, emailSubject, emailContent);
+                        //Send Notification
+                        ncrToNotify.Add(ncrModel);
+                        notificationGenerator.SendNotificationsForNCRList(ncrToNotify, (List<IdentityUser>)usersInOperationsRole, "fill", null, emailContent);
+
+                        //SendNotificationEmail(selectedOptions, emailSubject, emailContent);
 
                         return RedirectToAction("Index");
                     }
@@ -1959,7 +2034,11 @@ namespace Haver.Controllers
                     _context.NCRs.Update(ncrModel);
                     await _context.SaveChangesAsync();
 
-                    SendNotificationEmail(selectedOptions, emailSubject, emailContent);
+                    //SendNotificationEmail(selectedOptions, emailSubject, emailContent);
+
+                    //Send Notification
+                    ncrToNotify.Add(ncrModel);
+                    notificationGenerator.SendNotificationsForNCRList(ncrToNotify, (List<IdentityUser>)usersInOperationsRole, "fill", null, emailContent);
 
                     return RedirectToAction("Index");
                 }
@@ -2056,12 +2135,30 @@ namespace Haver.Controllers
                 TempData["ErrorAlert"] = "Unable to complete task. Please try again, if error persist see your system administrator.";
                 return RedirectToAction(nameof(Index));
             }
+            if (oper.Phase != "Operations")
+            {
+                TempData["ErrorAlert"] = "Unable to complete task. The NCR was already filled.";
+                return RedirectToAction(nameof(Index));
+            }
+            if (oper.IsNCRArchived == true)
+            {
+                TempData["ErrorAlert"] = "Unable to complete task. The NCR was Archived.";
+                return RedirectToAction(nameof(Index));
+            }
+            if (oper.Status != "Active")
+            {
+                TempData["ErrorAlert"] = "Unable to complete task. The is not active anymore.";
+                return RedirectToAction(nameof(Index));
+            }
 
             //Check for concurrency error
-            if (!oper.RowVersion.SequenceEqual(rowVersion))
+            if (rowVersion != null)
             {
-                TempData["ErrorAlert"] = "This NCR was edited or modified by another user. Try again.";
-                return RedirectToAction("Index");
+                if (!oper.RowVersion.SequenceEqual(rowVersion))
+                {
+                    TempData["ErrorAlert"] = "This NCR was edited or modified by another user. Try again.";
+                    return RedirectToAction("Index");
+                }
             }
 
             if (oper.IsNCRDraft == true)
@@ -2106,6 +2203,12 @@ namespace Haver.Controllers
 
                     PopulateUserEmailData(selectedOptions);
                     NCR ncrModel = GetNCR(oper.ID);
+
+
+                    //Intialize Notification sender
+                    var usersInProcurementRole = _userManager.GetUsersInRoleAsync("Procurement").Result;
+                    NotificationGenerator notificationGenerator = new NotificationGenerator(_context, _emailSender, _userManager);
+                    List<NCR> ncrToNotify = new List<NCR>();
 
                     string emailSubject = $"NCR {ncrModel.NCRNum} - {Subject}";
                     TempData["SuccessAlert"] = $"NCR {ncrModel.NCRNum}. 'Operations' section was successfully filled.";
@@ -2262,7 +2365,11 @@ namespace Haver.Controllers
 
                         await _context.SaveChangesAsync();
 
-                        SendNotificationEmail(selectedOptions, emailSubject, emailContent);
+                        //Send Notification
+                        ncrToNotify.Add(ncrModel);
+                        notificationGenerator.SendNotificationsForNCRList(ncrToNotify, (List<IdentityUser>)usersInProcurementRole, "fill", null, emailContent);
+
+                        //SendNotificationEmail(selectedOptions, emailSubject, emailContent);
 
                         return RedirectToAction("Index");
                     }
@@ -2275,7 +2382,11 @@ namespace Haver.Controllers
                     _context.NCRs.Update(ncrModel);
                     await _context.SaveChangesAsync();
 
-                    SendNotificationEmail(selectedOptions, emailSubject, emailContent);
+                    //SendNotificationEmail(selectedOptions, emailSubject, emailContent);
+
+                    //Send Notification
+                    ncrToNotify.Add(ncrModel);
+                    notificationGenerator.SendNotificationsForNCRList(ncrToNotify, (List<IdentityUser>)usersInProcurementRole, "fill", null, emailContent);
 
                     return RedirectToAction("Index");
                 }
@@ -2381,12 +2492,31 @@ namespace Haver.Controllers
                 TempData["ErrorAlert"] = "Unable to complete task. Please try again, if error persist see your system administrator.";
                 return RedirectToAction(nameof(Index));
             }
+            if (proc.Phase != "Procurement")
+            {
+                TempData["ErrorAlert"] = "Unable to complete task. The NCR was already filled.";
+                return RedirectToAction(nameof(Index));
+            }
+            if (proc.IsNCRArchived == true)
+            {
+                TempData["ErrorAlert"] = "Unable to complete task. The NCR was Archived.";
+                return RedirectToAction(nameof(Index));
+            }
+            if (proc.Status != "Active")
+            {
+                TempData["ErrorAlert"] = "Unable to complete task. The is not active anymore.";
+                return RedirectToAction(nameof(Index));
+            }
 
             //Check for concurrency error
-            if (!proc.RowVersion.SequenceEqual(rowVersion))
+            if (rowVersion != null)
             {
-                TempData["ErrorAlert"] = "This NCR was edited or modified by another user. Try again.";
-                return RedirectToAction("Index");
+                //Check for concurrency error
+                if (!proc.RowVersion.SequenceEqual(rowVersion))
+                {
+                    TempData["ErrorAlert"] = "This NCR was edited or modified by another user. Try again.";
+                    return RedirectToAction("Index");
+                }
             }
 
             if (proc.IsNCRDraft == true)
@@ -2430,6 +2560,11 @@ namespace Haver.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    //Intialize Notification sender
+                    NotificationGenerator notificationGenerator = new NotificationGenerator(_context, _emailSender, _userManager);
+                    List<NCR> ncrToNotify = new List<NCR>();
+                    var usersInQualInspRole = _userManager.GetUsersInRoleAsync("Quality Inspector").Result;
+
                     PopulateUserEmailData(selectedOptions);
                     NCR ncrModel = GetNCR(proc.ID);
 
@@ -2593,7 +2728,11 @@ namespace Haver.Controllers
 
                         await _context.SaveChangesAsync();
 
-                        SendNotificationEmail(selectedOptions, emailSubject, emailContent);
+                        //Send Notification
+                        ncrToNotify.Add(ncrModel);
+                        notificationGenerator.SendNotificationsForNCRList(ncrToNotify, (List<IdentityUser>)usersInQualInspRole, "fill", null, emailContent);
+
+                        //SendNotificationEmail(selectedOptions, emailSubject, emailContent);
 
                         return RedirectToAction("Index");
                     }
@@ -2607,7 +2746,11 @@ namespace Haver.Controllers
                     _context.NCRs.Update(ncrModel);
                     await _context.SaveChangesAsync();
 
-                    SendNotificationEmail(selectedOptions, emailSubject, emailContent);
+                    //Send Notification
+                    ncrToNotify.Add(ncrModel);
+                    notificationGenerator.SendNotificationsForNCRList(ncrToNotify, (List<IdentityUser>)usersInQualInspRole, "fill", null, emailContent);
+
+                    //SendNotificationEmail(selectedOptions, emailSubject, emailContent);
                     return RedirectToAction("Index");
                 }
             }
@@ -2712,12 +2855,29 @@ namespace Haver.Controllers
                 TempData["ErrorAlert"] = "Unable to complete task. Please try again, if error persist see your system administrator.";
                 return RedirectToAction(nameof(Index));
             }
-
-            //Check for concurrency error
-            if (!reinspec.RowVersion.SequenceEqual(rowVersion))
+            if (reinspec.Phase != "Reinspection")
             {
-                TempData["ErrorAlert"] = "This NCR was edited or modified by another user. Try again.";
-                return RedirectToAction("Index");
+                TempData["ErrorAlert"] = "Unable to complete task. The NCR was already filled.";
+                return RedirectToAction(nameof(Index));
+            }
+            if (reinspec.IsNCRArchived == true)
+            {
+                TempData["ErrorAlert"] = "Unable to complete task. The NCR was Archived.";
+                return RedirectToAction(nameof(Index));
+            }
+            if (reinspec.Status != "Active")
+            {
+                TempData["ErrorAlert"] = "Unable to complete task. The is not active anymore.";
+                return RedirectToAction(nameof(Index));
+            }
+            if(rowVersion != null)
+            {
+                //Check for concurrency error
+                if (!reinspec.RowVersion.SequenceEqual(rowVersion))
+                {
+                    TempData["ErrorAlert"] = "This NCR was edited or modified by another user. Try again.";
+                    return RedirectToAction("Index");
+                }
             }
 
             if (reinspec.IsNCRDraft == true)
@@ -2754,6 +2914,11 @@ namespace Haver.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    //Intialize Notification sender
+                    NotificationGenerator notificationGenerator = new NotificationGenerator(_context, _emailSender, _userManager);
+                    List<NCR> ncrToNotify = new List<NCR>();
+                    var usersInQualInspRole = _userManager.GetUsersInRoleAsync("Quality Inspector").Result;
+
                     PopulateUserEmailData(selectedOptions);
 
                     NCR ncrModel = GetNCR(reinspec.ID);
@@ -2934,9 +3099,13 @@ namespace Haver.Controllers
 
                             await _context.SaveChangesAsync();
 
-                            SendNotificationEmail(selectedOptions, emailSubject, emailContent);
+                            //SendNotificationEmail(selectedOptions, emailSubject, emailContent);
                             TempData["WarningAlert"] = $"NCR {ncrModel.NCRNum}. Reinspection rejected. A new NCR, numbered {repeatNCR.NCRNum}, was created and linked to the previous one.";
                             TempData["InfoAlertCreate"] = $"For your convenience, some of the data from the previous NCR was passed to this one, you can change it if necessary.";
+
+                            //Send Notification
+                            ncrToNotify.Add(repeatNCR);
+                            notificationGenerator.SendNotificationsForNCRList(ncrToNotify, (List<IdentityUser>)usersInQualInspRole, "rejected", null, emailContent);
 
                             return RedirectToAction("CreateQualityRepresentative", new { id = repeatNCR.ID});
                         }
@@ -2944,11 +3113,19 @@ namespace Haver.Controllers
                         _context.NCRs.Update(ncrModel);
                         await _context.SaveChangesAsync();
 
-                        SendNotificationEmail(selectedOptions, emailSubject, emailContent);
+                        ncrToNotify.Add(ncrModel);
+
+                        //SendNotificationEmail(selectedOptions, emailSubject, emailContent);
                         if (reinspec.Reinspection.ReinspecAccepted == false && ncrModel.PrevNCRID != null)
                         {
                             TempData["WarningAlert"] = $"NCR {ncrModel.NCRNum}. Reinspection rejected for a second time. The NCR was closed.";
+                            //Send Notification
+                            notificationGenerator.SendNotificationsForNCRList(ncrToNotify, (List<IdentityUser>)usersInQualInspRole, "rejected", null, emailContent);
+                            return RedirectToAction("Index");
                         }
+
+                        //Send Notification
+                        notificationGenerator.SendNotificationsForNCRList(ncrToNotify, (List<IdentityUser>)usersInQualInspRole, "closed", null, emailContent);
 
                         return RedirectToAction("Index");
 
@@ -3002,9 +3179,14 @@ namespace Haver.Controllers
                         //Test this
                         await _context.SaveChangesAsync();
 
-                        SendNotificationEmail(selectedOptions, emailSubject, emailContent);
+
+                        //SendNotificationEmail(selectedOptions, emailSubject, emailContent);
                         TempData["WarningAlert"] = $"NCR {ncrModel.NCRNum}. Reinspection rejected. A new NCR, numbered {repeatNCR.NCRNum}, was created and linked to the previous one.";
                         TempData["InfoAlertCreate"] = $"For your convenience, some of the data from the previous NCR was passed to this one, you can change it if necessary.";
+
+                        //Send Notification
+                        ncrToNotify.Add(repeatNCR);
+                        notificationGenerator.SendNotificationsForNCRList(ncrToNotify, (List<IdentityUser>)usersInQualInspRole, "rejected", null, emailContent);
 
                         _context.Entry(ncrModel).Reload();
                         return RedirectToAction("CreateQualityRepresentative", new { id = repeatNCR.ID});
@@ -3014,11 +3196,18 @@ namespace Haver.Controllers
                     _context.NCRs.Update(ncrModel);
                     await _context.SaveChangesAsync();
 
-                    SendNotificationEmail(selectedOptions, emailSubject, emailContent);
+                    //Send Notification
+                    ncrToNotify.Add(ncrModel);
+
+                    //SendNotificationEmail(selectedOptions, emailSubject, emailContent);
                     if (reinspec.Reinspection.ReinspecAccepted == false && ncrModel.PrevNCRID != null)
                     {
                         TempData["WarningAlert"] = $"NCR {ncrModel.NCRNum}. Reinspection rejected for a second time. The NCR was closed.";
+                        notificationGenerator.SendNotificationsForNCRList(ncrToNotify, (List<IdentityUser>)usersInQualInspRole, "rejectedAgain", null, emailContent);
+                        return RedirectToAction("Index");
                     }
+
+                    notificationGenerator.SendNotificationsForNCRList(ncrToNotify, (List<IdentityUser>)usersInQualInspRole, "close", null, emailContent);
 
                     return RedirectToAction("Index");
                 }
@@ -3202,6 +3391,15 @@ namespace Haver.Controllers
                     .Include(r => r.Reinspection.VideoLinks)
                 .FirstOrDefaultAsync(p => p.ID == id);
 
+            //Intialize Notification sender
+            var usersInAdminRole = _userManager.GetUsersInRoleAsync("Admin").Result;
+            var usersInQualInspRole = _userManager.GetUsersInRoleAsync("Quality Inspector").Result;
+            var usersInEngineeringRole = _userManager.GetUsersInRoleAsync("Engineer").Result;
+            var usersInOperationsRole = _userManager.GetUsersInRoleAsync("Operations Manager").Result;
+            var usersInProcurementRole = _userManager.GetUsersInRoleAsync("Procurement").Result;
+            NotificationGenerator notificationGenerator = new NotificationGenerator(_context, _emailSender, _userManager);
+            List<NCR> ncrToNotify = new List<NCR>();
+
             //Check that we got the NCR or exit with a not found error
             if (ncrToUpdate == null)
             {
@@ -3219,23 +3417,28 @@ namespace Haver.Controllers
             //Check if the section being edited is null
             else if (sectionEdited == "QualityRepresentative" && !QualRepExists(ncrToUpdate.QualityRepresentative.ID))
             {
-                return NotFound();
+                TempData["ErrorAlert"] = "Unable to complete task. Please try again, if error persist see your system administrator.";
+                return RedirectToAction(nameof(Index));
             }
             else if (sectionEdited == "Engineering" && !EngineeringExists(ncrToUpdate.Engineering.ID))
             {
-                return NotFound();
+                TempData["ErrorAlert"] = "Unable to complete task. Please try again, if error persist see your system administrator.";
+                return RedirectToAction(nameof(Index));
             }
             else if (sectionEdited == "Operations" && !OperationsExists(ncrToUpdate.Operations.ID))
             {
-                return NotFound();
+                TempData["ErrorAlert"] = "Unable to complete task. Please try again, if error persist see your system administrator.";
+                return RedirectToAction(nameof(Index));
             }
             else if (sectionEdited == "Procurement" && !ProcurementExists(ncrToUpdate.Procurement.ID))
             {
-                return NotFound();
+                TempData["ErrorAlert"] = "Unable to complete task. Please try again, if error persist see your system administrator.";
+                return RedirectToAction(nameof(Index));
             }
             else if (sectionEdited == "Reinspection" && !ReinspectionExists(ncrToUpdate.Reinspection.ID))
             {
-                return NotFound();
+                TempData["ErrorAlert"] = "Unable to complete task. Please try again, if error persist see your system administrator.";
+                return RedirectToAction(nameof(Index));
             }
 
             //Put the original RowVersion value in the OriginalValues collection for the entity
@@ -3293,10 +3496,20 @@ namespace Haver.Controllers
                     }
                     string emailSubject = $"NCR {ncrToUpdate.NCRNum} - {Subject}";
 
+                    ncrToUpdate.SectionUpdated = sectionEdited;
+
                     _context.Update(ncrToUpdate);
                     await _context.SaveChangesAsync();
 
-                    SendNotificationEmail(selectedOptions, emailSubject, emailContent);
+                    //Send Notification
+                    ncrToNotify.Add(ncrToUpdate);
+                    notificationGenerator.SendNotificationsForNCRList(ncrToNotify, (List<IdentityUser>)usersInQualInspRole, "edited", "noAdmin");
+                    notificationGenerator.SendNotificationsForNCRList(ncrToNotify, (List<IdentityUser>)usersInEngineeringRole, "edited", "noAdmin");
+                    notificationGenerator.SendNotificationsForNCRList(ncrToNotify, (List<IdentityUser>)usersInOperationsRole, "edited", "noAdmin");
+                    notificationGenerator.SendNotificationsForNCRList(ncrToNotify, (List<IdentityUser>)usersInProcurementRole, "edited", "noAdmin");
+                    notificationGenerator.SendNotificationsForNCRListAdmin(ncrToNotify, (List<IdentityUser>)usersInAdminRole, "edited");
+
+                    //SendNotificationEmail(selectedOptions, emailSubject, emailContent);
 
                     //Send on to details with the section edited open
                     TempData["SectionEdited"] = sectionEdited;
@@ -3941,51 +4154,6 @@ namespace Haver.Controllers
             return Task.CompletedTask;
         }
 
-        ////Method to add Photos
-        //public static async Task AddQualityPhotos<T>(T module, List<IFormFile> photos) where T : class
-        //{
-        //    var qualityPhotosProperty = module.GetType().GetProperty("QualityPhotos");
-        //    if (qualityPhotosProperty != null && qualityPhotosProperty.PropertyType == typeof(List<Photo>))
-        //    {
-        //        var qualityPhotos = qualityPhotosProperty.GetValue(module) as List<Photo>;
-        //        if (qualityPhotos == null)
-        //        {
-        //            qualityPhotos = new List<Photo>();
-        //        }
-
-        //        foreach (var photo in photos)
-        //        {
-        //            string mimeType = photo.ContentType;
-        //            long fileLength = photo.Length;
-
-        //            if (!(string.IsNullOrEmpty(mimeType) || fileLength == 0))
-        //            {
-        //                if (mimeType.Contains("image"))
-        //                {
-        //                    using (var memoryStream = new MemoryStream())
-        //                    {
-        //                        await photo.CopyToAsync(memoryStream);
-        //                        var photoArray = memoryStream.ToArray();
-
-        //                        // Create a new QualityPhoto instance for each image
-        //                        var qualityPhoto = new Photo
-        //                        {
-        //                            Content = photoArray,
-        //                            MimeType = mimeType
-        //                        };
-
-        //                        // Add the photo to the QualityPhotos list
-        //                        qualityPhotos.Add(qualityPhoto);
-        //                    }
-        //                }
-        //            }
-        //        }
-
-        //        // Set the updated QualityPhotos list back to the module
-        //        qualityPhotosProperty.SetValue(module, qualityPhotos);
-        //    }
-        //}
-
         // Method to add Photos
         public static async Task AddQualityPhotos<T>(T module, List<IFormFile> photos) where T : class
         {
@@ -4019,7 +4187,50 @@ namespace Haver.Controllers
                                     {
                                         Quality = 70 // Adjust quality as per your requirement
                                     };
-                                    //image.Mutate(x => x.Resize(1000, 1000)); // Resize image to maximum dimensions
+
+                                    // Define the percentage by which you want to resize the image
+                                    double resizePercentage = 0.6; // Resize to 50% of the original size
+
+                                    // Check if either width or height exceeds the threshold size
+                                    if ((image.Width > 1500 && image.Width <= 3000) || (image.Height > 1500 && image.Height <= 3000))
+                                    {
+                                        // Calculate the new dimensions based on the percentage
+                                        int newWidth = (int)(image.Width * resizePercentage);
+                                        int newHeight = (int)(image.Height * resizePercentage);
+
+                                        // Resize the image to the new dimensions
+                                        image.Mutate(x => x.Resize(newWidth, newHeight));
+                                    }
+                                    else if ((image.Width >= 3001 && image.Width <= 5000) || (image.Height >= 3001 && image.Height <= 3000))
+                                    {
+                                        resizePercentage = 0.7;
+                                        // Calculate the new dimensions based on the percentage
+                                        int newWidth = (int)(image.Width * resizePercentage);
+                                        int newHeight = (int)(image.Height * resizePercentage);
+
+                                        // Resize the image to the new dimensions
+                                        image.Mutate(x => x.Resize(newWidth, newHeight));
+                                    }
+                                    else if ((image.Width >= 5001 && image.Width <= 8000) || (image.Height >= 5001 && image.Height <= 8000))
+                                    {
+                                        resizePercentage = 0.8;
+                                        // Calculate the new dimensions based on the percentage
+                                        int newWidth = (int)(image.Width * resizePercentage);
+                                        int newHeight = (int)(image.Height * resizePercentage);
+
+                                        // Resize the image to the new dimensions
+                                        image.Mutate(x => x.Resize(newWidth, newHeight));
+                                    }
+                                    else
+                                    {
+                                        resizePercentage = 0.9;
+                                        // Calculate the new dimensions based on the percentage
+                                        int newWidth = (int)(image.Width * resizePercentage);
+                                        int newHeight = (int)(image.Height * resizePercentage);
+
+                                        // Resize the image to the new dimensions
+                                        image.Mutate(x => x.Resize(newWidth, newHeight));
+                                    }
 
                                     // Convert the image to byte array
                                     using (var outputStream = new MemoryStream())

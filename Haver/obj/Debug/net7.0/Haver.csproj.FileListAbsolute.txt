@@ -3382,3 +3382,6 @@ D:\My Work\backup5 - Copy (5)\haver7-iago\Haver\obj\Debug\net7.0\Haver.pdb
 D:\My Work\backup5 - Copy (5)\haver7-iago\Haver\obj\Debug\net7.0\Haver.genruntimeconfig.cache
 D:\My Work\backup5 - Copy (5)\haver7-iago\Haver\obj\Debug\net7.0\ref\Haver.dll
 D:\My Work\backup5 - Copy (5)\haver7-iago\Haver\bin\Debug\net7.0\SixLabors.ImageSharp.dll
+D:\My Work\backup5 - Copy (5)\haver7-iago\Haver\bin\Debug\net7.0\Quartz.dll
+D:\My Work\backup5 - Copy (5)\haver7-iago\Haver\bin\Debug\net7.0\Quartz.Extensions.DependencyInjection.dll
+D:\My Work\backup5 - Copy (5)\haver7-iago\Haver\bin\Debug\net7.0\Quartz.Extensions.Hosting.dll
