@@ -7,6 +7,9 @@
 @{
     var warningAlert = TempData["ArchivingWarningAlert"] as string;
     var infoAlert = TempData["ArchivingInfoAlert"] as string;
+
+    var supplierSelected = ViewData["SupplierSelected"] as string;
+    var ncrNumSelected = ViewData["NcrNumSelected"] as string;
 }
 
 @if (!string.IsNullOrEmpty(infoAlert)) // Check if the alert message is not empty
@@ -79,7 +82,15 @@
         <div class="row">
             <div class="form-group col-md-2">
                 <label class="control-label">Search by NCR number</label>
-                @Html.TextBox("SearchString", null, new { @class = "form-control search-box", @placeholder = "Ex: 2024-023" })
+                <div class="input-search-box">
+                    <input name="SearchString" class="form-control" list="datalistOptions" id="exampleDataList" placeholder="Search NCR number" autocomplete="off" type="text" value="@ncrNumSelected">
+                </div>
+                <datalist id="datalistOptions">
+                    @foreach (var ncr in ViewBag.NCRsToDL)
+                    {
+                        <option value="@ncr.NCRNum"></option>
+                    }
+                </datalist>
             </div>
             <div class="form-group col-md-2">
                 <label class="control-label">Start Date</label>
@@ -91,7 +102,15 @@
             </div>
             <div class="form-group col-md-3">
                 <label class="control-label">Filter by Supplier</label>
-                @Html.DropDownList("SupplierID", null, "All Suppliers", htmlAttributes: new { @class = "form-select" })
+                <div class="input-search-box">
+                    <input name="SupplierID" class="form-control" list="supOptions" id="exampleDataListTwo" placeholder="Search supplier" autocomplete="off" type="text" value="@supplierSelected">
+                </div>
+                <datalist id="supOptions">
+                    @foreach (var item in ViewBag.SupplierSummary)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </datalist>
             </div>
             <div class="form-group form-switch col-md-3 fieltering-checkbox">
                 <label class="form-check-label" for="flexSwitchCheckDefault">Hide inactive/closed NCRs?</label>
@@ -126,7 +145,7 @@
                     <th>
                         PHASE
                     </th>
-                    <th>
+                    <th class="pono-row-header">
                         PO OR PROD NO.
                     </th>
                     <th>
@@ -147,7 +166,7 @@
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td>
+                        <td class="ncr-num-td">
                             @if (item.NCRNum == null)
                             {
                                 <div>0000-000</div>
@@ -175,17 +194,17 @@
                                 <span style="color: var(--haver-blue);">@Html.DisplayFor(modelItem => item.Status)</span>
                             }
                         </td>
-                        <td>
+                        <td class="ncr-row-phase">
                             @Html.DisplayFor(modelItem => item.Phase)
                         </td>
-                        <td>
+                        <td class="pono-row">
                             @Html.DisplayFor(modelItem => item.QualityRepresentative.PoNo)
                         </td>
-                        <td>
+                        <td class="supplier-name-row">
                             @Html.DisplayFor(modelItem => item.QualityRepresentative.Supplier.SupplierName)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.CreatedOn)
+                            @Html.DisplayFor(modelItem => item.CreatedOnDO)
                         </td>
                         <td class="archivingCheckTd">
                             <input type="checkbox" name="NCRsID" value="@item.ID">

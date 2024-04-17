@@ -24,7 +24,7 @@ namespace Haver.Utilities
                           .Include(ncr => ncr.Engineering)
                           .Include(ncr => ncr.Operations)
                           .Include(ncr => ncr.Procurement)
-                          .Where(ncr => !ncr.IsNCRDraft)
+                          .Where(ncr => !ncr.IsNCRArchived)
                           .ToList();
         }
 
@@ -159,13 +159,13 @@ namespace Haver.Utilities
                     }
 
                     // Converting DateOnly to DateTime by providing Time Info
-                    if (ncr.Engineering != null && ncr.QualityRepresentative.ConfirmingEng != false)
+                    if (ncr.Engineering != null && ncr.QualityRepresentative.ConfirmingEng == false)
                     {
                         TimeSpan differenceLastFilled = (TimeSpan)(nowToronto - ncr.Engineering.CreatedOn);
                         LastFilled = differenceLastFilled.Days;
                         operTotal.Add(ncr);
                     }
-                    else if (ncr.QualityRepresentative != null)
+                    else if (ncr.Engineering == null && ncr.QualityRepresentative.ConfirmingEng == true)
                     {
                         TimeSpan differenceLastFilled = (TimeSpan)(nowToronto - ncr.QualityRepresentative.CreatedOn);
                         LastFilled = differenceLastFilled.Days;

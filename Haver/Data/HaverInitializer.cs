@@ -22,43 +22,48 @@ namespace Haver.Data
 
                 if (!context.Employees.Any()) //Example, might be different names
                 {
-                    context.Employees.AddRange(
-                     new Employee
-                     {
-                         FirstName = "Iago",
-                         LastName = "Romao",
-                         Email = "iago.romao5@gmail.com",
-                     },
-                     new Employee
-                     {
-                         FirstName = "Fred",
-                         LastName = "Flintstone",
-                         Email = "admin@outlook.com"
-                     },
-                    new Employee
-                    {
-                        FirstName = "Peter",
-                        LastName = "Parker",
-                        Email = "engineer@outlook.com"
-                    },
-                    new Employee
-                    {
-                        FirstName = "Margaret",
-                        LastName = "Thompson",
-                        Email = "procurement@outlook.com"
-                    },
-                    new Employee
-                    {
-                        FirstName = "Mary",
-                        LastName = "Grayson",
-                        Email = "qualityinsp@outlook.com"
-                    },
-                    new Employee
-                    {
-                        FirstName = "Jhoon",
-                        LastName = "Cook",
-                        Email = "opmanager@outlook.com"
-                    });
+                    //context.Employees.AddRange(
+                    //// new Employee
+                    //// {
+                    ////     FirstName = "Iago",
+                    ////     LastName = "Romao",
+                    ////     Email = "iago.romao5@gmail.com",
+                    //// },
+                    //// new Employee
+                    //// {
+                    ////     FirstName = "Fred",
+                    ////     LastName = "Flintstone",
+                    ////     Email = "admin@outlook.com"
+                    //// },
+                    ////new Employee
+                    ////{
+                    ////    FirstName = "Peter",
+                    ////    LastName = "Parker",
+                    ////    Email = "engineer@outlook.com"
+                    ////},
+                    ////new Employee
+                    ////{
+                    ////    FirstName = "Margaret",
+                    ////    LastName = "Thompson",
+                    ////    Email = "procurement@outlook.com"
+                    ////},
+                    ////new Employee
+                    ////{
+                    ////    FirstName = "Mary",
+                    ////    LastName = "Grayson",
+                    ////    Email = "qualityinsp@outlook.com"
+                    ////},
+                    ////new Employee
+                    ////{
+                    ////    FirstName = "Jhoon",
+                    ////    LastName = "Cook",
+                    ////    Email = "opmanager@outlook.com"
+                    ////});
+                    ////{
+                    ////    FirstName = "Jhoon",
+                    ////    LastName = "Cook",
+                    ////    Email = "opmanager@outlook.com"
+                    //});
 
                     context.SaveChanges();
                 }

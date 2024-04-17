@@ -2,6 +2,11 @@
 
 @{
     ViewData["Title"] = "Archived";
+
+    var activeCheck = ViewData["activeCheck"] as string;
+
+    var supplierSelected = ViewData["SupplierSelected"] as string;
+    var ncrNumSelected = ViewData["NcrNumSelected"] as string;
 }
 
 <div>
@@ -50,7 +55,15 @@
         <div class="row">
             <div class="form-group col-md-3">
                 <label class="control-label">Search by NCR number</label>
-                @Html.TextBox("SearchString", null, new { @class = "form-control search-box", @placeholder = "Ex: 2024-023"})
+                <div class="input-search-box">
+                    <input name="SearchString" class="form-control" list="datalistOptions" id="exampleDataList" placeholder="Search NCR number" autocomplete="off" type="text" value="@ncrNumSelected">
+                </div>
+                <datalist id="datalistOptions">
+                    @foreach (var ncr in ViewBag.NCRsToDL)
+                    {
+                        <option value="@ncr.NCRNum"></option>
+                    }
+                </datalist>
             </div>
             <div class="form-group col-md-3">
                 <label class="control-label">Start Date</label>
@@ -62,7 +75,15 @@
             </div>
             <div class="form-group col-md-3">
                 <label class="control-label">Filter by Supplier</label>
-                @Html.DropDownList("SupplierID", null, "All Suppliers", htmlAttributes: new { @class = "form-select" })
+                <div class="input-search-box">
+                    <input name="SupplierID" class="form-control" list="supOptions" id="exampleDataListTwo" placeholder="Search supplier" autocomplete="off" type="text" value="@supplierSelected">
+                </div>
+                <datalist id="supOptions">
+                    @foreach (var item in ViewBag.SupplierSummary)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </datalist>
             </div>
             <div class="form-group col-md-4 align-self-end fieltering-btns">
                 <button asp-action="Archived" formmethod="get" type="submit" name="actionButton" class="btn btn-primary">
@@ -89,7 +110,7 @@
                     <th>
                         PHASE
                     </th>
-                    <th>
+                    <th class="pono-row-header">
                         PO OR PROD NO.
                     </th>
                     <th>
@@ -109,7 +130,7 @@
                 {
 
                     <tr id="tr-@item.ID">
-                        <td>
+                        <td class="ncr-num-td">
                             @if (item.NCRNum == null)
                             {
                                 <div>0000-000</div>
@@ -120,36 +141,21 @@
                             }
                         </td>
                         <td>
-                            @if (item.Status == "Active")
-                            {
-                                <span style="color: var(--green);">@Html.DisplayFor(modelItem => item.Status)</span>
-                            }
-                            else if (item.Status == "Closed")
-                            {
-                                <span style="color: var(--yellow);">@Html.DisplayFor(modelItem => item.Status)</span>
-                            }
-                            else if (item.Status == "Rejected" || item.Status == "Rejected Again")
-                            {
-                                <span style="color: var(--red);">@Html.DisplayFor(modelItem => item.Status)</span>
-                            }
-                            else if (item.Status == "Voided")
-                            {
-                                <span style="color: var(--haver-blue);">@Html.DisplayFor(modelItem => item.Status)</span>
-                            }
+                            <span style="color: var(--haver-blue);">Archived</span>
                         </td>
-                        <td>
+                        <td class="ncr-row-phase">
                             @Html.DisplayFor(modelItem => item.Phase)
                         </td>
-                        <td>
+                        <td class="pono-row">
                             @Html.DisplayFor(modelItem => item.QualityRepresentative.PoNo)
                         </td>
-                        <td>
+                        <td class="supplier-name-row">
                             @Html.DisplayFor(modelItem => item.QualityRepresentative.Supplier.SupplierName)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.CreatedOn)
+                            @Html.DisplayFor(modelItem => item.CreatedOnDO)
                         </td>
-                        <td>
+                        <td class="details-menu-row">
 
                             <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.ID"><i class="bi bi-card-list"></i>Details</a>
                             @* <a class="btn btn-primary" href="@Url.Action("DownloadPDF", "NCR", new { id = @item.ID })"><i class="bi bi-download"></i>Download PDF</a> *@

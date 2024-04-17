@@ -65,11 +65,42 @@ namespace Haver.Controllers
         }
 
         //GET: NCR
-        public async Task<IActionResult> Index(string ncrsByActiveTime, string SearchString, int? SupplierID, int? page, int? pageSizeID, string SelectedOption
+        public async Task<IActionResult> Index(string ncrsByActiveTime, string SearchString, string SupplierID, int? page, int? pageSizeID, string SelectedOption
             , string actionButton, string active, string sortDirection = "desc", string sortField = "CREATED ON")
         {
 
             PopulateList();
+
+            ViewData["activeCheck"] = active;
+
+            int? supSelected = null;
+
+            if (SupplierID != null)
+            {
+                try
+                {
+                    int indexSup = SupplierID.IndexOf(' ');
+                    string supCode = SupplierID.Substring(0, indexSup);
+                    var getSup = _context.Suppliers.FirstOrDefault(p => p.SupplierCode == Convert.ToInt32(supCode));
+                    if(getSup != null)
+                    {
+                        supSelected = getSup.ID;
+                    }
+                }
+                catch (Exception)
+                {
+
+                }
+            }
+            if (SupplierID != null)
+            {
+                ViewData["SupplierSelected"] = SupplierID;
+            }
+            if(SearchString != null)
+            {
+                ViewData["NcrNumSelected"] = SearchString;
+            }
+            
 
             //Dropdown data
             var ncrsDL = _context.NCRs.ToList();
@@ -82,6 +113,8 @@ namespace Haver.Controllers
                                             .Include(n => n.QualityRepresentative)
                                                 .Include(n => n.QualityRepresentative.Problem)
                                                 .Include(n => n.QualityRepresentative.Supplier)
+                                            .Include(n => n.Procurement)
+                                            .Include(n => n.Reinspection)
                                             .Where(n => !n.IsNCRArchived)
                                             .AsNoTracking();
 
@@ -91,26 +124,10 @@ namespace Haver.Controllers
             var twoDaysAgo = nowToronto.AddDays(-2).Date;
             var oneDayAgo = nowToronto.AddDays(-1).Date;
 
-            if (ncrsByActiveTime != null)
+
+            if (supSelected.HasValue)
             {
-                //Fieltering overdue NCRs, by time and by phase
-                if (ncrsByActiveTime == "+3d")
-                {
-                    haverContext = haverContext.Where(ncr => ncr.CreatedOn.Value.Date <= threeDaysAgo);
-                }
-                else if (ncrsByActiveTime == "48h")
-                {
-                    haverContext = haverContext.Where(ncr => ncr.CreatedOn.Value.Date == twoDaysAgo);
-                                               
-                }
-                else if (ncrsByActiveTime == "24h")
-                {
-                    haverContext = haverContext.Where(ncr => ncr.CreatedOn.Value.Date == oneDayAgo);
-                }
-            }
-            if (SupplierID.HasValue)
-            {
-                haverContext = haverContext.Where(p => p.QualityRepresentative.SupplierID == SupplierID);
+                haverContext = haverContext.Where(p => p.QualityRepresentative.SupplierID == supSelected);
             }
             if (!string.IsNullOrEmpty(SearchString))
             {
@@ -127,6 +144,174 @@ namespace Haver.Controllers
             if (active != null)
             {
                 haverContext = haverContext.Where(p => p.ID != null);
+            }
+            if (ncrsByActiveTime != null)
+            {
+                //Fieltering overdue NCRs, by time and by phase
+                if (ncrsByActiveTime == "+3d")
+                {
+                    List<NCR> ncrsToDisplay = new List<NCR>();
+                    if(haverContext.Count() > 0)
+                    {
+                        try
+                        {
+                            foreach (var ncr in haverContext)
+                            {
+                                TimeSpan differenceLastFilled = (TimeSpan)(nowToronto - ncr.CreatedOn);
+                                if (SelectedOption == "Quality Representative")
+                                {
+                                    differenceLastFilled = (TimeSpan)(nowToronto - ncr.CreatedOn);
+                                }
+                                else if (SelectedOption == "Engineering")
+                                {
+                                    differenceLastFilled = (TimeSpan)(nowToronto - ncr.QualityRepresentative.CreatedOn);
+                                }
+                                else if (SelectedOption == "Operations")
+                                {
+                                    if (ncr.Engineering != null && ncr.QualityRepresentative.ConfirmingEng == false)
+                                    {
+                                        differenceLastFilled = (TimeSpan)(nowToronto - ncr.Engineering.CreatedOn);
+                                    }
+                                    else if(ncr.Engineering == null && ncr.QualityRepresentative.ConfirmingEng == true)
+                                    {
+                                        differenceLastFilled = (TimeSpan)(nowToronto - ncr.QualityRepresentative.CreatedOn);
+                                    }
+                                }
+                                else if (SelectedOption == "Procurement")
+                                {
+                                    differenceLastFilled = (TimeSpan)(nowToronto - ncr.Operations.CreatedOn);
+                                }
+                                else if (SelectedOption == "Reinspection")
+                                {
+                                    differenceLastFilled = (TimeSpan)(nowToronto - ncr.Procurement.CreatedOn);
+                                }
+
+                                var LastFilled = differenceLastFilled.Days;
+
+                                if (LastFilled > 2)
+                                {
+                                    ncrsToDisplay.Add(ncr);
+                                }
+                            }
+                        }
+                        catch(Exception ex)
+                        {
+
+                        }
+                        haverContext = haverContext.Where(ncr => ncrsToDisplay.Contains(ncr));
+                    }
+
+                }
+                else if (ncrsByActiveTime == "48h")
+                {
+                    List<NCR> ncrsToDisplay = new List<NCR>();
+                    if (haverContext.Count() > 0)
+                    {
+                        foreach (var ncr in haverContext)
+                        {
+                            try
+                            {
+                                TimeSpan differenceLastFilled = (TimeSpan)(nowToronto - ncr.CreatedOn);
+                                if (SelectedOption == "Quality Representative")
+                                {
+                                    differenceLastFilled = (TimeSpan)(nowToronto - ncr.CreatedOn);
+                                }
+                                else if (SelectedOption == "Engineering")
+                                {
+                                    differenceLastFilled = (TimeSpan)(nowToronto - ncr.QualityRepresentative.CreatedOn);
+                                }
+                                else if (SelectedOption == "Operations")
+                                {
+                                    if (ncr.QualityRepresentative.ConfirmingEng == true)
+                                    {
+                                        differenceLastFilled = (TimeSpan)(nowToronto - ncr.QualityRepresentative.CreatedOn);
+                                    }
+                                    else
+                                    {
+                                        differenceLastFilled = (TimeSpan)(nowToronto - ncr.Engineering.CreatedOn);
+                                    }
+                                }
+                                else if (SelectedOption == "Procurement")
+                                {
+                                    differenceLastFilled = (TimeSpan)(nowToronto - ncr.Operations.CreatedOn);
+                                }
+                                else if (SelectedOption == "Reinspection")
+                                {
+                                    differenceLastFilled = (TimeSpan)(nowToronto - ncr.Procurement.CreatedOn);
+                                }
+
+                                var LastFilled = differenceLastFilled.Days;
+
+                                if (LastFilled == 2)
+                                {
+                                    ncrsToDisplay.Add(ncr);
+                                }
+                            }
+                            catch(Exception ex)
+                            {
+
+                            }
+                        }
+                        haverContext = haverContext.Where(ncr => ncrsToDisplay.Contains(ncr));
+                    }
+
+
+                }
+                else if (ncrsByActiveTime == "24h")
+                {
+                    List<NCR> ncrsToDisplay = new List<NCR>();
+                    if (haverContext.Count() > 0)
+                    {
+                        foreach (var ncr in haverContext)
+                        {
+                            try
+                            {
+                                TimeSpan differenceLastFilled = (TimeSpan)(nowToronto - ncr.CreatedOn);
+                                if (SelectedOption == "Quality Representative")
+                                {
+                                    differenceLastFilled = (TimeSpan)(nowToronto - ncr.CreatedOn);
+                                }
+                                else if (SelectedOption == "Engineering")
+                                {
+                                    differenceLastFilled = (TimeSpan)(nowToronto - ncr.QualityRepresentative.CreatedOn);
+                                }
+                                else if (SelectedOption == "Operations")
+                                {
+                                    if (ncr.QualityRepresentative.ConfirmingEng == true)
+                                    {
+                                        differenceLastFilled = (TimeSpan)(nowToronto - ncr.QualityRepresentative.CreatedOn);
+                                    }
+                                    else
+                                    {
+                                        differenceLastFilled = (TimeSpan)(nowToronto - ncr.Engineering.CreatedOn);
+                                    }
+                                }
+                                else if (SelectedOption == "Procurement")
+                                {
+                                    differenceLastFilled = (TimeSpan)(nowToronto - ncr.Operations.CreatedOn);
+                                }
+                                else if (SelectedOption == "Reinspection")
+                                {
+                                    differenceLastFilled = (TimeSpan)(nowToronto - ncr.Procurement.CreatedOn);
+                                }
+
+                                var LastFilled = differenceLastFilled.Days;
+
+                                if (LastFilled == 1)
+                                {
+                                    ncrsToDisplay.Add(ncr);
+                                }
+                            }
+                            catch(Exception ex)
+                            {
+
+                            }
+                            
+                        }
+                        haverContext = haverContext.Where(ncr => ncrsToDisplay.Contains(ncr));
+                    }
+
+                }
             }
 
             //Before we sort, see if we have called for a change of filtering or sorting
@@ -188,7 +373,7 @@ namespace Haver.Controllers
 
         // GET: NCR/Archived
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Archived(string SearchString, int? SupplierID, int? page, int? pageSizeID, string SelectedOption
+        public async Task<IActionResult> Archived(string SearchString, string? SupplierID, int? page, int? pageSizeID, string SelectedOption
             , string actionButton, string active, string sortDirection = "desc", string sortField = "CREATED ON", DateTime? StartDate = null, DateTime? EndDate = null)
         {
             PopulateList();
@@ -203,9 +388,41 @@ namespace Haver.Controllers
                                             .Where(n => n.IsNCRArchived)
                                             .AsNoTracking();
 
-            if (SupplierID.HasValue)
+            int? supSelected = null;
+
+            if (SupplierID != null)
             {
-                haverContext = haverContext.Where(p => p.QualityRepresentative.SupplierID == SupplierID);
+                try
+                {
+                    int indexSup = SupplierID.IndexOf(' ');
+                    string supCode = SupplierID.Substring(0, indexSup);
+                    var getSup = _context.Suppliers.FirstOrDefault(p => p.SupplierCode == Convert.ToInt32(supCode));
+                    if (getSup != null)
+                    {
+                        supSelected = getSup.ID;
+                    }
+                }
+                catch (Exception)
+                {
+
+                }
+            }
+            if (SupplierID != null)
+            {
+                ViewData["SupplierSelected"] = SupplierID;
+            }
+            if (SearchString != null)
+            {
+                ViewData["NcrNumSelected"] = SearchString;
+            }
+
+            //Dropdown data
+            var ncrsDL = _context.NCRs.ToList();
+            ViewBag.NCRsToDL = ncrsDL;
+
+            if (supSelected.HasValue)
+            {
+                haverContext = haverContext.Where(p => p.QualityRepresentative.SupplierID == supSelected);
             }
             if (!string.IsNullOrEmpty(SearchString))
             {
@@ -283,7 +500,7 @@ namespace Haver.Controllers
 
         [Authorize(Roles = "Admin")]
         // GET: NCR/Archiving
-        public async Task<IActionResult> Archiving(string SearchString, int? SupplierID, int? page, int? pageSizeID, string SelectedOption
+        public async Task<IActionResult> Archiving(string SearchString, string SupplierID, int? page, int? pageSizeID, string SelectedOption
             , string actionButton, string active, string sortDirection = "desc", string sortField = "CREATED ON", DateTime? StartDate = null, DateTime? EndDate = null)
         {
             PopulateList();
@@ -298,9 +515,41 @@ namespace Haver.Controllers
                                             .Where(n => !n.IsNCRArchived)
                                             .AsNoTracking();
 
-            if (SupplierID.HasValue)
+            int? supSelected = null;
+
+            if (SupplierID != null)
             {
-                haverContext = haverContext.Where(p => p.QualityRepresentative.SupplierID == SupplierID);
+                try
+                {
+                    int indexSup = SupplierID.IndexOf(' ');
+                    string supCode = SupplierID.Substring(0, indexSup);
+                    var getSup = _context.Suppliers.FirstOrDefault(p => p.SupplierCode == Convert.ToInt32(supCode));
+                    if (getSup != null)
+                    {
+                        supSelected = getSup.ID;
+                    }
+                }
+                catch (Exception)
+                {
+
+                }
+            }
+            if (SupplierID != null)
+            {
+                ViewData["SupplierSelected"] = SupplierID;
+            }
+            if (SearchString != null)
+            {
+                ViewData["NcrNumSelected"] = SearchString;
+            }
+
+            //Dropdown data
+            var ncrsDL = _context.NCRs.ToList();
+            ViewBag.NCRsToDL = ncrsDL;
+
+            if (supSelected.HasValue)
+            {
+                haverContext = haverContext.Where(p => p.QualityRepresentative.SupplierID == supSelected);
             }
             if (!string.IsNullOrEmpty(SearchString))
             {
@@ -795,6 +1044,8 @@ namespace Haver.Controllers
                     }
                 }
 
+                //Set sort for next time
+                ViewData["sortField"] = sortField;
                 ViewData["sortDirection"] = sortDirection;
 
                 // Pagination
@@ -1282,6 +1533,23 @@ namespace Haver.Controllers
                     quality.QualityRepresentative.ProcessApplicableID = (int)quality.DraftQualityRepresentative.ProcessApplicableID;
                     quality.QualityRepresentative.QualityPhotos = quality.DraftQualityRepresentative.QualityPhotos;
                     quality.QualityRepresentative.VideoLinks = quality.DraftQualityRepresentative.VideoLinks;
+
+                    //Get part, suppplier and problem
+                    var getPart = _context.Parts.FirstOrDefault(p => p.ID == quality.QualityRepresentative.PartID);
+                    var getSup = _context.Suppliers.FirstOrDefault(p => p.ID == quality.QualityRepresentative.SupplierID);
+                    var getProblem = _context.Problems.FirstOrDefault(p => p.ID == quality.QualityRepresentative.ProblemID);
+                    if (getPart != null)
+                    {
+                        quality.QualityRepresentative.Part = getPart;
+                    }
+                    if (getSup != null)
+                    {
+                        quality.QualityRepresentative.Supplier = getSup;
+                    }
+                    if (getProblem != null)
+                    {
+                        quality.QualityRepresentative.Problem = getProblem;
+                    }
                 }
                 else if(quality.PrevNCRID != null)
                 {
@@ -1331,12 +1599,67 @@ namespace Haver.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin,Quality Inspector")]
-        public async Task<IActionResult> CreateQualityRepresentative(NCR quality, NCR genNCR, int[] imagesToRemove, int[] linksToRemove, List<IFormFile> Pictures, string[] selectedOptions, string Subject, string emailContent, string[] Links, string draft, string sectionEdited, Byte[] RowVersion)
+        public async Task<IActionResult> CreateQualityRepresentative(NCR quality, NCR genNCR, int[] imagesToRemove, int[] linksToRemove, List<IFormFile> Pictures, string[] selectedOptions, string Subject, string emailContent, string[] Links, string draft, string sectionEdited, Byte[] RowVersion, string problemSel, string partSel, string supSel)
         {
             //Temporarily bypass the required attributes in order to save a draft
             if (draft != null)
             {
                 ModelState.Clear();
+            }
+            //get partSelected
+            if (partSel != null)
+            {
+                try
+                {
+                    int indexPart = partSel.IndexOf(' ');
+                    string partNumber = partSel.Substring(0, indexPart);
+                    var getPart = _context.Parts.FirstOrDefault(p => p.PartNumber == Convert.ToInt32(partNumber));
+                    if(getPart != null)
+                    {
+                        quality.QualityRepresentative.PartID = getPart.ID;
+                        genNCR.QualityRepresentative.PartID = getPart.ID;
+                    }
+                }
+                catch (Exception)
+                {
+
+                }
+            }
+            //get supplierSelected
+            if(supSel != null)
+            {
+                try
+                {
+                    int indexSup = supSel.IndexOf(' ');
+                    string supCode = supSel.Substring(0, indexSup);
+                    var getSup = _context.Suppliers.FirstOrDefault(p => p.SupplierCode == Convert.ToInt32(supCode));
+                    if (getSup != null)
+                    {
+                        quality.QualityRepresentative.SupplierID = getSup.ID;
+                        genNCR.QualityRepresentative.SupplierID = getSup.ID;
+                    }
+                }
+                catch (Exception)
+                {
+
+                }
+            }
+            //get problem Selected
+            if (problemSel != null)
+            {
+                try
+                {
+                    var getProblem = _context.Problems.FirstOrDefault(p => p.ProblemDescription == problemSel);
+                    if(getProblem != null)
+                    {
+                        quality.QualityRepresentative.ProblemID = getProblem.ID;
+                        genNCR.QualityRepresentative.ProblemID = getProblem.ID;
+                    }
+                }
+                catch(Exception)
+                {
+
+                }
             }
 
             try
@@ -1674,6 +1997,7 @@ namespace Haver.Controllers
                     notificationGenerator.SendNotificationsForNCRList(ncrToNotify, (List<IdentityUser>)usersInEngineeringRole, "create", null, emailContent);
 
                     //SendNotificationEmail(selectedOptions, emailSubject, emailContent);
+
                     
                     return RedirectToAction("Index");
                 }
@@ -1724,6 +2048,7 @@ namespace Haver.Controllers
             PopulateUserEmailData(selectedOptions);
             PopulateList();
 
+
             NCR ncrModelRepeat = GetNCR(quality.ID);
             if (ncrModelRepeat != null)
             {
@@ -1753,6 +2078,23 @@ namespace Haver.Controllers
                 ncrModelRepeat.QualityRepresentative = genNCR.QualityRepresentative;
                 TempData["SectionEdited"] = sectionEdited;
 
+                //Get part, suppplier and problem
+                var getPart = _context.Parts.FirstOrDefault(p => p.ID == quality.QualityRepresentative.PartID);
+                var getSup = _context.Suppliers.FirstOrDefault(p => p.ID == quality.QualityRepresentative.SupplierID);
+                var getProblem = _context.Problems.FirstOrDefault(p => p.ID == quality.QualityRepresentative.ProblemID);
+                if (getPart != null)
+                {
+                    ncrModelRepeat.QualityRepresentative.Part = getPart;
+                }
+                if (getSup != null)
+                {
+                    ncrModelRepeat.QualityRepresentative.Supplier = getSup;
+                }
+                if (getProblem != null)
+                {
+                    ncrModelRepeat.QualityRepresentative.Problem = getProblem;
+                }
+
                 //If NCR is a draft
                 if (ncrModelRepeat.IsNCRDraft)
                 {
@@ -1760,6 +2102,23 @@ namespace Haver.Controllers
                     ncrModelRepeat.QualityRepresentative.VideoLinks = ncrModelRepeat.DraftQualityRepresentative.VideoLinks;
                     return View("Create", ncrModelRepeat);
                 }
+            }
+            //Optmize repetition
+            //Get part, suppplier and problem
+            var getPartTwo = _context.Parts.FirstOrDefault(p => p.ID == quality.QualityRepresentative.PartID);
+            var getSupTwo = _context.Suppliers.FirstOrDefault(p => p.ID == quality.QualityRepresentative.SupplierID);
+            var getProblemTwo = _context.Problems.FirstOrDefault(p => p.ID == quality.QualityRepresentative.ProblemID);
+            if (getPartTwo != null)
+            {
+                genNCR.QualityRepresentative.Part = getPartTwo;
+            }
+            if (getSupTwo != null)
+            {
+                genNCR.QualityRepresentative.Supplier = getSupTwo;
+            }
+            if (getProblemTwo != null)
+            {
+                genNCR.QualityRepresentative.Problem = getProblemTwo;
             }
 
             return View("Create", genNCR);
@@ -3362,7 +3721,7 @@ namespace Haver.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Byte[] RowVersion, List<IFormFile> Pictures, string[] selectedOptions, int[] imagesToRemove, int[] linksToRemove, string Subject, string emailContent, string[] Links, string sectionEdited)
+        public async Task<IActionResult> Edit(int id, Byte[] RowVersion, List<IFormFile> Pictures, string[] selectedOptions, int[] imagesToRemove, int[] linksToRemove, string Subject, string emailContent, string[] Links, string sectionEdited, string partSel, string supSel, string problemSel)
         {
             PopulateUserEmailData(selectedOptions);
 
@@ -3390,6 +3749,59 @@ namespace Haver.Controllers
                     .Include(r => r.Reinspection.QualityPhotos)
                     .Include(r => r.Reinspection.VideoLinks)
                 .FirstOrDefaultAsync(p => p.ID == id);
+
+            //get partSelected
+            if (partSel != null)
+            {
+                try
+                {
+                    int indexPart = partSel.IndexOf(' ');
+                    string partNumber = partSel.Substring(0, indexPart);
+                    var getPart = _context.Parts.FirstOrDefault(p => p.PartNumber == Convert.ToInt32(partNumber));
+                    if (getPart != null)
+                    {
+                        ncrToUpdate.QualityRepresentative.PartID = getPart.ID;
+                    }
+                }
+                catch (Exception)
+                {
+                    ModelState.AddModelError("QualityRepresentative.PartID", "Invalid Part Selection");
+                }
+            }
+            //get supplierSelected
+            if (supSel != null)
+            {
+                try
+                {
+                    int indexSup = supSel.IndexOf(' ');
+                    string supCode = supSel.Substring(0, indexSup);
+                    var getSup = _context.Suppliers.FirstOrDefault(p => p.SupplierCode == Convert.ToInt32(supCode));
+                    if (getSup != null)
+                    {
+                        ncrToUpdate.QualityRepresentative.SupplierID = getSup.ID;
+                    }
+                }
+                catch (Exception)
+                {
+                    ModelState.AddModelError("QualityRepresentative.SupplierID", "Invalid Supplier Selection");
+                }
+            }
+            //get problem Selected
+            if (problemSel != null)
+            {
+                try
+                {
+                    var getProblem = _context.Problems.FirstOrDefault(p => p.ProblemDescription == problemSel);
+                    if (getProblem != null)
+                    {
+                        ncrToUpdate.QualityRepresentative.ProblemID = getProblem.ID;
+                    }
+                }
+                catch (Exception)
+                {
+                    ModelState.AddModelError("QualityRepresentative.ProblemID", "Invalid Problem Selection");
+                }
+            }
 
             //Intialize Notification sender
             var usersInAdminRole = _userManager.GetUsersInRoleAsync("Admin").Result;
@@ -3557,6 +3969,7 @@ namespace Haver.Controllers
                     return RedirectToAction(nameof(Index));
                 }
             }
+            PopulateList();
 
             //Check for concurrency error
             NCR ncrModelRepeat = GetNCR(id);
@@ -3625,6 +4038,7 @@ namespace Haver.Controllers
                 .Parts
                 .OrderBy(m => m.PartNumber), "ID", "PartSummary", selectedId);
         }
+
         private SelectList EngReviewList(int? selectedId)
         {
             return new SelectList(_context
@@ -3636,6 +4050,24 @@ namespace Haver.Controllers
             return new SelectList(_context
                 .PrelDecisions
                 .OrderBy(m => m.Decision), "ID", "Decision", selectedId);
+        }
+        private SelectList PartSummaryList(string partSummary)
+        {
+            return new SelectList(_context
+                .Parts
+                .OrderBy(m => m.PartNumber), "PartSummary", "PartSummary", partSummary);
+        }
+        private SelectList SupplierSummaryList(string partSummary)
+        {
+            return new SelectList(_context
+                .Suppliers
+                .OrderBy(m => m.SupplierCode), "SupplierSummary", "SupplierSummary", partSummary);
+        }
+        private SelectList ProblemDescriptionList(string partSummary)
+        {
+            return new SelectList(_context
+                .Problems
+                .OrderBy(m => m.ProblemDescription), "ProblemDescription", "ProblemDescription", partSummary);
         }
 
         private void PopulateList(NCR? ncr = null)
@@ -3658,6 +4090,9 @@ namespace Haver.Controllers
                 ViewData["ProcessApplicableID"] = ProcessApplicableList(ncr.DraftQualityRepresentative?.ProcessApplicableID);
                 ViewData["PartID"] = PartList(ncr.DraftQualityRepresentative?.PartID);
             }
+            ViewData["PartSummary"] = PartSummaryList(qualityRepresentative?.Part.PartSummary);
+            ViewData["SupplierSummary"] = SupplierSummaryList(qualityRepresentative?.Supplier.SupplierSummary);
+            ViewData["ProblemDescription"] = ProblemDescriptionList(qualityRepresentative?.Problem.ProblemDescription);
         }
 
         //Helper method to create new NCR number
@@ -4262,6 +4697,9 @@ namespace Haver.Controllers
         {
             NCR ncrModel = _context.NCRs
                 .Include(n => n.QualityRepresentative)
+                    .Include(qr => qr.QualityRepresentative.Problem)
+                    .Include(qr => qr.QualityRepresentative.Part)
+                    .Include(qr => qr.QualityRepresentative.Supplier)
                     .Include(qr => qr.QualityRepresentative.QualityPhotos)
                     .Include(qr => qr.QualityRepresentative.VideoLinks)
                 .Include(n => n.Engineering)

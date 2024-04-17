@@ -124,6 +124,22 @@ namespace Haver.Data
                         userManager.AddToRoleAsync(user, "Admin").Wait();
                     }
                 }
+                if (userManager.FindByEmailAsync("l.pentland@haverniagara.ca").Result == null)
+                {
+                    IdentityUser user = new IdentityUser
+                    {
+                        UserName = "l.pentland@haverniagara.ca",
+                        Email = "l.pentland@haverniagara.ca",
+                        EmailConfirmed = true
+                    };
+
+                    IdentityResult result = userManager.CreateAsync(user, "Pa55w@rd").Result;
+
+                    if (result.Succeeded)
+                    {
+                        userManager.AddToRoleAsync(user, "Admin").Wait();
+                    }
+                }
             }
             catch (Exception ex)
             {

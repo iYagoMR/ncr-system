@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Dashboard";
+
+
 }
 
 <div>
@@ -649,7 +651,12 @@
         // Function to toggle the state of the button and update the UI
         function sortNCRsTimeList(name) {
             if (actionButtonTimeName == 'LAST FILLED' || actionButtonTimeName == 'SINCE CREATION') {
-                actionButtonTimeName = null;
+                if (actionButtonTimeName != name) {
+                    actionButtonTimeName = name;
+                }
+                else{
+                    actionButtonTimeName = null;
+                }
             }
             else {
                 actionButtonTimeName = name;
@@ -684,6 +691,7 @@
                     {
                         actionButton: actionButtonTimeName,
                         page: NCRTimeListPageNumber,
+                        sortField: actionButtonTimeName,
                     },
                     contextType: "application/json; charset=utf8",
                     dataType: "json",
@@ -703,8 +711,8 @@
                             var row = '<tr class="grey-rows">' +
                                 '<td><div>' + item.ncrNo + '</td></div>' +
                                 '<td>' + item.phase + '</td>' +
-                                '<td>' + lastFilledNum + '</td>' +
-                                '<td>' + item.sinceCreated + '</td>' +
+                                '<td>' + lastFilledNum + ' days' + '</td>' +
+                                '<td>' + item.sinceCreated + ' days' + '</td>' +
                                 '</tr>';
                             $('.ncr-list-row.ncr-time-list').append(row);
                         });

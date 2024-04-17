@@ -571,6 +571,24 @@ h1 {
 
 /*Form layout config*/
 
+/*Search boxes*/
+.input-search-box {
+    position: relative;
+}
+.input-search-box::before{
+content: url(../assets/icons/search-symbol.png);
+    position: absolute;
+    left: 5px;
+    top: 6px;
+    width: 20px;
+    height: 20px;
+    z-index: 1;
+    font-size: 10px;
+    transform: scale(0.03);
+}
+.input-search-box .form-control{
+    padding-left: 45px;
+}
 
 /* Adding items to the drop down; "+" sign */
 .btn-plus {
@@ -1000,6 +1018,14 @@ header{
 
 /*Rows*/
 
+.ncr-rows-menu {
+    background-color: var(--haver-blue);
+    border-radius: 50px;
+    margin-left: 10px;
+}
+.ncr-rows-menu button i{
+    color: white;
+}
 th {
     white-space: nowrap;
     overflow: hidden;
@@ -1210,6 +1236,15 @@ main > form > table > tbody > tr > td:nth-child(7){
 }
 /*Analytics*/
 
+/*NCR time tracker phase*/
+#EnoughDataNCRT > div.table-container > table > thead > tr > th:nth-child(2){
+    width: 230px;
+}
+/*NCR Num*/
+#EnoughDataNCRT > div.table-container > table > thead > tr > th:nth-child(1) {
+    width: 200px;
+}
+
 .dashboard-cards.analytics div div .col-md-6, .dashboard-cards.analytics .col-md-12 {
     display: flex;
 }
@@ -1340,7 +1375,7 @@ body > div > main > div.col-lg-12 > div {
     width: 150px;
 }
 .standard-card .lf-th input{
-    width: 80px;
+    width: 110px;
 }
 
 .standard-card th input:hover {
@@ -1643,6 +1678,15 @@ input[type="file"]::file-selector-button {
         max-width: 120px;
     }
 
+    .pono-row-header{
+        display: none;
+    }
+    .pono-row{
+        display: none;
+    }
+    .time-counters a {
+        margin-left: -5px;
+    }
 
 }
 
@@ -1722,6 +1766,17 @@ input[type="file"]::file-selector-button {
         position: absolute;
         margin-left: -235px;
         margin-top: 27px;
+    }
+
+    /*Bulk Archiving*/
+    body > div > main > form > div.filtering-fields.form-horizontal > div > div:nth-child(1){
+        width: 100%; 
+    }
+    body > div > main > form > div.filtering-fields.form-horizontal > div > div:nth-child(2) {
+        width: 100%;
+    }
+    body > div > main > form > div.filtering-fields.form-horizontal > div > div:nth-child(3) {
+        width: 100%;
     }
 
 }
@@ -1866,6 +1921,10 @@ input[type="file"]::file-selector-button {
 @media (max-width: 767px) {
     /*Dashboard*/
     /*Dashboard btns*/
+
+    .input-search-box::before {
+        top: 4px;
+    }
 
     .dashboard-btns div div .btn-secondary,.dashboard-btns div div .btn-primary {
         font-size: 1rem;

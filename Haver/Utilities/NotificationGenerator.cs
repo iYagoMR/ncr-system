@@ -369,7 +369,7 @@ namespace Haver.Utilities
             {
                 timeFrame = "3 days";
             }
-
+            string urlStart = "https://haverfinal2024.azurewebsites.net";
             string sectionToFill = $"Create{ncr.Phase}";
             if(ncr.Phase == "Quality Representative")
             {
@@ -378,7 +378,7 @@ namespace Haver.Utilities
 
             notification.Type = "overdueFill";
             notification.Title = $"NCR {ncr.NCRNum}. {timeFrame} reminder";
-            notification.Message = $"NCR in {ncr.Phase} phase has not been filled for <p>{timeFrame}</p>. <a href='/NCR/{sectionToFill}/{ncr.ID}'>Fill NCR</a> or <a href='/NCR/Details/{ncr.ID}'>View details</a>";
+            notification.Message = $"NCR in {ncr.Phase} phase has not been filled for <p>{timeFrame}</p>. <a href='{urlStart}/NCR/{sectionToFill}/{ncr.ID}'>Fill NCR</a> or <a href='{urlStart}/NCR/Details/{ncr.ID}'>View details</a>";
             notification.CreateOn = nowToronto;
             notification.EmployeeID = employee.ID;
             _context.Notifications.Add(notification);
@@ -397,7 +397,7 @@ namespace Haver.Utilities
                 var nowToronto = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time"));
                 TimeSpan differenceLastFilled = (TimeSpan)(nowToronto - ncr.CreatedOn);
                 int LastFilled = differenceLastFilled.Days;
-
+                string urlStart = "https://haverfinal2024.azurewebsites.net";
                 var configurationVariables = _context.ConfigurationVariables.FirstOrDefault(config => config.ID == 1);
                 if (configurationVariables == null)
                 {
@@ -412,12 +412,15 @@ namespace Haver.Utilities
 
                 notification.Type = "overdueNCR";
                 notification.Title = $"NCR {ncr.NCRNum}. {configurationVariables.OverdueNCRsNotificationDays} days reminder";
-                notification.Message = $"NCR in {ncr.Phase} phase is active for <p>{configurationVariables.OverdueNCRsNotificationDays} or more days</p>. <a href='/NCR/{sectionToFill}/{ncr.ID}'>Fill NCR</a> or <a href='/NCR/Details/{ncr.ID}'>View details</a>";
+                notification.Message = $"NCR in {ncr.Phase} phase is active for <p>{configurationVariables.OverdueNCRsNotificationDays} or more days</p>. <a href='{urlStart}/NCR/{sectionToFill}/{ncr.ID}'>Fill NCR</a> or <a href='{urlStart}/NCR/Details/{ncr.ID}'>View details</a>";
                 notification.CreateOn = nowToronto;
                 notification.EmployeeID = employee.ID;
                 _context.Notifications.Add(notification);
 
-                //SendNotificationEmail(employee.Email, employee.Email, notification.Title, notification.Message);
+                if (employee.Email != "qualityinsp@outlook.com" && employee.Email != "engineer@outlook.com" && employee.Email != "opmanager@outlook.com" && employee.Email != "admin@outlook.com")
+                {
+                    SendNotificationEmail(employee.Email, employee.Email, notification.Title, notification.Message);
+                }
             }
             catch (Exception){
 
@@ -427,15 +430,19 @@ namespace Haver.Utilities
         public void ExpecDateReturnReminder(Notification notification, NCR ncr, Employee employee)
         {
             var nowToronto = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time"));
+            string urlStart = "https://haverfinal2024.azurewebsites.net";
 
             notification.Type = "expecDateReturn";
             notification.Title = $"NCR {ncr.NCRNum}. Date of return reminder";
-            notification.Message = $"The expected date of return for this NCR is {ncr.Procurement.ExpecDateOfReturn}</p>. <a href='/NCR/Details/{ncr.ID}'>View details</a>";
+            notification.Message = $"The expected date of return for this NCR is {ncr.Procurement.ExpecDateOfReturn}</p>. <a href='{urlStart}/NCR/Details/{ncr.ID}'>View details</a>";
             notification.CreateOn = nowToronto;
             notification.EmployeeID = employee.ID;
             _context.Notifications.Add(notification);
 
-            //SendNotificationEmail(employee.Email, employee.Email, notification.Title, notification.Message);
+            if (employee.Email != "qualityinsp@outlook.com" && employee.Email != "engineer@outlook.com" && employee.Email != "opmanager@outlook.com" && employee.Email != "admin@outlook.com")
+            {
+                SendNotificationEmail(employee.Email, employee.Email, notification.Title, notification.Message);
+            }
         }
 
         private async void SendNotificationEmail(string name, string email, string Subject, string emailContent)

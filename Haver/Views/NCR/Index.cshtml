@@ -9,6 +9,11 @@
     var successAlert = TempData["SuccessAlert"] as string;
     var warningAlert = TempData["WarningAlert"] as string;
     var infoAlert = TempData["InfoAlert"] as string;
+
+    var activeCheck = ViewData["activeCheck"] as string;
+
+    var supplierSelected = ViewData["SupplierSelected"] as string;
+    var ncrNumSelected = ViewData["NcrNumSelected"] as string;
 }
 
 @if (!string.IsNullOrEmpty(infoAlert)) // Check if the alert message is not empty
@@ -134,7 +139,9 @@ else
         <div class="row">
             <div class="form-group col-md-3">
                 <label class="control-label">Search NCR number</label>
-                <input name="SearchString" class="form-control" list="datalistOptions" id="exampleDataList" placeholder="Ex: 2024-010">
+                <div class="input-search-box">
+                    <input name="SearchString" class="form-control" list="datalistOptions" id="exampleDataList" placeholder="Search NCR number" autocomplete="off" type="text" value="@ncrNumSelected">
+                </div>
                 <datalist id="datalistOptions">
                     @foreach (var ncr in ViewBag.NCRsToDL)
                     {
@@ -144,7 +151,16 @@ else
             </div>
             <div class="form-group col-md-3">
                 <label class="control-label">Filter by Supplier</label>
-                @Html.DropDownList("SupplierID", null, "All Suppliers", htmlAttributes: new { @class = "form-select" })
+                <div class="input-search-box">
+                    <input name="SupplierID" class="form-control" list="supOptions" id="exampleDataListTwo" placeholder="Search supplier" autocomplete="off" type="text" value="@supplierSelected">
+                </div>
+                <datalist id="supOptions">
+                    @foreach (var item in ViewBag.SupplierSummary)
+                    {
+                        <option value="@item.Value">@item.Text</option>
+                    }
+                </datalist>
+
             </div>
             <div class="form-group col-md-3">
                 <label class="control-label">Filter by Phase</label>
@@ -159,9 +175,9 @@ else
             </div>
             <div class="form-group form-switch col-md-3 fieltering-checkbox">
                 <label class="form-check-label" for="flexSwitchCheckDefault">Show inactive/closed NCRs?</label>
-                <input class="form-check-input" type="checkbox" name="active" id="flexSwitchCheckDefault">
+                <input class="form-check-input" type="checkbox" name="active" id="flexSwitchCheckDefault" @(activeCheck != null ? "checked" : "")>
             </div>
-@*             <div class="form-group col-md-3">
+@*          <div class="form-group col-md-3">
                 <label class="control-label">Filter by time since last filled</label>
                 @Html.DropDownList("ncrsByActiveTime", new List<SelectListItem>
                 {
@@ -195,7 +211,7 @@ else
                     <th>
                         PHASE
                     </th>
-                    <th>
+                    <th class="pono-row-header">
                         PO OR PROD NO.
                     </th>
                     <th>
@@ -263,9 +279,9 @@ else
                             <a class="btn btn-primary" asp-action="Details" asp-route-id="@item.ID"><i class="bi bi-card-list"></i>Details</a>
 
                             @* <a class="btn btn-primary" href="@Url.Action("DownloadPDF", "NCR", new { id = @item.ID })"><i class="bi bi-download"></i>Download PDF</a> *@
-                            <div class="dropdown">
+                            <div class="dropdown ncr-rows-menu">
                                 <button class="dropdown-toggle" type="button" id="dropdownMenu2" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bi bi-three-dots-vertical"></i>
+                                    <i class="bi bi-list"></i>
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu2">
                                     @if (item.Phase == "Quality Representative" && item.Status != "Voided" && (User.IsInRole("Admin") || User.IsInRole("Quality Inspector")))
@@ -595,6 +611,8 @@ else
         }
 
         function archiveNCR(ncrId) {
+            var rowToRemove = document.getElementById("tr-" + ncrId);
+
             $.ajax({
                 type: "POST",
                 url: "/NCR/ArchiveNCR",
@@ -615,6 +633,7 @@ else
                         // Display success message
                         $(".alert-success").addClass("d-flex");
                         $(".alert-success div").show().text(response.successAlert);
+                        $(rowToRemove).css('display', 'none'); // Remove the row from the table
                     }
                     else if (response.errorAlert) {
                         // Display error message
@@ -636,6 +655,7 @@ else
         function voidNCR(ncrId) {
             console.log(ncrIdChoosen);
             var voidReasonInput = document.getElementById("voidReasonInput").value;
+            var rowToRemove = document.getElementById("tr-" + ncrId);
 
             $.ajax({
                 type: "POST",
@@ -652,18 +672,19 @@ else
                     $(".alert.conditional .btn-close").click();
                     $(".alert-danger").removeClass("d-flex");
                     $(".alert-success").removeClass("d-flex");
-
-                    console.log('NCR Voided');
+                    
                     if (response.successAlert) {
                         // Display success message
                         $(".alert-success").addClass("d-flex");
                         $(".alert-success div").show().text(response.successAlert);
+                        $(rowToRemove).css('display', 'none'); // Remove the row from the table
                     }
                     else if (response.errorAlert) {
                         // Display error message
                         $(".alert-danger").addClass("d-flex");
                         $(".alert-danger div").show().text(response.errorAlert + " Please refresh your page.");
                     }
+                    //$('html, body').animate({ scrollTop: 0 }, 'slow');
                 },
                 error: function (xhr, status, error) {
                     $(".alert-success").removeClass("d-flex");
