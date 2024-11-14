@@ -6,7 +6,7 @@ The application was developed using **ASP.NET** and is designed to be fully **re
 
 ## Live Demo
 
-You can view a live demo of the project at: [Live Demo](https://haverdemo2024.azurewebsites.net/)
+You can view a live demo of the project at: https://haverdemo2024.azurewebsites.net/
 
 ## Key Features
 
