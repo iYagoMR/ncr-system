@@ -1,6 +1,6 @@
 # Non-Conformance Reporting (NCR) System Enhancement
 
-This project was developed during a college competition involving 7 teams, where my team's solution was recognized as one of the best. **Haver & Boecker Niagara**, a global leader in industrial processing solutions, approached us to enhance their Non-Conformance Reporting (NCR) system. The existing system was outdated and inefficient, relying on cumbersome methods that slowed down processes and led to errors. Our solution modernized the NCR workflow, making it faster, more intuitive, and fully digital.
+This project was developed during a college competition involving 7 teams, where my team's solution was recognized as one of the best. **Haver & Boecker Niagara**, a global leader in industrial processing solutions, approached us to enhance their Non-Conformance Reporting (NCR) system. The existing system was outdated and inefficient, relying on excel spreadsheets. Our solution modernized the NCR workflow, making it faster, more intuitive, and fully digital.
 
 The application was developed using **ASP.NET** and is designed to be fully **responsive**, ensuring it works seamlessly across a variety of devices and screen sizes, from desktop computers to mobile phones.
 
