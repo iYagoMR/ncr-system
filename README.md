@@ -4,6 +4,10 @@ This project was developed during a college competition involving 7 teams, where
 
 The application was developed using **ASP.NET** and is designed to be fully **responsive**, ensuring it works seamlessly across a variety of devices and screen sizes, from desktop computers to mobile phones.
 
+## Live Demo
+
+You can view a live demo of the project at: [Live Demo](https://haverdemo2024.azurewebsites.net/)
+
 ## Key Features
 
 - **User-Friendly Interface:** A streamlined, intuitive interface to improve the user experience for employees submitting non-conformance reports and administrators reviewing them.
@@ -14,10 +18,6 @@ The application was developed using **ASP.NET** and is designed to be fully **re
 - **Email Notifications:** Automated email notifications inform users and administrators of updates to reports or actions taken on them.
 - **Fully Responsive:** The app is optimized for mobile, tablet, and desktop use, providing a consistent and smooth experience across all devices.
 - **Data Security:** Secure login system to protect sensitive information, ensuring that only authorized personnel can access the system.
-
-## Live Demo
-
-You can view a live demo of the project at: [Live Demo](https://haverdemo2024.azurewebsites.net/)
 
 ---
 
